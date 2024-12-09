@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://qw3bgt3468bw"]
+
+[ext_resource type="Texture2D" uid="uid://g0pqr8detjpm" path="res://resources/node_marker.png" id="1_stxgc"]
+
+[node name="node_marker" type="TextureButton"]
+offset_right = 56.0
+offset_bottom = 56.0
+scale = Vector2(0.2, 0.2)
+texture_normal = ExtResource("1_stxgc")
