@@ -11,7 +11,6 @@ enum Region {
 	MAX
 }
 
-
 const ROOM_DATA : Array[String] = [
 	"res://data/Frigate Orpheon.json",
 	"res://data/Chozo Ruins.json",
@@ -23,14 +22,13 @@ const ROOM_DATA : Array[String] = [
 ]
 const REGION_OFFSET : Array[Vector2] = [
 	Vector2(0, -900),
-	Vector2(2100, -200),
-	Vector2(200, 1200),
-	Vector2(2500, 700),
+	Vector2(2000, -500),
+	Vector2(200, -400),
+	Vector2(2800, 900),
 	Vector2(1250, 1250),
-	Vector2(1000, 600),
+	Vector2(1000, -500),
 	Vector2(700, -900)
 ]
-
 const REGION_NAME : Array[String] = [
 	"Frigate Orpheon",
 	"Chozo Ruins",
@@ -93,6 +91,9 @@ func draw_map() -> void:
 			room.set_name(j) # Set name in SceneTree
 		
 		region.position = REGION_OFFSET[i]
+		
+		if i in [Region.FRIGATE, Region.CRATER]:
+			region.hide()
 	
 	# Now that every room and its nodes have been
 	# created, finish initializing node connections
@@ -257,9 +258,8 @@ func resolve_map(start_node_data : NodeData) -> void:
 
 func can_reach_internal(from_node : NodeData, to_node : NodeData) -> bool:
 	var region_data : Dictionary = get_region_data(from_node.region)
-	var logic_data : Dictionary = region_data["areas"][from_node.room_name]["nodes"][from_node.display_name]["connections"][to_node.display_name]
-	
-	return true
+	var logic : Dictionary = region_data["areas"][from_node.room_name]["nodes"][from_node.display_name]["connections"][to_node.display_name]
+	return inventory.can_reach(logic)
 
 func can_reach_external(from_node : NodeData, to_node : NodeData) -> bool:
 	return inventory.can_pass_dock(to_node.default_dock_weakness)

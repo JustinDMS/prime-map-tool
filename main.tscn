@@ -54,17 +54,18 @@ layout_mode = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer"]
 layout_mode = 2
 
+[node name="import_rdv" type="Button" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Import RDV"
+
+[node name="rdv_game_hash" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
 [node name="region_name" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 
 [node name="room_name" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="import_rdv" type="Button" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-text = "Import RDV"
-
-[node name="rdv_game_hash" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 
 [node name="Camera2D" type="Camera2D" parent="."]
