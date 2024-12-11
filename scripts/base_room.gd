@@ -4,8 +4,12 @@ signal started_hover
 signal stopped_hover
 signal clicked
 
-const HOVER_COLOR := Color.YELLOW
-const UNREACHABLE_COLOR := Color.WEB_GRAY
+enum State {
+	DEFAULT,
+	HOVERED,
+	UNREACHABLE,
+}
+
 const ROOM_COLOR : Array[Color] = [
 	"#999999",
 	"#FFA400",
@@ -15,9 +19,13 @@ const ROOM_COLOR : Array[Color] = [
 	"#A4031F",
 	"#700000"
 ]
+const HOVER_COLOR := Color.YELLOW
+const UNREACHABLE_COLOR := Color.WEB_GRAY
 
 var region : int = 0
 var data : RoomData = null
+var state := State.DEFAULT
+var prev_state := State.DEFAULT ## Used to return to after hovering
 var is_hovered : bool = false:
 	set(value):
 		if is_hovered == value:
@@ -38,11 +46,15 @@ func _input(event: InputEvent) -> void:
 
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_TOP_LEFT)
+	mouse_entered.connect(room_hover)
+	mouse_exited.connect(room_stop_hover)
+	set_mouse_filter(Control.MOUSE_FILTER_PASS)
+	
 	if data:
 		init_room()
 
-func init_room() -> ColorRect:
-	set_color(ROOM_COLOR[region]) 
+func init_room():
+	region = data.region
 	
 	var x1 : float = data.aabb[0]
 	var y1 : float = data.aabb[1]
@@ -57,28 +69,27 @@ func init_room() -> ColorRect:
 	size.x = abs(x2 - x1)
 	size.y = abs(y2 - y1)
 	
-	mouse_entered.connect(room_hover)
-	mouse_exited.connect(room_stop_hover)
-	set_mouse_filter(Control.MOUSE_FILTER_PASS)
+	set_state(State.DEFAULT)
+
+func set_state(new_state : State) -> void:
+	prev_state = state
+	state = new_state
 	
-	return self
-
-func set_region(new_region : int) -> void:
-	region = new_region
-
-func set_region_color() -> void:
-	set_color(ROOM_COLOR[region]) 
+	match state:
+		State.DEFAULT:
+			set_color(ROOM_COLOR[region])
+		State.HOVERED:
+			set_color(HOVER_COLOR)
+		State.UNREACHABLE:
+			set_color(UNREACHABLE_COLOR)
 
 func room_hover() -> void:
-	set_color(HOVER_COLOR)
+	set_state(State.HOVERED)
 	is_hovered = true
 
 func room_stop_hover() -> void:
-	set_region_color()
+	set_state(prev_state)
 	is_hovered = false
-
-func set_room_unavailable() -> void:
-	set_color(UNREACHABLE_COLOR)
 
 func room_clicked() -> void:
 	print(data.name)

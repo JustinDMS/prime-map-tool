@@ -76,13 +76,14 @@ func draw_map() -> void:
 		var region := Control.new()
 		add_child(region)
 		region.set_name(region_data["name"])
+		region.scale.y = -1
 		
 		for j in region_data["areas"].keys():
 			var room_data := make_room_data(i, j, region_data["areas"][j])
 			world_data[REGION_NAME[i]][j] = room_data
 			room_data.default_node = get_node_data(REGION_NAME[i], j, region_data["areas"][j]["default_node"])
-			var room := draw_room(room_data)
 			
+			var room := draw_room(room_data)
 			room.started_hover.connect(ui.room_hover)
 			room.stopped_hover.connect(ui.room_stop_hover)
 			
@@ -173,7 +174,6 @@ func draw_room(room_data : RoomData) -> Room:
 	const BASE_ROOM : PackedScene = preload("res://resources/base_room.tscn")
 	
 	var room := BASE_ROOM.instantiate()
-	room.set_region(room_data.region)
 	room.data = room_data
 	
 	return room
@@ -211,7 +211,13 @@ func get_room_obj(region : Region, room_name : String) -> Room:
 	var data : RoomData = world_data[REGION_NAME[region]][room_name]
 	return room_map[data]
 
+func set_all_unreachable() -> void:
+	for key in room_map.keys():
+		room_map[key].set_state(Room.State.UNREACHABLE)
+
 func resolve_map(start_node_data : NodeData) -> void:
+	set_all_unreachable()
+	
 	var queue : Array[NodeData] = []
 	for n in start_node_data.connections:
 		queue.append(n)
@@ -247,7 +253,7 @@ func resolve_map(start_node_data : NodeData) -> void:
 	for i in range(Region.MAX):
 		for j in visited_rooms[REGION_NAME[i]]:
 			var room_obj := get_room_obj(i, j)
-			room_obj.set_room_unavailable()
+			room_obj.set_state(Room.State.DEFAULT)
 
 func can_reach_internal(from_node : NodeData, to_node : NodeData) -> bool:
 	var region_data : Dictionary = get_region_data(from_node.region)
