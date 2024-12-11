@@ -6,58 +6,6 @@
 
 [node name="main" type="Node2D"]
 
-[node name="Worlds" type="CanvasLayer" parent="."]
-layer = 2
-follow_viewport_enabled = true
-
-[node name="world_manager" type="Control" parent="Worlds" node_paths=PackedStringArray("ui")]
-layout_mode = 3
-anchors_preset = 0
-mouse_filter = 1
-script = ExtResource("1_rofpd")
-ui = NodePath("../../UI/ui")
-
-[node name="UI" type="CanvasLayer" parent="."]
-
-[node name="ui" type="Control" parent="UI" node_paths=PackedStringArray("region_name_label", "room_name_label", "import_rdv_button", "rdv_game_hash_label")]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-mouse_default_cursor_shape = 2
-script = ExtResource("3_fapwp")
-region_name_label = NodePath("HBoxContainer/VBoxContainer/region_name")
-room_name_label = NodePath("HBoxContainer/VBoxContainer/room_name")
-import_rdv_button = NodePath("HBoxContainer/VBoxContainer/import_rdv")
-rdv_game_hash_label = NodePath("HBoxContainer/VBoxContainer/rdv_game_hash")
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/ui"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/HBoxContainer"]
-layout_mode = 2
-
-[node name="region_name" type="Label" parent="UI/ui/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="room_name" type="Label" parent="UI/ui/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="import_rdv" type="Button" parent="UI/ui/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-text = "Import RDV"
-
-[node name="rdv_game_hash" type="Label" parent="UI/ui/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-
 [node name="Background" type="CanvasLayer" parent="."]
 layer = 0
 
@@ -70,7 +18,56 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.00898824, 0.235263, 0.231493, 1)
 
+[node name="Worlds" type="CanvasLayer" parent="."]
+follow_viewport_enabled = true
+
+[node name="world_manager" type="Control" parent="Worlds" node_paths=PackedStringArray("ui")]
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 1
+script = ExtResource("1_rofpd")
+ui = NodePath("../../UI/ui")
+
+[node name="UI" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="ui" type="Control" parent="UI" node_paths=PackedStringArray("region_name_label", "room_name_label", "import_rdv_button", "rdv_game_hash_label")]
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
+script = ExtResource("3_fapwp")
+region_name_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer/region_name")
+room_name_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer/room_name")
+import_rdv_button = NodePath("MarginContainer/HBoxContainer/VBoxContainer/import_rdv")
+rdv_game_hash_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer/rdv_game_hash")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/ui"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/ui/MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="region_name" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="room_name" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="import_rdv" type="Button" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Import RDV"
+
+[node name="rdv_game_hash" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
 [node name="Camera2D" type="Camera2D" parent="."]
 position_smoothing_enabled = true
-position_smoothing_speed = 15.0
+position_smoothing_speed = 20.0
 script = ExtResource("3_et3qh")

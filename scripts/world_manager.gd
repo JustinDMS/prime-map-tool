@@ -141,8 +141,14 @@ func make_node_data(room_data : RoomData, data : Dictionary) -> void:
 	
 	for node in data.keys():
 		var node_data := NodeData.new()
+		node_data.region = room_data.region
+		node_data.room_name = room_data.name
 		node_data.display_name = node
 		node_data.node_type = data[node]["node_type"]
+		
+		if node_data.node_type == "dock":
+			node_data.dock_type = data[node]["dock_type"]
+			node_data.default_dock_weakness = data[node]["default_dock_weakness"]
 		
 		if data[node]["coordinates"] != null:
 			node_data.coordinates = Vector3(
@@ -201,15 +207,53 @@ func init_current_inventory(data : Array) -> void:
 		if inventory.state.has(i):
 			inventory.state[i] += 1
 
-func resolve_map(start_node : NodeData) -> void:
-	var region_data : Array[Dictionary] = []
-	for i in range(Region.MAX):
-		var data : Dictionary = get_region_data(i)
-		region_data.append(data)
-	
-	# Need tricks in here somewhere :^)
-	
+func get_room_obj(region : Region, room_name : String) -> Room:
+	var data : RoomData = world_data[REGION_NAME[region]][room_name]
+	return room_map[data]
+
+func resolve_map(start_node_data : NodeData) -> void:
 	var queue : Array[NodeData] = []
+	for n in start_node_data.connections:
+		queue.append(n)
 	
-	for node in start_node.connections:
-		region_data[]
+	var visited_nodes := {start_node_data : true}
+	var visited_rooms := {
+		REGION_NAME[Region.FRIGATE] : [],
+		REGION_NAME[Region.CHOZO] : [],
+		REGION_NAME[Region.PHENDRANA] : [],
+		REGION_NAME[Region.TALLON] : [],
+		REGION_NAME[Region.MINES] : [],
+		REGION_NAME[Region.MAGMOOR] : [],
+		REGION_NAME[Region.CRATER] : []
+	}
+	
+	while len(queue) > 0:
+		var node : NodeData = queue.pop_front()
+		visited_nodes[node] = true
+		if not node.room_name in visited_rooms[REGION_NAME[node.region]]:
+			visited_rooms[REGION_NAME[node.region]].append(node.room_name)
+		
+		var default : NodeData = node.default_connection
+		if default:
+			if not visited_nodes.has(default) and can_reach_external(node, default):
+				queue.append(default)
+		
+		for n in node.connections:
+			if visited_nodes.has(n):
+				continue
+			if can_reach_internal(node, n):
+				queue.append(n)
+	
+	for i in range(Region.MAX):
+		for j in visited_rooms[REGION_NAME[i]]:
+			var room_obj := get_room_obj(i, j)
+			room_obj.set_room_unavailable()
+
+func can_reach_internal(from_node : NodeData, to_node : NodeData) -> bool:
+	var region_data : Dictionary = get_region_data(from_node.region)
+	var logic_data : Dictionary = region_data["areas"][from_node.room_name]["nodes"][from_node.display_name]["connections"][to_node.display_name]
+	
+	return true
+
+func can_reach_external(from_node : NodeData, to_node : NodeData) -> bool:
+	return inventory.can_pass_dock(to_node.default_dock_weakness)
