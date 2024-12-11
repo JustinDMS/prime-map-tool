@@ -1,6 +1,7 @@
 extends Control
 
 signal rdvgame_loaded(data : Dictionary)
+signal inventory_changed()
 
 const REGION_DISPLAY_NAME : Array[String] = [
 	"Frigate Orpheon",
@@ -16,6 +17,8 @@ const REGION_DISPLAY_NAME : Array[String] = [
 @export var room_name_label : Label
 @export var import_rdv_button : Button
 @export var rdv_game_hash_label : Label
+@export var inventory_visibility_button : Button
+@export var inventory_container : VBoxContainer
 
 func _ready() -> void:
 	if import_rdv_button:
@@ -52,3 +55,19 @@ func rdv_imported(raw_text : String) -> void:
 		return
 	rdv_game_hash_label.set_text(data.info.word_hash)
 	rdvgame_loaded.emit(data)
+
+func init_inventory_display(inventory : PrimeInventory) -> void:
+	for key in inventory.state.keys():
+		var checkbox := CheckBox.new()
+		inventory_container.add_child(checkbox)
+		
+		checkbox.focus_mode = Control.FOCUS_NONE
+		
+		checkbox.text = key
+		checkbox.button_pressed = inventory.state[key] > 0
+		
+		checkbox.toggled.connect(
+			func(on : bool): 
+			inventory.state[key] = 1 if on else 0
+			inventory_changed.emit()
+			)

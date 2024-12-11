@@ -1,5 +1,7 @@
 extends Control
 
+signal inventory_initialized(inv : PrimeInventory)
+
 enum Region {
 	FRIGATE,
 	CHOZO,
@@ -52,6 +54,7 @@ var world_data := {
 }
 var room_map := {}
 var inventory : PrimeInventory = null
+var start_node : NodeData = null
 
 func _unhandled_input(event: InputEvent) -> void:
 	# Debug use
@@ -66,6 +69,8 @@ func _redraw_map() -> void:
 func _ready() -> void:
 	draw_map()
 	ui.rdvgame_loaded.connect(load_rdv)
+	ui.inventory_changed.connect(resolve_map)
+	inventory_initialized.connect(ui.init_inventory_display)
 
 func draw_map() -> void:
 	for i in range(Region.MAX):
@@ -191,12 +196,12 @@ func load_rdv(data : Dictionary) -> void:
 	init_current_inventory(start_inventory)
 	
 	var start_location : PackedStringArray = data["game_modifications"][0]["starting_location"].split("/")
-	var start_location_node : NodeData = get_node_data(start_location[0], start_location[1], start_location[2])
+	start_node = get_node_data(start_location[0], start_location[1], start_location[2])
 	
 	var start_room_data : RoomData = world_data[start_location[0]][start_location[1]]
 	var _start_room : Room = room_map[start_room_data]
 	
-	resolve_map(start_location_node)
+	resolve_map()
 
 func init_current_inventory(data : Array) -> void:
 	inventory = PrimeInventory.new()
@@ -207,6 +212,8 @@ func init_current_inventory(data : Array) -> void:
 	for i in data:
 		if inventory.state.has(i):
 			inventory.state[i] += 1
+	
+	inventory_initialized.emit(inventory)
 
 func get_room_obj(region : Region, room_name : String) -> Room:
 	var data : RoomData = world_data[REGION_NAME[region]][room_name]
@@ -216,14 +223,18 @@ func set_all_unreachable() -> void:
 	for key in room_map.keys():
 		room_map[key].set_state(Room.State.UNREACHABLE)
 
-func resolve_map(start_node_data : NodeData) -> void:
+func resolve_map() -> void:
+	if not start_node:
+		push_error("Start node is null")
+		return
+	
 	set_all_unreachable()
 	
 	var queue : Array[NodeData] = []
-	for n in start_node_data.connections:
+	for n in start_node.connections:
 		queue.append(n)
 	
-	var visited_nodes := {start_node_data : true}
+	var visited_nodes := {start_node : true}
 	var visited_rooms := {
 		REGION_NAME[Region.FRIGATE] : [],
 		REGION_NAME[Region.CHOZO] : [],
@@ -262,4 +273,4 @@ func can_reach_internal(from_node : NodeData, to_node : NodeData) -> bool:
 	return inventory.can_reach(logic)
 
 func can_reach_external(from_node : NodeData, to_node : NodeData) -> bool:
-	return inventory.can_pass_dock(to_node.default_dock_weakness)
+	return inventory.can_pass_dock(from_node.default_dock_weakness) and inventory.can_pass_dock(to_node.default_dock_weakness)
