@@ -16,7 +16,7 @@ var current_zoom : float = START_ZOOM:
 		current_zoom = value
 		#print("Zoom = %.2f" % value)
 
-func _input(event: InputEvent) -> void:
+func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action("zoom_in"):
 		update_zoom(current_zoom + ZOOM_RATE)
 	if event.is_action("zoom_out"):

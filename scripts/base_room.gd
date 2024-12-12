@@ -92,5 +92,5 @@ func room_stop_hover() -> void:
 	is_hovered = false
 
 func room_clicked() -> void:
-	print(data.name)
+	print_debug(data.name)
 	clicked.emit()

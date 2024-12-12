@@ -20,10 +20,12 @@ const REGION_DISPLAY_NAME : Array[String] = [
 @export var inventory_visibility_button : Button
 @export var inventory_panel : Panel
 @export var inventory_container : VBoxContainer
+@export var apply_changes_button : Button
 
 func _ready() -> void:
 	import_rdv_button.pressed.connect(import_rdv_pressed)
 	inventory_visibility_button.pressed.connect(inventory_visibility_button_pressed)
+	apply_changes_button.pressed.connect(apply_changes_button_pressed)
 
 func room_hover(room : Room) -> void:
 	region_name_label.text = REGION_DISPLAY_NAME[room.data.region]
@@ -67,11 +69,7 @@ func init_inventory_display(inventory : PrimeInventory) -> void:
 		checkbox.text = key
 		checkbox.button_pressed = inventory.state[key] > 0
 		
-		checkbox.toggled.connect(
-			func(on : bool): 
-			inventory.state[key] = 1 if on else 0
-			inventory_changed.emit()
-			)
+		checkbox.toggled.connect(func(on : bool): inventory.state[key] = 1 if on else 0)
 
 func inventory_visibility_button_pressed() -> void:
 	inventory_panel.visible = !inventory_panel.visible
@@ -80,3 +78,6 @@ func inventory_visibility_button_pressed() -> void:
 		inventory_visibility_button.text = ">"
 	else:
 		inventory_visibility_button.text = "<"
+
+func apply_changes_button_pressed() -> void:
+	inventory_changed.emit()

@@ -80,24 +80,14 @@ var region_map := {}
 var inventory : PrimeInventory = null
 var start_node : NodeData = null
 
-func _unhandled_input(event: InputEvent) -> void:
-	# Debug use
-	#if event is InputEventKey and event.keycode == KEY_R and event.is_pressed() and not event.is_echo():
-	#	_redraw_map()
-	pass
-
-func _redraw_map() -> void:
-	for node in get_children():
-		node.queue_free()
-	draw_map()
-
 func _ready() -> void:
-	draw_map()
-	init_elevators()
-	
 	ui.rdvgame_loaded.connect(load_rdv)
 	ui.inventory_changed.connect(resolve_map)
 	inventory_initialized.connect(ui.init_inventory_display)
+	
+	draw_map()
+	init_elevators()
+	init_current_inventory()
 
 func draw_map() -> void:
 	for i in range(Region.MAX):
@@ -244,15 +234,17 @@ func load_rdv(data : Dictionary) -> void:
 	
 	init_elevators(data["game_modifications"][0]["dock_connections"])
 
-func init_current_inventory(data : Array) -> void:
+func init_current_inventory(data : Array = []) -> void:
 	inventory = PrimeInventory.new()
 	
+	# If there's no data give all items
 	if data.is_empty():
-		return
-	
-	for i in data:
-		if inventory.state.has(i):
-			inventory.state[i] += 1
+		for key in inventory.state.keys():
+			inventory.state[key] = 1
+	else:
+		for i in data:
+			if inventory.state.has(i):
+				inventory.state[i] += 1
 	
 	inventory_initialized.emit(inventory)
 
@@ -266,8 +258,7 @@ func set_all_unreachable() -> void:
 
 func resolve_map() -> void:
 	if not start_node:
-		push_error("Start node is null")
-		return
+		start_node = get_node_data(REGION_NAME[Region.TALLON], "Landing Site", "Ship")
 	
 	set_all_unreachable()
 	

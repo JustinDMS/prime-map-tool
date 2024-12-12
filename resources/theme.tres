@@ -63,6 +63,7 @@ Button/font_sizes/font_size = 24
 Button/styles/hover = SubResource("StyleBoxFlat_as057")
 Button/styles/normal = SubResource("StyleBoxFlat_f8dca")
 Button/styles/pressed = SubResource("StyleBoxFlat_2saaw")
+CheckBox/font_sizes/font_size = 20
 HSeparator/constants/separation = 10
 HSeparator/styles/separator = SubResource("StyleBoxLine_c6cir")
 Panel/styles/panel = SubResource("StyleBoxFlat_khyk1")
