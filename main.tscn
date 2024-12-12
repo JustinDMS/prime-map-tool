@@ -1,8 +1,25 @@
-[gd_scene load_steps=4 format=3 uid="uid://br45wp8jdj0tx"]
+[gd_scene load_steps=9 format=3 uid="uid://br45wp8jdj0tx"]
 
 [ext_resource type="Script" path="res://scripts/world_manager.gd" id="1_rofpd"]
+[ext_resource type="Theme" uid="uid://dbk0vd03ipng1" path="res://resources/theme.tres" id="3_4glie"]
 [ext_resource type="Script" path="res://camera.gd" id="3_et3qh"]
 [ext_resource type="Script" path="res://scripts/ui.gd" id="3_fapwp"]
+
+[sub_resource type="SystemFont" id="SystemFont_82onk"]
+font_names = PackedStringArray("Times New Roman")
+oversampling = 2.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_ebq5s"]
+font = SubResource("SystemFont_82onk")
+font_size = 32
+
+[sub_resource type="LabelSettings" id="LabelSettings_57nyd"]
+font = SubResource("SystemFont_82onk")
+font_size = 26
+
+[sub_resource type="LabelSettings" id="LabelSettings_3g8em"]
+font = SubResource("SystemFont_82onk")
+font_size = 26
 
 [node name="main" type="Node2D"]
 
@@ -16,7 +33,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.00898824, 0.235263, 0.231493, 1)
+color = Color(0.168627, 0.176471, 0.258824, 1)
 
 [node name="Worlds" type="CanvasLayer" parent="."]
 follow_viewport_enabled = true
@@ -31,26 +48,33 @@ ui = NodePath("../../UI/ui")
 [node name="UI" type="CanvasLayer" parent="."]
 layer = 2
 
-[node name="ui" type="Control" parent="UI" node_paths=PackedStringArray("region_name_label", "room_name_label", "import_rdv_button", "rdv_game_hash_label", "inventory_visibility_button", "inventory_container")]
+[node name="ui" type="Control" parent="UI" node_paths=PackedStringArray("region_name_label", "room_name_label", "import_rdv_button", "rdv_game_hash_label", "inventory_visibility_button", "inventory_panel", "inventory_container")]
 layout_mode = 3
-anchors_preset = 9
+anchors_preset = 15
+anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("3_fapwp")
-region_name_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer/region_name")
-room_name_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer/room_name")
+region_name_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/region_name")
+room_name_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/room_name")
 import_rdv_button = NodePath("MarginContainer/HBoxContainer/VBoxContainer/import_rdv")
 rdv_game_hash_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer/rdv_game_hash")
-inventory_visibility_button = NodePath("MarginContainer/HBoxContainer/VBoxContainer/inventory_visibility")
-inventory_container = NodePath("MarginContainer/HBoxContainer/VBoxContainer/inventory_container")
+inventory_visibility_button = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_visibility")
+inventory_panel = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/Panel")
+inventory_container = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/Panel/MarginContainer/inventory_container")
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/ui"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI/ui/MarginContainer"]
@@ -58,29 +82,84 @@ layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="import_rdv" type="Button" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
+theme = ExtResource("3_4glie")
 text = "Import RDV"
 
 [node name="rdv_game_hash" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("3_4glie")
 
-[node name="region_name" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="room_name" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer"]
+[node name="room_name" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
+theme = ExtResource("3_4glie")
+text = "Transport to Magmoor Caverns North"
+label_settings = SubResource("LabelSettings_ebq5s")
+horizontal_alignment = 1
 
-[node name="inventory_visibility" type="Button" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer"]
+[node name="region_name" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme = ExtResource("3_4glie")
+text = "Chozo Ruins"
+label_settings = SubResource("LabelSettings_57nyd")
+horizontal_alignment = 1
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="inventory_visibility" type="Button" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+focus_mode = 0
+theme = ExtResource("3_4glie")
+text = "<"
+
+[node name="Panel" type="Panel" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer"]
 visible = false
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
-size_flags_horizontal = 0
-text = "Show Inventory"
+size_flags_horizontal = 3
+theme = ExtResource("3_4glie")
 
-[node name="inventory_container" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_top = 10
+
+[node name="inventory_container" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/Panel/MarginContainer"]
 layout_mode = 2
+theme = ExtResource("3_4glie")
+
+[node name="Label" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/Panel/MarginContainer/inventory_container"]
+layout_mode = 2
+theme = ExtResource("3_4glie")
+text = "Inventory"
+label_settings = SubResource("LabelSettings_3g8em")
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/Panel/MarginContainer/inventory_container"]
+layout_mode = 2
+theme = ExtResource("3_4glie")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position_smoothing_enabled = true

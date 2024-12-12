@@ -12,10 +12,10 @@ enum State {
 
 const ROOM_COLOR : Array[Color] = [
 	"#999999",
-	"#FFA400",
+	"#EA8C55",
 	"#CADBC8",
-	"#3E5641",
-	"#392F5A",
+	"#627264",
+	"#BC96E6",
 	"#A4031F",
 	"#700000"
 ]

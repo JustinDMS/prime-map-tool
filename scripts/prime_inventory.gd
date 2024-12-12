@@ -137,7 +137,7 @@ func has_wave() -> bool:
 func can_shoot() -> bool:
 	return (
 		state["Combat Visor"] > 0 or
-		state["Themal Visor"] > 0 or 
+		state["Thermal Visor"] > 0 or 
 		state["X-Ray Visor"] > 0
 		) and (
 			has_power_beam() or 

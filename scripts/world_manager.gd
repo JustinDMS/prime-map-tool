@@ -348,8 +348,10 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
 		# Add offset
 		var from_room_data := get_room_data(from[0], from[1])
 		var to_room_data := get_room_data(to[0], to[1])
+		
 		point_1.x += room_map[from_room_data].size.x * 0.5
 		point_1.y -= room_map[from_room_data].size.y * 0.5
+		
 		point_2.x += room_map[to_room_data].size.x * 0.5
 		point_2.y -= room_map[to_room_data].size.y * 0.5
 		
