@@ -333,7 +333,7 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
 		var to_node_data := get_node_data(to[0], to[1], to[2])
 		
 		var line2d := Line2D.new()
-		line2d.name = "%s_to_%s" % [from[1], to[1]]
+		line2d.name = "%s to %s" % [from[1], to[1]]
 		line2d.width = LINE_WIDTH
 		line2d.begin_cap_mode = Line2D.LINE_CAP_ROUND
 		line2d.end_cap_mode = Line2D.LINE_CAP_ROUND

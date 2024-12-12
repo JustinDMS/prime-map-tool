@@ -11,6 +11,7 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 shadow_size = 3
+shadow_offset = Vector2(0, 2)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f8dca"]
 content_margin_left = 10.0
@@ -35,7 +36,6 @@ corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
-shadow_size = 3
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_c6cir"]
 color = Color(1, 1, 1, 0.501961)
