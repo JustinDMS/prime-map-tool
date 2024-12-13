@@ -12,6 +12,12 @@ enum Region {
 	CRATER,
 	MAX
 }
+enum {
+	MINES_1,
+	MINES_2,
+	MINES_3,
+	MINES_MAX
+}
 
 const ROOM_DATA : Array[String] = [
 	"res://data/Frigate Orpheon.json",
@@ -27,7 +33,7 @@ const REGION_OFFSET : Array[Vector2] = [
 	Vector2(2000, -500),
 	Vector2(200, -400),
 	Vector2(2800, 900),
-	Vector2(1250, 1250),
+	Vector2(1000, 1250),
 	Vector2(1000, -500),
 	Vector2(700, -900)
 ]
@@ -64,6 +70,11 @@ const VANILLA_ELEVATOR_DATA := {
 	"Chozo Ruins/Transport to Tallon Overworld East/Teleporter to Tallon Overworld": "Tallon Overworld/Transport to Chozo Ruins East/Teleporter to Chozo Ruins",
 	"Chozo Ruins/Transport to Tallon Overworld South/Teleporter to Tallon Overworld": "Tallon Overworld/Transport to Chozo Ruins South/Teleporter to Chozo Ruins"
 }
+const MINES_OFFSET : Array[Vector2] = [
+	Vector2(500, 0),
+	Vector2(0, -200),
+	Vector2(250, -650)
+]
 
 @export var ui : Control
 
@@ -100,6 +111,12 @@ func draw_map() -> void:
 		region.set_name(region_data["name"])
 		region.scale.y = -1
 		
+		if i == Region.MINES:
+			for n in range(MINES_MAX):
+				var sub_region := Control.new()
+				region.add_child(sub_region)
+				sub_region.name = "Mines Level %d" % n
+		
 		for j in region_data["areas"].keys():
 			var room_data := make_room_data(i, j, region_data["areas"][j])
 			world_data[REGION_NAME[i]][j] = room_data
@@ -111,7 +128,14 @@ func draw_map() -> void:
 			
 			room_map[room_data] = room
 			
-			region.add_child(room)
+			if not i == Region.MINES:
+				region.add_child(room)
+			else:
+				var sub_region := determine_mines_region(room_data.aabb[2])
+				var sub_region_node : Control = region.get_child(sub_region)
+				sub_region_node.add_child(room)
+				sub_region_node.position = MINES_OFFSET[sub_region]
+			
 			room.set_name(j) # Set name in SceneTree
 		
 		region.position = REGION_OFFSET[i]
@@ -140,6 +164,19 @@ func draw_map() -> void:
 						default_connection_data["node"]
 					)
 					node.default_connection = default_connection
+
+func determine_mines_region(z : float) -> int:
+	const Z_LEVEL = [
+		-5.6,
+		-114.2,
+	]
+	
+	if z >= Z_LEVEL[MINES_1]:
+		return MINES_1
+	elif z >= Z_LEVEL[MINES_2]:
+		return MINES_2
+	else:
+		return MINES_3
 
 func get_region_data(region : Region) -> Dictionary:
 	var raw_json : JSON = load(ROOM_DATA[region])
@@ -331,12 +368,55 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
 		line2d.modulate.a *= 0.5
 		add_child(line2d)
 		
+		# Start position
 		# Flip y coordinate because region control scale.y == -1
-		var point_1 : Vector2 = line2d.to_local(region_map[from[0]].global_position + Vector2(from_node_data.coordinates.x, -from_node_data.coordinates.y))
-		var point_2 : Vector2 = line2d.to_local(region_map[to[0]].global_position + Vector2(to_node_data.coordinates.x, -to_node_data.coordinates.y))
+		var point_1 := Vector2.ZERO
+		var point_2 := Vector2.ZERO
+		if from[0] == REGION_NAME[Region.MINES]:
+			point_1 = region_map[from[0]].get_child(determine_mines_region(from_node_data.coordinates.z)).global_position + Vector2(from_node_data.coordinates.x, -from_node_data.coordinates.y)
+		else:
+			point_1 = region_map[from[0]].global_position + Vector2(from_node_data.coordinates.x, -from_node_data.coordinates.y)
+		if to[0] == REGION_NAME[Region.MINES]:
+			point_2 = region_map[to[0]].get_child(determine_mines_region(to_node_data.coordinates.z)).global_position + Vector2(to_node_data.coordinates.x, -to_node_data.coordinates.y)
+		else:
+			point_2 = region_map[to[0]].global_position + Vector2(to_node_data.coordinates.x, -to_node_data.coordinates.y)
+		
+		point_1 = line2d.to_local(point_1)
+		point_2 = line2d.to_local(point_2)
 		# Add offset
 		var from_room_data := get_room_data(from[0], from[1])
 		var to_room_data := get_room_data(to[0], to[1])
+		
+		point_1.x += room_map[from_room_data].size.x * 0.5
+		point_1.y -= room_map[from_room_data].size.y * 0.5
+		
+		point_2.x += room_map[to_room_data].size.x * 0.5
+		point_2.y -= room_map[to_room_data].size.y * 0.5
+		
+		line2d.add_point(point_1)
+		line2d.add_point(point_2)
+	
+	# Manually draw lines for mines sub regions
+	const FROM_ROOMS : Array[String] = ["Elevator B", "Processing Center Access", "Elevator A"]
+	const TO_ROOMS : Array[String] = ["Elevator Access B", "Phazon Processing Center", "Elevator Access A"]
+	for i in range(3):
+		var from_room_data := get_room_data(REGION_NAME[Region.MINES], FROM_ROOMS[i])
+		var to_room_data := get_room_data(REGION_NAME[Region.MINES], TO_ROOMS[i])
+		
+		var line2d := Line2D.new()
+		line2d.width = LINE_WIDTH
+		line2d.begin_cap_mode = Line2D.LINE_CAP_ROUND
+		line2d.end_cap_mode = Line2D.LINE_CAP_ROUND
+		line2d.z_index = -1
+		line2d.modulate = Room.ROOM_COLOR[Region.MINES]
+		line2d.modulate.a *= 0.5
+		add_child(line2d)
+		
+		var point_1 : Vector2 = region_map[REGION_NAME[Region.MINES]].get_child(determine_mines_region(from_room_data.aabb[2])).global_position + Vector2(from_room_data.aabb[0], -from_room_data.aabb[1])
+		var point_2 : Vector2 = region_map[REGION_NAME[Region.MINES]].get_child(determine_mines_region(to_room_data.aabb[2])).global_position + Vector2(to_room_data.aabb[0], -to_room_data.aabb[1])
+		
+		point_1 = line2d.to_local(point_1)
+		point_2 = line2d.to_local(point_2)
 		
 		point_1.x += room_map[from_room_data].size.x * 0.5
 		point_1.y -= room_map[from_room_data].size.y * 0.5

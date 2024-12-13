@@ -118,6 +118,9 @@ func init_inventory_display(inventory : PrimeInventory) -> void:
 	const BUTTON_SIZE := Vector2(95, 70)
 	const THEME := preload("res://resources/theme.tres")
 	
+	for node in inventory_container.get_children():
+		node.queue_free()
+	
 	for key in inventory.state.keys():
 		var checkbox := CheckBox.new()
 		inventory_container.add_child(checkbox)
