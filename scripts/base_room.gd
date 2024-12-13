@@ -72,17 +72,23 @@ func init_room():
 	
 	set_state(State.DEFAULT)
 
+func change_to_color(new_color : Color) -> void:
+	const DURATION : float = 0.2
+	
+	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+	tween.tween_property(self, "color", new_color, DURATION)
+
 func set_state(new_state : State) -> void:
 	prev_state = state
 	state = new_state
 	
 	match state:
 		State.DEFAULT:
-			set_color(ROOM_COLOR[region])
+			change_to_color(ROOM_COLOR[region])
 		State.HOVERED:
-			set_color(HOVER_COLOR)
+			change_to_color(HOVER_COLOR)
 		State.UNREACHABLE:
-			set_color(UNREACHABLE_COLOR)
+			change_to_color(UNREACHABLE_COLOR)
 
 func room_hover() -> void:
 	set_state(State.HOVERED)
