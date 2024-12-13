@@ -80,7 +80,7 @@ func has_bombs() -> bool:
 	return state["Morph Ball Bomb"] > 0
 
 func has_main_pb() -> bool:
-	return state["Power Bombs"]
+	return state["Power Bomb"]
 
 func has_space_jump() -> bool:
 	return state["Space Jump Boots"] > 0
@@ -101,7 +101,7 @@ func has_gravity() -> bool:
 	return state["Gravity Suit"] > 0
 
 func has_phazon() -> bool:
-	return state["Phazon SUit"] > 0
+	return state["Phazon Suit"] > 0
 
 func has_power_beam() -> bool:
 	return state["Power Beam"] > 0
@@ -113,7 +113,7 @@ func has_ice_beam() -> bool:
 	return state["Ice Beam"] > 0
 
 func has_plasma() -> bool:
-	return state["Plasma"] > 0
+	return state["Plasma Beam"] > 0
 
 func has_combat_visor() -> bool:
 	return state["Combat Visor"] > 0
@@ -226,6 +226,10 @@ func can_pass_dock(weakness : String) -> bool:
 			return has_morph()
 		"Permanently Locked":
 			return false
+		"Open Passage":
+			return true
+		"Closed Passage":
+			return false
 		_:
 			push_error("Unhandled door weakness: %s" % weakness)
 	
@@ -235,8 +239,14 @@ func parse_item_name(item_name : String) -> bool:
 	match item_name:
 		"SpaceJump":
 			return has_space_jump()
+		"Combat":
+			return has_combat_visor()
 		"Scan":
 			return has_scan()
+		"Thermal":
+			return has_thermal()
+		"X-Ray":
+			return has_xray()
 		"MorphBall":
 			return has_morph()
 		"Boost":
@@ -253,6 +263,14 @@ func parse_item_name(item_name : String) -> bool:
 			return has_charge()
 		"GravitySuit":
 			return has_gravity()
+		"PhazonSuit":
+			return has_phazon()
+		"Power":
+			return has_power_beam()
+		"Ice":
+			return has_ice_beam()
+		"Plasma":
+			return has_plasma()
 		
 		# Artifacts
 		"Chozo":
@@ -325,12 +343,20 @@ func can_reach(logic : Dictionary) -> bool:
 					return can_shoot() and has_power_beam()
 				"Shoot Wave Beam":
 					return can_shoot() and has_wave()
+				"Shoot Ice Beam":
+					return can_shoot() and has_ice_beam()
+				"Shoot Plasma Beam":
+					return can_shoot() and has_plasma()
+				"Have all Beams":
+					return has_power_beam() and has_wave() and has_ice_beam() and has_plasma()
 				"Shoot Super Missile":
 					return can_shoot() and has_missile() and has_charge() and has_supers()
 				"Use Grapple Beam":
 					return can_shoot() and has_grapple()
 				"Heat-Resisting Suit":
 					return has_varia()
+				"Move Past Scatter Bombu":
+					return true
 				_:
 					push_error("Unhandled template type: %s" % logic["data"])
 		_:

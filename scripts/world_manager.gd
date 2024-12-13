@@ -64,6 +64,7 @@ const VANILLA_ELEVATOR_DATA := {
 	"Chozo Ruins/Transport to Tallon Overworld East/Teleporter to Tallon Overworld": "Tallon Overworld/Transport to Chozo Ruins East/Teleporter to Chozo Ruins",
 	"Chozo Ruins/Transport to Tallon Overworld South/Teleporter to Tallon Overworld": "Tallon Overworld/Transport to Chozo Ruins South/Teleporter to Chozo Ruins"
 }
+
 @export var ui : Control
 
 var world_data := {
