@@ -16,49 +16,59 @@ enum Artifact {
 }
 
 @export var state := {
-	"Charge Beam" : 0,
-	"Power Beam" : 0,
-	"Wave Beam" : 0,
-	"Ice Beam" : 0,
-	"Plasma Beam" : 0,
-	"Missile Launcher" : 0,
-	"Grapple Beam" : 0,
-	"Combat Visor" : 0,
-	"Scan Visor" : 0,
-	"Thermal Visor" : 0,
-	"X-Ray Visor" : 0,
-	"Space Jump Boots" : 0,
-	"Energy Tank" : 0,
-	"Morph Ball" : 0,
-	"Morph Ball Bomb" : 0,
-	"Boost Ball" : 0,
-	"Spider Ball" : 0,
-	"Power Bomb" : 0,
-	"Power Suit" : 0,
-	"Varia Suit" : 0,
-	"Gravity Suit" : 0,
-	"Phazon Suit" : 0,
-	"Super Missile" : 0,
-	"Wavebuster" : 0,
-	"Ice Spreader" : 0,
-	"Flamethrower" : 0,
+	"Morph Ball" : 1,
+	"Boost Ball" : 1,
+	"Spider Ball" : 1,
+	"Morph Ball Bomb" : 1,
 	
-	"Missile Expansion" : 0,
-	"Power Bomb Expansion" : 0,
+	"Power Bomb" : 1,
+	"Space Jump Boots" : 1,
+	"Charge Beam" : 1,
+	"Grapple Beam" : 1,
 	
-	"Artifact of Truth" : 0,
-	"Artifact of Strength" : 0,
-	"Artifact of Elder" : 0,
-	"Artifact of Wild" : 0,
-	"Artifact of Lifegiver" : 0,
-	"Artifact of Warrior" : 0,
-	"Artifact of Chozo" : 0,
-	"Artifact of Nature" : 0,
-	"Artifact of Sun" : 0,
-	"Artifact of World" : 0,
-	"Artifact of Spirit" : 0,
-	"Artifact of Newborn" : 0,
+	"Power Suit" : 1,
+	"Varia Suit" : 1,
+	"Gravity Suit" : 1,
+	"Phazon Suit" : 1,
+	
+	
+	"Power Beam" : 1,
+	"Wave Beam" : 1,
+	"Ice Beam" : 1,
+	"Plasma Beam" : 1,
+	
+	"Combat Visor" : 1,
+	"Scan Visor" : 1,
+	"Thermal Visor" : 1,
+	"X-Ray Visor" : 1,
+	
+	"Super Missile" : 1,
+	"Wavebuster" : 1,
+	"Ice Spreader" : 1,
+	"Flamethrower" : 1,
+	
+	"Missile Launcher" : 1,
+	"Energy Tank" : 14,
+	"Missile Expansion" : 49,
+	"Power Bomb Expansion" : 4,
+	
+	"Artifact of Truth" : 1,
+	"Artifact of Strength" : 1,
+	"Artifact of Elder" : 1,
+	"Artifact of Wild" : 1,
+	"Artifact of Lifegiver" : 1,
+	"Artifact of Warrior" : 1,
+	"Artifact of Chozo" : 1,
+	"Artifact of Nature" : 1,
+	"Artifact of Sun" : 1,
+	"Artifact of World" : 1,
+	"Artifact of Spirit" : 1,
+	"Artifact of Newborn" : 1,
 }
+
+func clear() -> void:
+	for item in state.keys():
+		state[item] = 0
 
 func has_artifact(a : Artifact) -> bool:
 	match a:
@@ -203,7 +213,7 @@ func parse_item_name(item_name : String) -> bool:
 			return has_artifact(Artifact.NATURE)
 		"Newborn":
 			return has_artifact(Artifact.NEWBORN)
-		"Spririt":
+		"Spirit":
 			return has_artifact(Artifact.SPIRIT)
 		"Strength":
 			return has_artifact(Artifact.STRENGTH)

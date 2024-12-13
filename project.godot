@@ -19,6 +19,10 @@ config/features=PackedStringArray("4.3", "GL Compatibility")
 window/size/viewport_width=1920
 window/size/viewport_height=1080
 
+[gui]
+
+theme/custom="res://resources/theme.tres"
+
 [input]
 
 zoom_in={

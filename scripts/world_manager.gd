@@ -237,11 +237,8 @@ func load_rdv(data : Dictionary) -> void:
 func init_current_inventory(data : Array = []) -> void:
 	inventory = PrimeInventory.new()
 	
-	# If there's no data give all items
-	if data.is_empty():
-		for key in inventory.state.keys():
-			inventory.state[key] = 1
-	else:
+	if not data.is_empty():
+		inventory.clear()
 		for i in data:
 			if inventory.state.has(i):
 				inventory.state[i] += 1

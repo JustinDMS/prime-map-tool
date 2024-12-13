@@ -37,7 +37,7 @@ var is_hovered : bool = false:
 		else:
 			stopped_hover.emit(self)
 
-func _input(event: InputEvent) -> void:
+func _gui_input(event: InputEvent) -> void:
 	if not data:
 		return
 	
@@ -49,6 +49,7 @@ func _ready() -> void:
 	mouse_entered.connect(room_hover)
 	mouse_exited.connect(room_stop_hover)
 	set_mouse_filter(Control.MOUSE_FILTER_PASS)
+	set_default_cursor_shape(Control.CURSOR_POINTING_HAND)
 	
 	if data:
 		init_room()
