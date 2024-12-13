@@ -15,6 +15,8 @@ enum Artifact {
 	NEWBORN
 }
 
+@export var requires_launcher := false
+@export var requires_main_pb := false
 @export var state := {
 	"Morph Ball" : 1,
 	"Boost Ball" : 1,
@@ -30,7 +32,6 @@ enum Artifact {
 	"Varia Suit" : 1,
 	"Gravity Suit" : 1,
 	"Phazon Suit" : 1,
-	
 	
 	"Power Beam" : 1,
 	"Wave Beam" : 1,
@@ -66,9 +67,89 @@ enum Artifact {
 	"Artifact of Newborn" : 1,
 }
 
-func clear() -> void:
-	for item in state.keys():
-		state[item] = 0
+func has_morph() -> bool:
+	return state["Morph Ball"] > 0
+
+func has_boost() -> bool:
+	return state["Boost Ball"] > 0
+
+func has_spider() -> bool:
+	return state["Spider Ball"] > 0
+
+func has_bombs() -> bool:
+	return state["Morph Ball Bomb"] > 0
+
+func has_main_pb() -> bool:
+	return state["Power Bombs"]
+
+func has_space_jump() -> bool:
+	return state["Space Jump Boots"] > 0
+
+func has_charge() -> bool:
+	return state["Charge Beam"] > 0
+
+func has_grapple() -> bool:
+	return state["Grapple Beam"] > 0
+
+func has_power_suit() -> bool:
+	return state["Power Suit"] > 0
+
+func has_varia() -> bool:
+	return state["Varia Suit"] > 0
+
+func has_gravity() -> bool:
+	return state["Gravity Suit"] > 0
+
+func has_phazon() -> bool:
+	return state["Phazon SUit"] > 0
+
+func has_power_beam() -> bool:
+	return state["Power Beam"] > 0
+
+func has_wave() -> bool:
+	return state["Wave Beam"] > 0
+
+func has_ice_beam() -> bool:
+	return state["Ice Beam"] > 0
+
+func has_plasma() -> bool:
+	return state["Plasma"] > 0
+
+func has_combat_visor() -> bool:
+	return state["Combat Visor"] > 0
+
+func has_scan() -> bool:
+	return state["Scan Visor"] > 0
+
+func has_thermal() -> bool:
+	return state["Thermal Visor"] > 0
+
+func has_xray() -> bool:
+	return state["X-Ray Visor"] > 0
+
+func has_supers() -> bool:
+	return state["Super Missile"] > 0
+
+func has_wavebuster() -> bool:
+	return state["Wavebuster"] > 0
+
+func has_ice_spreader() -> bool:
+	return state["Ice Spreader"] > 0
+
+func has_flamethrower() -> bool:
+	return state["Flamethrower"] > 0
+
+func has_launcher() -> bool:
+	return state["Missile Launcher"] > 0
+
+func get_etanks() -> int:
+	return state["Energy Tank"]
+
+func get_missile_expansions() -> int:
+	return state["Missile Expansion"]
+
+func get_power_bomb_expansions() -> int:
+	return state["Power Bomb Expansion"]
 
 func has_artifact(a : Artifact) -> bool:
 	match a:
@@ -99,75 +180,46 @@ func has_artifact(a : Artifact) -> bool:
 	
 	return false
 
-func has_varia() -> bool:
-	return state["Varia Suit"] > 0
+########
 
-func has_gravity() -> bool:
-	return state["Gravity Suit"] > 0
-
-func has_scan() -> bool:
-	return state["Scan Visor"] > 0
-
-func has_space_jump() -> bool:
-	return state["Space Jump Boots"] > 0
-
-func has_morph() -> bool:
-	return state["Morph Ball"] > 0
-
-func has_boost() -> bool:
-	return state["Boost Ball"] > 0
-
-func has_bombs() -> bool:
-	return state["Morph Ball Bomb"] > 0
-
-func has_spider() -> bool:
-	return state["Spider Ball"] > 0
+func clear() -> void:
+	for item in state.keys():
+		state[item] = 0
 
 func has_missile() -> bool:
-	return (state["Missile Launcher"] > 0 or state["Missile Expansion"] > 0)
+	if requires_launcher:
+		return has_launcher()
+	return (has_launcher() or get_missile_expansions() > 0)
 
 func has_pb() -> bool:
-	return (state["Power Bomb"] > 0 or state["Power Bomb Expansion"] > 0)
-
-func has_grapple() -> bool:
-	return state["Grapple Beam"] > 0
-
-func has_charge() -> bool:
-	return state["Charge Beam"] > 0
-
-func has_supers() -> bool:
-	return state["Super Missile"] > 0
-
-func has_power_beam() -> bool:
-	return state["Power Beam"] > 0
-
-func has_wave() -> bool:
-	return state["Wave Beam"] > 0
+	if requires_main_pb:
+		return has_main_pb()
+	return (has_main_pb() or get_power_bomb_expansions() > 0)
 
 func can_shoot() -> bool:
 	return (
-		state["Combat Visor"] > 0 or
-		state["Thermal Visor"] > 0 or 
-		state["X-Ray Visor"] > 0
+		has_combat_visor() or
+		has_thermal() or 
+		has_xray()
 		) and (
 			has_power_beam() or 
-			state["Wave Beam"] > 0 or 
-			state["Ice Beam"] > 0 or 
-			state["Plasma Beam"] > 0
+			has_wave() or 
+			has_ice_beam() or 
+			has_plasma()
 		)
 
 func can_pass_dock(weakness : String) -> bool:
 	match weakness:
 		"Normal Door", "Circular Door":
-			return can_shoot() or (has_morph() and (state["Morph Ball Bomb"] > 0 or has_pb()))
+			return can_shoot() or (has_morph() and (has_bombs() or has_pb()))
 		"Missile Blast Shield":
 			return can_shoot() and has_missile()
 		"Wave Door":
-			return can_shoot() and state["Wave Beam"] > 0
+			return can_shoot() and has_wave()
 		"Ice Door":
-			return can_shoot() and state["Ice Beam"] > 0
+			return can_shoot() and has_ice_beam()
 		"Plasma Door":
-			return can_shoot() and state["Plasma Beam"] > 0
+			return can_shoot() and has_plasma()
 		"Teleporter", "Square Door":
 			return true
 		"Morph Ball Door":
