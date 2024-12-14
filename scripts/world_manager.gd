@@ -30,10 +30,10 @@ const ROOM_DATA : Array[String] = [
 ]
 const REGION_OFFSET : Array[Vector2] = [
 	Vector2(0, -900),
-	Vector2(2000, -500),
-	Vector2(200, -400),
-	Vector2(2800, 900),
-	Vector2(1000, 1250),
+	Vector2(2250, -300),
+	Vector2(500, 0),
+	Vector2(2500, 700),
+	Vector2(1250, 1100),
 	Vector2(1000, -500),
 	Vector2(700, -900)
 ]
@@ -184,6 +184,8 @@ func get_region_data(region : Region) -> Dictionary:
 
 func make_room_data(region : Region, room_name : String, data : Dictionary) -> RoomData:
 	var room_data := RoomData.new()
+	if not region in [Region.FRIGATE, Region.CRATER]:
+		room_data.texture = get_room_texture(REGION_NAME[region], room_name)
 	room_data.region = region
 	room_data.name = room_name
 	room_data.aabb = [
@@ -418,11 +420,14 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
 		point_1 = line2d.to_local(point_1)
 		point_2 = line2d.to_local(point_2)
 		
-		point_1.x += room_map[from_room_data].size.x * 0.5
-		point_1.y -= room_map[from_room_data].size.y * 0.5
+		point_1.x += room_map[from_room_data].custom_minimum_size.x * 0.5
+		point_1.y -= room_map[from_room_data].custom_minimum_size.y * 0.5
 		
-		point_2.x += room_map[to_room_data].size.x * 0.5
-		point_2.y -= room_map[to_room_data].size.y * 0.5
+		point_2.x += room_map[to_room_data].custom_minimum_size.x * 0.5
+		point_2.y -= room_map[to_room_data].custom_minimum_size.y * 0.5
 		
 		line2d.add_point(point_1)
 		line2d.add_point(point_2)
+
+func get_room_texture(region_name : String, room_name : String) -> Texture2D:
+	return load("res://data/room_images/%s/%s.png" % [region_name, room_name])

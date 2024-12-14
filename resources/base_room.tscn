@@ -2,5 +2,5 @@
 
 [ext_resource type="Script" path="res://scripts/base_room.gd" id="1_qal52"]
 
-[node name="base_room" type="ColorRect"]
+[node name="base_room" type="TextureButton"]
 script = ExtResource("1_qal52")

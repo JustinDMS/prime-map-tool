@@ -5,7 +5,7 @@ const MIN_ZOOM : float = 2.5
 const MAX_ZOOM : float = 0.35
 const START_ZOOM : float = MAX_ZOOM
 
-const START_POS = Vector2(1500, 620)
+const START_POS = Vector2(1750, 550)
 
 func _ready() -> void:
 	position = START_POS

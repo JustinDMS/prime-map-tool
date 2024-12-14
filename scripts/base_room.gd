@@ -1,4 +1,4 @@
-class_name Room extends ColorRect
+class_name Room extends TextureButton
 
 signal started_hover
 signal stopped_hover
@@ -50,11 +50,21 @@ func _ready() -> void:
 	mouse_exited.connect(room_stop_hover)
 	set_mouse_filter(Control.MOUSE_FILTER_PASS)
 	set_default_cursor_shape(Control.CURSOR_POINTING_HAND)
+	ignore_texture_size = true
+	set_stretch_mode(TextureButton.STRETCH_KEEP_ASPECT_CENTERED)
+	flip_v = true
 	
-	if data:
+	if data and data.texture:
 		init_room()
 
 func init_room():
+	var image := data.texture.get_image()
+	image.flip_y()
+	var bitmap := BitMap.new()
+	bitmap.create_from_image_alpha(image, 0.01)
+	texture_normal = data.texture
+	texture_click_mask = bitmap
+	
 	region = data.region
 	
 	var x1 : float = data.aabb[0]
@@ -67,8 +77,8 @@ func init_room():
 	position.x = x1
 	position.y = y1
 	
-	size.x = abs(x2 - x1)
-	size.y = abs(y2 - y1)
+	custom_minimum_size.x = abs(x2 - x1)
+	custom_minimum_size.y = abs(y2 - y1)
 	
 	set_state(State.DEFAULT)
 
@@ -76,7 +86,7 @@ func change_to_color(new_color : Color) -> void:
 	const DURATION : float = 0.2
 	
 	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
-	tween.tween_property(self, "color", new_color, DURATION)
+	tween.tween_property(self, "modulate", new_color, DURATION)
 
 func set_state(new_state : State) -> void:
 	prev_state = state
