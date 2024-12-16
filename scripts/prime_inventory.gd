@@ -351,7 +351,7 @@ func can_reach(logic : Dictionary) -> bool:
 			for i in range(logic["data"]["items"].size()):
 				if can_reach(logic["data"]["items"][i]):
 					return true
-				return false
+			return false
 		
 		"resource":
 			match logic["data"]["type"]:
@@ -403,8 +403,6 @@ func init_tricks(data : Dictionary) -> void:
 		tricks[key] = TRICK_VALUE_MAP[value]
 
 func can_perform_trick(type : String, value : int) -> bool:
-	if not tricks.has(type):
-		print(type)
 	if tricks[type] >= value:
 		return true
 	return false
