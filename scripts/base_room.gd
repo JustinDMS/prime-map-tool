@@ -13,10 +13,10 @@ enum State {
 const ROOM_COLOR : Array[Color] = [
 	"#999999",
 	"#EA8C55",
-	"#CADBC8",
-	"#627264",
+	"#C9D6EA",
+	"#7FB685",
 	"#BC96E6",
-	"#A4031F",
+	"#A7333F",
 	"#700000"
 ]
 const HOVER_COLOR := Color.YELLOW

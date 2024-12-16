@@ -1,4 +1,26 @@
-[gd_resource type="Theme" load_steps=10 format=3 uid="uid://dbk0vd03ipng1"]
+[gd_resource type="Theme" load_steps=13 format=3 uid="uid://dbk0vd03ipng1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_14vwr"]
+bg_color = Color(0.14155, 0.14699, 0.331755, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+expand_margin_left = 5.0
+expand_margin_top = 40.0
+expand_margin_right = 5.0
+expand_margin_bottom = 5.0
+shadow_size = 3
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0wms7"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 4.0
+bg_color = Color(0.14155, 0.14699, 0.331755, 1)
+shadow_size = 3
+shadow_offset = Vector2(0, 2)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_as057"]
 content_margin_left = 10.0
@@ -79,6 +101,17 @@ color = Color(1, 1, 1, 0.501961)
 grow_begin = -10.0
 grow_end = 10.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kcuip"]
+content_margin_left = 10.0
+content_margin_top = 5.0
+content_margin_right = 10.0
+content_margin_bottom = 5.0
+bg_color = Color(0.0885465, 0.0913099, 0.229807, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_khyk1"]
 bg_color = Color(0.14155, 0.14699, 0.331755, 1)
 corner_radius_top_left = 10
@@ -96,6 +129,8 @@ oversampling = 2.0
 [resource]
 default_font = SubResource("SystemFont_82onk")
 default_font_size = 24
+AcceptDialog/styles/embedded_border = SubResource("StyleBoxFlat_14vwr")
+AcceptDialog/styles/panel = SubResource("StyleBoxFlat_0wms7")
 Button/font_sizes/font_size = 24
 Button/styles/hover = SubResource("StyleBoxFlat_as057")
 Button/styles/normal = SubResource("StyleBoxFlat_f8dca")
@@ -107,4 +142,5 @@ CheckBox/styles/normal = SubResource("StyleBoxFlat_ui4tg")
 GridContainer/constants/v_separation = 22
 HSeparator/constants/separation = 10
 HSeparator/styles/separator = SubResource("StyleBoxLine_c6cir")
+LineEdit/styles/normal = SubResource("StyleBoxFlat_kcuip")
 Panel/styles/panel = SubResource("StyleBoxFlat_khyk1")

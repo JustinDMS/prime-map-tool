@@ -138,13 +138,19 @@ func room_stop_hover(_room : Room) -> void:
 func import_rdv_pressed() -> void:
 	const MIN_DIALOG_SIZE := Vector2i(300, 100)
 	var line_edit := LineEdit.new()
+	line_edit.theme = THEME
 	
 	var accept_dialog := AcceptDialog.new()
 	accept_dialog.min_size = MIN_DIALOG_SIZE
 	accept_dialog.title = "Paste contents of .rdvgame"
 	accept_dialog.ok_button_text = "Import"
+	accept_dialog.get_ok_button().focus_mode = Control.FOCUS_NONE
 	accept_dialog.close_requested.connect(func(): accept_dialog.queue_free())
-	accept_dialog.confirmed.connect(func(): rdv_imported(line_edit.text))
+	accept_dialog.confirmed.connect(
+		func(): 
+		rdv_imported(line_edit.text)
+		accept_dialog.queue_free()
+		)
 	
 	accept_dialog.add_child(line_edit)
 	accept_dialog.register_text_enter(line_edit)
@@ -236,8 +242,12 @@ func init_tricks_display(inventory : PrimeInventory) -> void:
 		level_label.set_h_size_flags(Control.SIZE_EXPAND + Control.SIZE_SHRINK_CENTER)
 		hbox.add_child(level_label)
 		
-		slider.value_changed.connect(func(new_value : float): level_label.text = TRICK_LEVEL_NAME[int(slider.value)])
-		slider.drag_ended.connect(func(changed : bool): if changed: inventory_changed.emit())
+		slider.value_changed.connect(
+			func(new_value : float): 
+				level_label.text = TRICK_LEVEL_NAME[int(new_value)]
+				inventory.tricks[key] = int(new_value)
+				inventory_changed.emit()
+				)
 
 func tricks_visibility_button_pressed() -> void:
 	tricks_panel.visible = !tricks_panel.visible
