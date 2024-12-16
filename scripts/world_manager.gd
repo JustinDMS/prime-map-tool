@@ -78,6 +78,7 @@ const MINES_OFFSET : Array[Vector2] = [
 
 @export var ui : Control
 
+var region_data : Array[Dictionary] = []
 var world_data := {
 	REGION_NAME[Region.FRIGATE] : {},
 	REGION_NAME[Region.CHOZO] : {},
@@ -96,6 +97,7 @@ func _ready() -> void:
 	ui.rdvgame_loaded.connect(load_rdv)
 	ui.inventory_changed.connect(resolve_map)
 	inventory_initialized.connect(ui.init_inventory_display)
+	inventory_initialized.connect(ui.init_tricks_display)
 	
 	draw_map()
 	init_elevators()
@@ -103,12 +105,12 @@ func _ready() -> void:
 
 func draw_map() -> void:
 	for i in range(Region.MAX):
-		var region_data : Dictionary = get_region_data(i)
+		region_data.append(get_region_data(i))
 		
 		var region := Control.new()
 		region_map[REGION_NAME[i]] = region
 		add_child(region)
-		region.set_name(region_data["name"])
+		region.set_name(region_data[i]["name"])
 		region.scale.y = -1
 		
 		if i == Region.MINES:
@@ -117,10 +119,10 @@ func draw_map() -> void:
 				region.add_child(sub_region)
 				sub_region.name = "Mines Level %d" % n
 		
-		for j in region_data["areas"].keys():
-			var room_data := make_room_data(i, j, region_data["areas"][j])
+		for j in region_data[i]["areas"].keys():
+			var room_data := make_room_data(i, j, region_data[i]["areas"][j])
 			world_data[REGION_NAME[i]][j] = room_data
-			room_data.default_node = get_node_data(REGION_NAME[i], j, region_data["areas"][j]["default_node"])
+			room_data.default_node = get_node_data(REGION_NAME[i], j, region_data[i]["areas"][j]["default_node"])
 			
 			var room := draw_room(room_data)
 			room.started_hover.connect(ui.room_hover)
@@ -146,17 +148,16 @@ func draw_map() -> void:
 	# Now that every room and its nodes have been
 	# created, finish initializing node connections
 	for i in range(Region.MAX):
-		var region_data : Dictionary = get_region_data(i)
-		for j in region_data["areas"].keys():
-			for k in region_data["areas"][j]["nodes"].keys():
+		for j in region_data[i]["areas"].keys():
+			for k in region_data[i]["areas"][j]["nodes"].keys():
 				var node := get_node_data(REGION_NAME[i], j, k)
 				var connections : Array[NodeData] = []
-				for l in region_data["areas"][j]["nodes"][k]["connections"]:
+				for l in region_data[i]["areas"][j]["nodes"][k]["connections"]:
 					var new_connection := get_node_data(REGION_NAME[i], j, l)
 					connections.append(new_connection)
 				node.connections.assign(connections)
 				
-				var default_connection_data = region_data["areas"][j]["nodes"][k].get("default_connection", null)
+				var default_connection_data = region_data[i]["areas"][j]["nodes"][k].get("default_connection", null)
 				if default_connection_data and default_connection_data["region"] in REGION_NAME:
 					var default_connection := get_node_data(
 						default_connection_data["region"],
@@ -264,6 +265,9 @@ func load_rdv(data : Dictionary) -> void:
 	var start_inventory : Array = data["game_modifications"][0]["starting_equipment"]["pickups"]
 	init_current_inventory(start_inventory)
 	
+	var tricks : Dictionary = data["info"]["presets"][0]["configuration"]["trick_level"]["specific_levels"]
+	inventory.init_tricks(tricks)
+	
 	var start_location : PackedStringArray = data["game_modifications"][0]["starting_location"].split("/")
 	start_node = get_node_data(start_location[0], start_location[1], start_location[2])
 	
@@ -337,8 +341,7 @@ func resolve_map() -> void:
 			room_obj.set_state(Room.State.DEFAULT)
 
 func can_reach_internal(from_node : NodeData, to_node : NodeData) -> bool:
-	var region_data : Dictionary = get_region_data(from_node.region)
-	var logic : Dictionary = region_data["areas"][from_node.room_name]["nodes"][from_node.display_name]["connections"][to_node.display_name]
+	var logic : Dictionary = region_data[from_node.region]["areas"][from_node.room_name]["nodes"][from_node.display_name]["connections"][to_node.display_name]
 	return inventory.can_reach(logic)
 
 func can_reach_external(from_node : NodeData, to_node : NodeData) -> bool:

@@ -15,6 +15,15 @@ enum Artifact {
 	NEWBORN
 }
 
+const TRICK_VALUE_MAP : Dictionary = {
+	"disabled" : 0,
+	"beginner" : 1,
+	"intermediate" : 2,
+	"advanced" : 3,
+	"expert" : 4,
+	"hypermode": 5
+}
+
 @export var requires_launcher := false
 @export var requires_main_pb := false
 @export var state := {
@@ -65,6 +74,30 @@ enum Artifact {
 	"Artifact of World" : 1,
 	"Artifact of Spirit" : 1,
 	"Artifact of Newborn" : 1,
+}
+@export var tricks := {
+	"BJ" : TRICK_VALUE_MAP["disabled"],
+	"BSJ" : TRICK_VALUE_MAP["disabled"],
+	"BoostlessSpiner" : TRICK_VALUE_MAP["disabled"],
+	"CBJ" : TRICK_VALUE_MAP["disabled"],
+	"ClipThruObjects" : TRICK_VALUE_MAP["disabled"],
+	"Combat" : TRICK_VALUE_MAP["disabled"],
+	"DBoosting" : TRICK_VALUE_MAP["disabled"],
+	"Dash" : TRICK_VALUE_MAP["disabled"],
+	"HeatRun" : TRICK_VALUE_MAP["disabled"],
+	"IS" : TRICK_VALUE_MAP["disabled"],
+	"IUJ" : TRICK_VALUE_MAP["disabled"],
+	"InvisibleObjects" : TRICK_VALUE_MAP["disabled"],
+	"Knowledge" : TRICK_VALUE_MAP["disabled"],
+	"LJump" : TRICK_VALUE_MAP["disabled"],
+	"Movement" : TRICK_VALUE_MAP["disabled"],
+	"OoB" : TRICK_VALUE_MAP["disabled"],
+	"RJump" : TRICK_VALUE_MAP["disabled"],
+	"SJump" : TRICK_VALUE_MAP["disabled"],
+	"StandEnemies" : TRICK_VALUE_MAP["disabled"],
+	"Standable" : TRICK_VALUE_MAP["disabled"],
+	"UnderwaterMovement" : TRICK_VALUE_MAP["disabled"],
+	"WallBoost" : TRICK_VALUE_MAP["disabled"]
 }
 
 func has_morph() -> bool:
@@ -327,7 +360,7 @@ func can_reach(logic : Dictionary) -> bool:
 				"events":
 					return true # TODO
 				"tricks":
-					return true # TODO
+					return can_perform_trick(logic["data"]["name"], logic["data"]["amount"])
 				"damage":
 					return true # TODO
 				"misc":
@@ -362,4 +395,16 @@ func can_reach(logic : Dictionary) -> bool:
 		_:
 			push_error("Unhandled logic type: %s" % logic["type"])
 	
+	return false
+
+func init_tricks(data : Dictionary) -> void:
+	for key in data.keys():
+		var value : String = data[key]
+		tricks[key] = TRICK_VALUE_MAP[value]
+
+func can_perform_trick(type : String, value : int) -> bool:
+	if not tricks.has(type):
+		print(type)
+	if tricks[type] >= value:
+		return true
 	return false

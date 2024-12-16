@@ -3,6 +3,7 @@ extends Control
 signal rdvgame_loaded(data : Dictionary)
 signal inventory_changed()
 
+const THEME := preload("res://resources/theme.tres")
 const REGION_DISPLAY_NAME : Array[String] = [
 	"Frigate Orpheon",
 	"Chozo Ruins",
@@ -62,25 +63,69 @@ const INVENTORY_ICON_MAP := {
 	"Artifact of Spirit" : preload("res://data/icons/Artifact of Spirit.png"),
 	"Artifact of Newborn" : preload("res://data/icons/Artifact of Newborn.png"),
 }
+const TRICK_NAME_MAP : Dictionary = {
+	"BJ" : "Bomb Jump",
+	"BSJ" : "Bomb Space Jump",
+	"BoostlessSpiner" : "Spinners without Boost",
+	"CBJ" : "Complex Bomb Jump",
+	"ClipThruObjects" : "Clip Through Objects",
+	"Combat" : "Combat",
+	"DBoosting" : "Damage Boosting",
+	"Dash" : "Combat/Scan Dash",
+	"HeatRun" : "Heat Run",
+	"IS" : "Infinite Speed",
+	"IUJ" : "Instant Unmorph Jump",
+	"InvisibleObjects" : "Invisible Objects",
+	"Knowledge" : "Knowledge",
+	"LJump" : "L-Jump",
+	"Movement" : "Movement",
+	"OoB" : "Single-Room Out of Bounds",
+	"RJump" : "R-Jump",
+	"SJump" : "Slope Jump",
+	"StandEnemies" : "Jump Off Enemies",
+	"Standable" : "Standable Terrain",
+	"UnderwaterMovement" : "Gravityless Underwater Movement",
+	"WallBoost" : "Wall Boost"
+}
+const TRICK_LEVEL_NAME : Array[String] = [
+	"Disabled",
+	"Beginner",
+	"Intermediate",
+	"Advanced",
+	"Expert",
+	"Hypermode"
+]
 
 @export var region_name_label : Label
 @export var room_name_label : Label
 @export var import_rdv_button : Button
 @export var rdv_game_hash_label : Label
+@export_category("Inventory")
 @export var inventory_visibility_button : Button
 @export var inventory_panel : Panel
 @export var inventory_label : Label
 @export var inventory_container : GridContainer
-@export var apply_changes_button : Button
 @export var give_all_button : Button
 @export var clear_button : Button
+@export_category("Tricks")
+@export var tricks_visibility_button : Button
+@export var tricks_panel : Panel
+@export var max_button : Button
+@export var none_button : Button
+@export var tricks_container : VBoxContainer
+
+@onready var display_panels : Array[Panel] = [inventory_panel, tricks_panel]
 
 func _ready() -> void:
 	import_rdv_button.pressed.connect(import_rdv_pressed)
+	
 	inventory_visibility_button.pressed.connect(inventory_visibility_button_pressed)
-	apply_changes_button.pressed.connect(apply_changes_button_pressed)
 	give_all_button.pressed.connect(give_all_pressed)
 	clear_button.pressed.connect(clear_pressed)
+	
+	tricks_visibility_button.pressed.connect(tricks_visibility_button_pressed)
+	max_button.pressed.connect(max_pressed)
+	none_button.pressed.connect(none_pressed)
 
 func room_hover(room : Room) -> void:
 	region_name_label.text = REGION_DISPLAY_NAME[room.data.region]
@@ -116,7 +161,6 @@ func rdv_imported(raw_text : String) -> void:
 
 func init_inventory_display(inventory : PrimeInventory) -> void:
 	const BUTTON_SIZE := Vector2(95, 70)
-	const THEME := preload("res://resources/theme.tres")
 	
 	for node in inventory_container.get_children():
 		node.queue_free()
@@ -135,18 +179,19 @@ func init_inventory_display(inventory : PrimeInventory) -> void:
 		checkbox.button_pressed = inventory.state[key] > 0
 		checkbox.mouse_entered.connect(func(): set_inventory_text(key))
 		checkbox.mouse_exited.connect(func(): set_inventory_text("Inventory"))
-		checkbox.toggled.connect(func(on : bool): inventory.state[key] = 1 if on else 0)
+		checkbox.toggled.connect(
+			func(on : bool): 
+			inventory.state[key] = 1 if on else 0
+			inventory_changed.emit()
+			)
 
 func inventory_visibility_button_pressed() -> void:
 	inventory_panel.visible = !inventory_panel.visible
 	
 	if inventory_panel.visible:
-		inventory_visibility_button.text = ">"
+		inventory_visibility_button.text = "> Inventory"
 	else:
-		inventory_visibility_button.text = "<"
-
-func apply_changes_button_pressed() -> void:
-	inventory_changed.emit()
+		inventory_visibility_button.text = "< Inventory"
 
 func set_inventory_text(new_text : String) -> void:
 	inventory_label.text = new_text
@@ -158,3 +203,60 @@ func give_all_pressed() -> void:
 func clear_pressed() -> void:
 	for cb in inventory_container.get_children():
 		cb.button_pressed = false
+
+func init_tricks_display(inventory : PrimeInventory) -> void:
+	const MAX_TRICK_LEVEL := 5
+	
+	for node in tricks_container.get_children():
+		node.queue_free()
+	
+	print('here')
+	
+	for key in inventory.tricks.keys():
+		var label := Label.new()
+		label.text = TRICK_NAME_MAP[key]
+		tricks_container.add_child(label)
+		
+		var hbox := HBoxContainer.new()
+		tricks_container.add_child(hbox)
+		
+		var slider := HSlider.new()
+		slider.focus_mode = Control.FOCUS_NONE
+		slider.rounded = true
+		slider.step = 1.0
+		slider.min_value = 0
+		slider.max_value = MAX_TRICK_LEVEL
+		slider.tick_count = MAX_TRICK_LEVEL + 1
+		slider.scrollable = false
+		slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		hbox.add_child(slider)
+		
+		var level_label := Label.new()
+		level_label.text = TRICK_LEVEL_NAME[slider.value]
+		level_label.set_h_size_flags(Control.SIZE_EXPAND + Control.SIZE_SHRINK_CENTER)
+		hbox.add_child(level_label)
+		
+		slider.value_changed.connect(func(new_value : float): level_label.text = TRICK_LEVEL_NAME[int(slider.value)])
+		slider.drag_ended.connect(func(changed : bool): if changed: inventory_changed.emit())
+
+func tricks_visibility_button_pressed() -> void:
+	tricks_panel.visible = !tricks_panel.visible
+	
+	if tricks_panel.visible:
+		tricks_visibility_button.text = "> Tricks"
+	else:
+		tricks_visibility_button.text = "< Tricks"
+
+func max_pressed() -> void:
+	# HACK
+	for node in tricks_container.get_children():
+		if node is HBoxContainer:
+			var slider := node.get_child(0) as HSlider
+			slider.value = 5
+
+func none_pressed() -> void:
+	# HACK
+	for node in tricks_container.get_children():
+		if node is HBoxContainer:
+			var slider := node.get_child(0) as HSlider
+			slider.value = 0
