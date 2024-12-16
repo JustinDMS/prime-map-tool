@@ -45,14 +45,8 @@ func _gui_input(event: InputEvent) -> void:
 		room_clicked()
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_TOP_LEFT)
 	mouse_entered.connect(room_hover)
 	mouse_exited.connect(room_stop_hover)
-	set_mouse_filter(Control.MOUSE_FILTER_PASS)
-	set_default_cursor_shape(Control.CURSOR_POINTING_HAND)
-	ignore_texture_size = true
-	set_stretch_mode(TextureButton.STRETCH_KEEP_ASPECT_CENTERED)
-	flip_v = true
 	
 	if data and data.texture:
 		init_room()
@@ -61,7 +55,7 @@ func init_room():
 	var image := data.texture.get_image()
 	image.flip_y()
 	var bitmap := BitMap.new()
-	bitmap.create_from_image_alpha(image, 0.01)
+	bitmap.create_from_image_alpha(image, 0.1)
 	texture_normal = data.texture
 	texture_click_mask = bitmap
 	

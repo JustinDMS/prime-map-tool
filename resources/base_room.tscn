@@ -3,4 +3,9 @@
 [ext_resource type="Script" path="res://scripts/base_room.gd" id="1_qal52"]
 
 [node name="base_room" type="TextureButton"]
+mouse_filter = 1
+mouse_default_cursor_shape = 2
+ignore_texture_size = true
+stretch_mode = 6
+flip_v = true
 script = ExtResource("1_qal52")
