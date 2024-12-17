@@ -19,6 +19,25 @@ const ROOM_COLOR : Array[Color] = [
 	"#A7333F",
 	"#700000"
 ]
+## Rooms that need to have their z index increased to match the game
+const MANUAL_Z_ROOMS : Array[String] = [
+	"Hall of the Elders",
+	
+	"Upper Edge Tunnel",
+	"Frost Cave Access",
+	
+	"Life Grove Tunnel",
+	"Frigate Crash Site",
+	
+	"Main Quarry",
+	"Security Access B",
+	"Omega Research",
+	"Elite Control",
+	"Elite Research",
+	
+	"Transport Tunnel C",
+	"Warrior Shrine",
+]
 const HOVER_COLOR := Color.YELLOW
 const UNREACHABLE_COLOR := Color.WEB_GRAY
 
@@ -26,13 +45,13 @@ var region : int = 0
 var data : RoomData = null
 var state := State.DEFAULT
 var prev_state := State.DEFAULT ## Used to return to after hovering
-var is_hovered : bool = false:
+var _is_hovered : bool = false:
 	set(value):
-		if is_hovered == value:
+		if _is_hovered == value:
 			return
 		
-		is_hovered = value
-		if is_hovered:
+		_is_hovered = value
+		if _is_hovered:
 			started_hover.emit(self)
 		else:
 			stopped_hover.emit(self)
@@ -41,7 +60,7 @@ func _gui_input(event: InputEvent) -> void:
 	if not data:
 		return
 	
-	if is_hovered and event.is_action("press") and event.is_pressed():
+	if _is_hovered and event.is_action("press") and event.is_pressed():
 		room_clicked()
 
 func _ready() -> void:
@@ -52,6 +71,9 @@ func _ready() -> void:
 		init_room()
 
 func init_room():
+	if data.name in MANUAL_Z_ROOMS:
+		z_index += 1
+	
 	var image := data.texture.get_image()
 	image.flip_y()
 	var bitmap := BitMap.new()
@@ -96,11 +118,11 @@ func set_state(new_state : State) -> void:
 
 func room_hover() -> void:
 	set_state(State.HOVERED)
-	is_hovered = true
+	_is_hovered = true
 
 func room_stop_hover() -> void:
 	set_state(prev_state)
-	is_hovered = false
+	_is_hovered = false
 
 func room_clicked() -> void:
 	print_debug(data.name)

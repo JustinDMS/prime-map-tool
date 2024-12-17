@@ -168,7 +168,7 @@ func draw_map() -> void:
 
 func determine_mines_region(z : float) -> int:
 	const Z_LEVEL = [
-		-5.6,
+		-6.6,
 		-114.2,
 	]
 	

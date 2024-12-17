@@ -216,8 +216,6 @@ func init_tricks_display(inventory : PrimeInventory) -> void:
 	for node in tricks_container.get_children():
 		node.queue_free()
 	
-	print('here')
-	
 	for key in inventory.tricks.keys():
 		var label := Label.new()
 		label.text = TRICK_NAME_MAP[key]

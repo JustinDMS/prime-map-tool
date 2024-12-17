@@ -294,6 +294,8 @@ func parse_item_name(item_name : String) -> bool:
 			return has_missile()
 		"Charge":
 			return has_charge()
+		"Grapple":
+			return has_grapple()
 		"GravitySuit":
 			return has_gravity()
 		"PhazonSuit":
