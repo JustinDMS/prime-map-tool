@@ -20,15 +20,19 @@ const VANILLA_ELEVATOR_DATA := {
 	"Chozo Ruins/Transport to Tallon Overworld East/Teleporter to Tallon Overworld": "Tallon Overworld/Transport to Chozo Ruins East/Teleporter to Chozo Ruins",
 	"Chozo Ruins/Transport to Tallon Overworld South/Teleporter to Tallon Overworld": "Tallon Overworld/Transport to Chozo Ruins South/Teleporter to Chozo Ruins"
 }
-const LINE_WIDTH : float = 5.0
+const IGNORE_REGIONS : Array[String] = ["Frigate Orpheon", "Impact Crater", "End of Game"]
+const LINE_WIDTH : float = 4.0
 const LINE_CAPS := Line2D.LINE_CAP_ROUND
-const Z_IDX : int = 1
-const LINE_COLOR := Color.WHITE
+const Z_IDX : int = -1
 
 @export var world_manager : World
 
+var lines := {}
+var color_map := {}
+
 func _ready() -> void:
 	world_manager.map_drawn.connect(init_elevators)
+	world_manager.map_resolved.connect(update_lines_from_visited)
 
 func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> void:
 	const MINES_SUBREGIONS := {
@@ -39,6 +43,8 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
 	
 	for node in get_children():
 		node.queue_free()
+	lines.clear()
+	color_map.clear()
 	
 	var connections := dock_connections.duplicate()
 	connections.merge(MINES_SUBREGIONS.duplicate())
@@ -51,6 +57,9 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
 		
 		var from : PackedStringArray = key.split("/")
 		var to : PackedStringArray = connections[key].split("/")
+		
+		if from[0] in IGNORE_REGIONS or to[0] in IGNORE_REGIONS:
+			continue
 		
 		var from_node_data := world_manager.get_node_data(from[0], from[1], from[2])
 		var to_node_data := world_manager.get_node_data(to[0], to[1], to[2])
@@ -70,6 +79,8 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
 		
 		var color := Room.ROOM_COLOR[from_node_data.region].lerp(Room.ROOM_COLOR[to_node_data.region], 0.5)
 		var line2d := new_connection_line(point_1, point_2, color)
+		lines[from_node_data] = line2d
+		color_map[line2d] = color
 		
 		line2d.name = "%s to %s" % [from_node_data.room_name, to_node_data.room_name]
 		
@@ -92,3 +103,11 @@ func new_connection_line(global_from : Vector2, global_to : Vector2, line_color 
 	line2d.add_point(local_to)
 	
 	return line2d
+
+func update_lines_from_visited(visited_nodes : Dictionary) -> void:
+	for key in lines:
+		var line : Line2D = lines[key]
+		if visited_nodes.get(key, false):
+			line.modulate = color_map[line]
+			continue
+		line.modulate = Room.UNREACHABLE_COLOR

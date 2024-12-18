@@ -1,6 +1,7 @@
 class_name World extends Control
 
 signal map_drawn(elevator_data : Dictionary)
+signal map_resolved(visited_nodes : Dictionary)
 signal inventory_initialized(inv : PrimeInventory)
 
 enum Region {
@@ -270,8 +271,9 @@ func load_rdv(data : Dictionary) -> void:
 	var start_room_data : RoomData = world_data[start_location[0]][start_location[1]]
 	var _start_room : Room = room_map[start_room_data]
 	
-	resolve_map()
 	map_drawn.emit(data["game_modifications"][0]["dock_connections"])
+	
+	resolve_map()
 
 func init_current_inventory(data : Array = []) -> void:
 	inventory = PrimeInventory.new()
@@ -337,6 +339,8 @@ func resolve_map() -> void:
 	
 	var starter_room := get_room_obj(start_node.region, start_node.room_name)
 	starter_room.set_state(Room.State.STARTER)
+	
+	map_resolved.emit(visited_nodes)
 
 func can_reach_internal(from_node : NodeData, to_node : NodeData) -> bool:
 	var logic : Dictionary = region_data[from_node.region]["areas"][from_node.room_name]["nodes"][from_node.display_name]["connections"][to_node.display_name]
@@ -344,8 +348,6 @@ func can_reach_internal(from_node : NodeData, to_node : NodeData) -> bool:
 
 func can_reach_external(from_node : NodeData, to_node : NodeData) -> bool:
 	return inventory.can_pass_dock(from_node.default_dock_weakness) and inventory.can_pass_dock(to_node.default_dock_weakness)
-
-
 
 func get_room_texture(region_name : String, room_name : String) -> Texture2D:
 	return load("res://data/room_images/%s/%s.png" % [region_name, room_name])
