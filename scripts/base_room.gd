@@ -3,6 +3,7 @@ class_name Room extends TextureButton
 signal started_hover
 signal stopped_hover
 signal clicked
+signal double_clicked(node_data : NodeData)
 
 enum State {
 	DEFAULT,
@@ -66,7 +67,10 @@ func _gui_input(event: InputEvent) -> void:
 		return
 	
 	if _is_hovered and event.is_action("press") and event.is_pressed():
-		room_clicked()
+		if not event.double_click:
+			room_clicked()
+		else:
+			double_clicked.emit(data.default_node)
 
 func _ready() -> void:
 	mouse_entered.connect(room_hover)
@@ -122,6 +126,7 @@ func set_state(new_state : State) -> void:
 		State.UNREACHABLE:
 			change_to_color(UNREACHABLE_COLOR)
 		State.STARTER:
+			prev_state = State.STARTER
 			start_highlight_loop()
 
 func room_hover() -> void:

@@ -78,7 +78,9 @@ func _ready() -> void:
 	inventory_initialized.connect(ui.init_tricks_display)
 	
 	draw_map()
+	
 	init_current_inventory()
+	inventory_initialized.emit(inventory)
 
 func draw_map() -> void:
 	for i in range(Region.MAX):
@@ -240,6 +242,7 @@ func draw_room(room_data : RoomData) -> Room:
 	
 	var room := BASE_ROOM.instantiate()
 	room.data = room_data
+	room.double_clicked.connect(set_start_node)
 	
 	return room
 
@@ -301,10 +304,11 @@ func resolve_map() -> void:
 	set_all_unreachable()
 	
 	var queue : Array[NodeData] = []
+	queue.append(start_node)
 	for n in start_node.connections:
 		queue.append(n)
 	
-	var visited_nodes := {start_node : true}
+	var visited_nodes := {}
 	var visited_rooms := {
 		REGION_NAME[Region.FRIGATE] : [],
 		REGION_NAME[Region.CHOZO] : [],
@@ -351,3 +355,7 @@ func can_reach_external(from_node : NodeData, to_node : NodeData) -> bool:
 
 func get_room_texture(region_name : String, room_name : String) -> Texture2D:
 	return load("res://data/room_images/%s/%s.png" % [region_name, room_name])
+
+func set_start_node(new_node : NodeData) -> void:
+	start_node = new_node
+	resolve_map()
