@@ -1,5 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://br45wp8jdj0tx"]
+[gd_scene load_steps=10 format=3 uid="uid://br45wp8jdj0tx"]
 
+[ext_resource type="Script" path="res://scripts/elevator_manager.gd" id="1_gb56k"]
 [ext_resource type="Script" path="res://scripts/world_manager.gd" id="1_rofpd"]
 [ext_resource type="Theme" uid="uid://dbk0vd03ipng1" path="res://resources/theme.tres" id="3_4glie"]
 [ext_resource type="Script" path="res://camera.gd" id="3_et3qh"]
@@ -35,6 +36,14 @@ grow_vertical = 2
 mouse_filter = 1
 mouse_default_cursor_shape = 3
 color = Color(0.168627, 0.176471, 0.258824, 1)
+
+[node name="elevator_manager" type="Control" parent="." node_paths=PackedStringArray("world_manager")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_gb56k")
+world_manager = NodePath("../world_manager")
 
 [node name="world_manager" type="Control" parent="." node_paths=PackedStringArray("ui")]
 layout_mode = 3

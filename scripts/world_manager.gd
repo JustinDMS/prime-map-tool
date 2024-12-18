@@ -1,5 +1,6 @@
-extends Control
+class_name World extends Control
 
+signal map_drawn(elevator_data : Dictionary)
 signal inventory_initialized(inv : PrimeInventory)
 
 enum Region {
@@ -46,30 +47,6 @@ const REGION_NAME : Array[String] = [
 	"Magmoor Caverns",
 	"Impact Crater"
 ]
-const VANILLA_ELEVATOR_DATA := {
-	"Impact Crater/Crater Entry Point/Teleporter to Tallon Overworld": "Tallon Overworld/Artifact Temple/Teleporter to Impact Crater",
-	"Impact Crater/Metroid Prime Lair/Teleporter to Credits": "End of Game/Credits/Event - Credits",
-	"Phendrana Drifts/Transport to Magmoor Caverns West/Teleporter to Magmoor Caverns": "Magmoor Caverns/Transport to Phendrana Drifts North/Teleporter to Phendrana Drifts",
-	"Phendrana Drifts/Transport to Magmoor Caverns South/Teleporter to Magmoor Caverns": "Magmoor Caverns/Transport to Phendrana Drifts South/Teleporter to Phendrana Drifts",
-	"Frigate Orpheon/Exterior Docking Hangar/Teleporter to Tallon Overworld": "Tallon Overworld/Landing Site/Ship",
-	"Magmoor Caverns/Transport to Chozo Ruins North/Teleporter to Chozo Ruins": "Chozo Ruins/Transport to Magmoor Caverns North/Teleporter to Magmoor Caverns",
-	"Magmoor Caverns/Transport to Phendrana Drifts North/Teleporter to Phendrana Drifts": "Phendrana Drifts/Transport to Magmoor Caverns West/Teleporter to Magmoor Caverns",
-	"Magmoor Caverns/Transport to Tallon Overworld West/Teleporter to Tallon Overworld": "Tallon Overworld/Transport to Magmoor Caverns East/Teleporter to Magmoor Caverns",
-	"Magmoor Caverns/Transport to Phazon Mines West/Teleporter to Phazon Mines": "Phazon Mines/Transport to Magmoor Caverns South/Teleporter to Magmoor Caverns",
-	"Magmoor Caverns/Transport to Phendrana Drifts South/Teleporter to Phendrana Drifts": "Phendrana Drifts/Transport to Magmoor Caverns South/Teleporter to Magmoor Caverns",
-	"Phazon Mines/Transport to Tallon Overworld South/Teleporter to Tallon Overworld": "Tallon Overworld/Transport to Phazon Mines East/Teleporter to Phazon Mines",
-	"Phazon Mines/Transport to Magmoor Caverns South/Teleporter to Magmoor Caverns": "Magmoor Caverns/Transport to Phazon Mines West/Teleporter to Phazon Mines",
-	"Tallon Overworld/Transport to Chozo Ruins West/Teleporter to Chozo Ruins": "Chozo Ruins/Transport to Tallon Overworld North/Teleporter to Tallon Overworld",
-	"Tallon Overworld/Artifact Temple/Teleporter to Impact Crater": "End of Game/Credits/Event - Credits",
-	"Tallon Overworld/Transport to Chozo Ruins East/Teleporter to Chozo Ruins": "Chozo Ruins/Transport to Tallon Overworld East/Teleporter to Tallon Overworld",
-	"Tallon Overworld/Transport to Magmoor Caverns East/Teleporter to Magmoor Caverns": "Magmoor Caverns/Transport to Tallon Overworld West/Teleporter to Tallon Overworld",
-	"Tallon Overworld/Transport to Chozo Ruins South/Teleporter to Chozo Ruins": "Chozo Ruins/Transport to Tallon Overworld South/Teleporter to Tallon Overworld",
-	"Tallon Overworld/Transport to Phazon Mines East/Teleporter to Phazon Mines": "Phazon Mines/Transport to Tallon Overworld South/Teleporter to Tallon Overworld",
-	"Chozo Ruins/Transport to Tallon Overworld North/Teleporter to Tallon Overworld": "Tallon Overworld/Transport to Chozo Ruins West/Teleporter to Chozo Ruins",
-	"Chozo Ruins/Transport to Magmoor Caverns North/Teleporter to Magmoor Caverns": "Magmoor Caverns/Transport to Chozo Ruins North/Teleporter to Chozo Ruins",
-	"Chozo Ruins/Transport to Tallon Overworld East/Teleporter to Tallon Overworld": "Tallon Overworld/Transport to Chozo Ruins East/Teleporter to Chozo Ruins",
-	"Chozo Ruins/Transport to Tallon Overworld South/Teleporter to Tallon Overworld": "Tallon Overworld/Transport to Chozo Ruins South/Teleporter to Chozo Ruins"
-}
 const MINES_OFFSET : Array[Vector2] = [
 	Vector2(500, 0),
 	Vector2(0, -200),
@@ -100,7 +77,6 @@ func _ready() -> void:
 	inventory_initialized.connect(ui.init_tricks_display)
 	
 	draw_map()
-	init_elevators()
 	init_current_inventory()
 
 func draw_map() -> void:
@@ -175,6 +151,8 @@ func draw_map() -> void:
 						default_connection_data["node"]
 					)
 					node_data.default_connection = default_connection
+	
+	map_drawn.emit()
 
 func determine_mines_region(z : float) -> int:
 	const Z_LEVEL = [
@@ -293,8 +271,7 @@ func load_rdv(data : Dictionary) -> void:
 	var _start_room : Room = room_map[start_room_data]
 	
 	resolve_map()
-	
-	init_elevators(data["game_modifications"][0]["dock_connections"])
+	map_drawn.emit(data["game_modifications"][0]["dock_connections"])
 
 func init_current_inventory(data : Array = []) -> void:
 	inventory = PrimeInventory.new()
@@ -368,90 +345,7 @@ func can_reach_internal(from_node : NodeData, to_node : NodeData) -> bool:
 func can_reach_external(from_node : NodeData, to_node : NodeData) -> bool:
 	return inventory.can_pass_dock(from_node.default_dock_weakness) and inventory.can_pass_dock(to_node.default_dock_weakness)
 
-func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> void:
-	const LINE_WIDTH : float = 5.0
-	
-	for key in dock_connections.keys():
-		var from : PackedStringArray = key.split("/")
-		var to : PackedStringArray = dock_connections[key].split("/")
-		if (
-			from[0] == REGION_NAME[Region.FRIGATE] or
-			from[0] == REGION_NAME[Region.CRATER] or
-			to[0] == "End of Game"
-			):
-			continue
-		
-		var from_node_data := get_node_data(from[0], from[1], from[2])
-		var to_node_data := get_node_data(to[0], to[1], to[2])
-		
-		var line2d := Line2D.new()
-		line2d.name = "%s to %s" % [from[1], to[1]]
-		line2d.width = LINE_WIDTH
-		line2d.begin_cap_mode = Line2D.LINE_CAP_ROUND
-		line2d.end_cap_mode = Line2D.LINE_CAP_ROUND
-		line2d.z_index = -1
-		line2d.modulate = Room.ROOM_COLOR[from_node_data.region]
-		line2d.modulate.a *= 0.5
-		add_child(line2d)
-		
-		# Start position
-		# Flip y coordinate because region control scale.y == -1
-		var point_1 := Vector2.ZERO
-		var point_2 := Vector2.ZERO
-		if from[0] == REGION_NAME[Region.MINES]:
-			point_1 = region_map[from[0]].get_child(determine_mines_region(from_node_data.coordinates.z)).global_position + Vector2(from_node_data.coordinates.x, -from_node_data.coordinates.y)
-		else:
-			point_1 = region_map[from[0]].global_position + Vector2(from_node_data.coordinates.x, -from_node_data.coordinates.y)
-		if to[0] == REGION_NAME[Region.MINES]:
-			point_2 = region_map[to[0]].get_child(determine_mines_region(to_node_data.coordinates.z)).global_position + Vector2(to_node_data.coordinates.x, -to_node_data.coordinates.y)
-		else:
-			point_2 = region_map[to[0]].global_position + Vector2(to_node_data.coordinates.x, -to_node_data.coordinates.y)
-		
-		point_1 = line2d.to_local(point_1)
-		point_2 = line2d.to_local(point_2)
-		# Add offset
-		var from_room_data := get_room_data(from[0], from[1])
-		var to_room_data := get_room_data(to[0], to[1])
-		
-		point_1.x += room_map[from_room_data].size.x * 0.5
-		point_1.y -= room_map[from_room_data].size.y * 0.5
-		
-		point_2.x += room_map[to_room_data].size.x * 0.5
-		point_2.y -= room_map[to_room_data].size.y * 0.5
-		
-		line2d.add_point(point_1)
-		line2d.add_point(point_2)
-	
-	# Manually draw lines for mines sub regions
-	const FROM_ROOMS : Array[String] = ["Elevator B", "Processing Center Access", "Elevator A"]
-	const TO_ROOMS : Array[String] = ["Elevator Access B", "Phazon Processing Center", "Elevator Access A"]
-	for i in range(3):
-		var from_room_data := get_room_data(REGION_NAME[Region.MINES], FROM_ROOMS[i])
-		var to_room_data := get_room_data(REGION_NAME[Region.MINES], TO_ROOMS[i])
-		
-		var line2d := Line2D.new()
-		line2d.width = LINE_WIDTH
-		line2d.begin_cap_mode = Line2D.LINE_CAP_ROUND
-		line2d.end_cap_mode = Line2D.LINE_CAP_ROUND
-		line2d.z_index = -1
-		line2d.modulate = Room.ROOM_COLOR[Region.MINES]
-		line2d.modulate.a *= 0.5
-		add_child(line2d)
-		
-		var point_1 : Vector2 = region_map[REGION_NAME[Region.MINES]].get_child(determine_mines_region(from_room_data.aabb[2])).global_position + Vector2(from_room_data.aabb[0], -from_room_data.aabb[1])
-		var point_2 : Vector2 = region_map[REGION_NAME[Region.MINES]].get_child(determine_mines_region(to_room_data.aabb[2])).global_position + Vector2(to_room_data.aabb[0], -to_room_data.aabb[1])
-		
-		point_1 = line2d.to_local(point_1)
-		point_2 = line2d.to_local(point_2)
-		
-		point_1.x += room_map[from_room_data].custom_minimum_size.x * 0.5
-		point_1.y -= room_map[from_room_data].custom_minimum_size.y * 0.5
-		
-		point_2.x += room_map[to_room_data].custom_minimum_size.x * 0.5
-		point_2.y -= room_map[to_room_data].custom_minimum_size.y * 0.5
-		
-		line2d.add_point(point_1)
-		line2d.add_point(point_2)
+
 
 func get_room_texture(region_name : String, room_name : String) -> Texture2D:
 	return load("res://data/room_images/%s/%s.png" % [region_name, room_name])
