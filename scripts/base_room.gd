@@ -8,7 +8,10 @@ enum State {
 	DEFAULT,
 	HOVERED,
 	UNREACHABLE,
+	STARTER,
 }
+
+const COLOR_CHANGE_DURATION : float = 0.2
 
 const ROOM_COLOR : Array[Color] = [
 	"#999999",
@@ -40,6 +43,7 @@ const MANUAL_Z_ROOMS : Array[String] = [
 ]
 const HOVER_COLOR := Color.YELLOW
 const UNREACHABLE_COLOR := Color.WEB_GRAY
+const STARTER_COLOR := Color.WHITE
 
 var region : int = 0
 var data : RoomData = null
@@ -55,6 +59,7 @@ var _is_hovered : bool = false:
 			started_hover.emit(self)
 		else:
 			stopped_hover.emit(self)
+var room_color_tween : Tween = null
 
 func _gui_input(event: InputEvent) -> void:
 	if not data:
@@ -97,27 +102,13 @@ func init_room():
 	custom_minimum_size.y = abs(y2 - y1)
 	
 	set_state(State.DEFAULT)
-	hide_nodes.call_deferred()
 
-func change_to_color(new_color : Color) -> void:
-	const DURATION : float = 0.2
+func change_to_color(new_color : Color, duration := COLOR_CHANGE_DURATION) -> void:
+	if room_color_tween and room_color_tween.is_valid():
+		room_color_tween.kill()
 	
-	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
-	tween.tween_property(self, "self_modulate", new_color, DURATION)
-
-func show_nodes() -> void:
-	const DURATION : float = 0.2
-	
-	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE).set_parallel(true)
-	for n in get_children():
-		tween.tween_property(n, "self_modulate", Color.WHITE, DURATION)
-
-func hide_nodes() -> void:
-	const DURATION : float = 0.2
-	
-	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE).set_parallel(true)
-	for n in get_children():
-		tween.tween_property(n, "self_modulate", Color.TRANSPARENT, DURATION)
+	room_color_tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+	room_color_tween.tween_property(self, "self_modulate", new_color, duration)
 
 func set_state(new_state : State) -> void:
 	prev_state = state
@@ -128,12 +119,10 @@ func set_state(new_state : State) -> void:
 			change_to_color(ROOM_COLOR[region])
 		State.HOVERED:
 			change_to_color(HOVER_COLOR)
-			show_nodes()
 		State.UNREACHABLE:
 			change_to_color(UNREACHABLE_COLOR)
-	
-	if prev_state == State.HOVERED:
-		hide_nodes()
+		State.STARTER:
+			start_highlight_loop()
 
 func room_hover() -> void:
 	set_state(State.HOVERED)
@@ -146,3 +135,14 @@ func room_stop_hover() -> void:
 func room_clicked() -> void:
 	print_debug(data.name)
 	clicked.emit()
+
+func start_highlight_loop() -> void:
+	const HIGHLIGHT_DURATION : float = 1.0
+	
+	change_to_color(STARTER_COLOR, HIGHLIGHT_DURATION)
+	await room_color_tween.finished
+	change_to_color(HOVER_COLOR if state == State.HOVERED else ROOM_COLOR[region], HIGHLIGHT_DURATION)
+	await room_color_tween.finished
+	
+	if state == State.STARTER:
+		start_highlight_loop()

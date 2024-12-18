@@ -11,6 +11,9 @@ func _gui_input(event: InputEvent) -> void:
 		node_clicked()
 
 func _ready() -> void:
+	# ALERT 
+	hide()
+	
 	if data:
 		name = "n_%s" % data.display_name
 		init_node()
