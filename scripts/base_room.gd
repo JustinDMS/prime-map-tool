@@ -19,7 +19,7 @@ const ROOM_COLOR : Array[Color] = [
 	"#A7333F",
 	"#700000"
 ]
-## Rooms that need to have their z index increased to match the game
+## Rooms that need to have their z index increased to better match the game
 const MANUAL_Z_ROOMS : Array[String] = [
 	"Hall of the Elders",
 	
@@ -97,12 +97,27 @@ func init_room():
 	custom_minimum_size.y = abs(y2 - y1)
 	
 	set_state(State.DEFAULT)
+	hide_nodes.call_deferred()
 
 func change_to_color(new_color : Color) -> void:
 	const DURATION : float = 0.2
 	
 	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
-	tween.tween_property(self, "modulate", new_color, DURATION)
+	tween.tween_property(self, "self_modulate", new_color, DURATION)
+
+func show_nodes() -> void:
+	const DURATION : float = 0.2
+	
+	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE).set_parallel(true)
+	for n in get_children():
+		tween.tween_property(n, "self_modulate", Color.WHITE, DURATION)
+
+func hide_nodes() -> void:
+	const DURATION : float = 0.2
+	
+	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE).set_parallel(true)
+	for n in get_children():
+		tween.tween_property(n, "self_modulate", Color.TRANSPARENT, DURATION)
 
 func set_state(new_state : State) -> void:
 	prev_state = state
@@ -113,8 +128,12 @@ func set_state(new_state : State) -> void:
 			change_to_color(ROOM_COLOR[region])
 		State.HOVERED:
 			change_to_color(HOVER_COLOR)
+			show_nodes()
 		State.UNREACHABLE:
 			change_to_color(UNREACHABLE_COLOR)
+	
+	if prev_state == State.HOVERED:
+		hide_nodes()
 
 func room_hover() -> void:
 	set_state(State.HOVERED)

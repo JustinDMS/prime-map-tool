@@ -138,6 +138,16 @@ func draw_map() -> void:
 				sub_region_node.add_child(room)
 				sub_region_node.position = MINES_OFFSET[sub_region]
 			
+			for n in room_data.nodes:
+				if n.coordinates == Vector3.ZERO:
+					continue
+				var node_marker := draw_node(n)
+				node_marker.room_size = Vector2(
+					abs(room_data.aabb[3] - room_data.aabb[0]),
+					abs(room_data.aabb[4] - room_data.aabb[1])
+				)
+				room.add_child(node_marker)
+			
 			room.set_name(j) # Set name in SceneTree
 		
 		region.position = REGION_OFFSET[i]
@@ -150,12 +160,12 @@ func draw_map() -> void:
 	for i in range(Region.MAX):
 		for j in region_data[i]["areas"].keys():
 			for k in region_data[i]["areas"][j]["nodes"].keys():
-				var node := get_node_data(REGION_NAME[i], j, k)
+				var node_data := get_node_data(REGION_NAME[i], j, k)
 				var connections : Array[NodeData] = []
 				for l in region_data[i]["areas"][j]["nodes"][k]["connections"]:
 					var new_connection := get_node_data(REGION_NAME[i], j, l)
 					connections.append(new_connection)
-				node.connections.assign(connections)
+				node_data.connections.assign(connections)
 				
 				var default_connection_data = region_data[i]["areas"][j]["nodes"][k].get("default_connection", null)
 				if default_connection_data and default_connection_data["region"] in REGION_NAME:
@@ -164,7 +174,7 @@ func draw_map() -> void:
 						default_connection_data["area"],
 						default_connection_data["node"]
 					)
-					node.default_connection = default_connection
+					node_data.default_connection = default_connection
 
 func determine_mines_region(z : float) -> int:
 	const Z_LEVEL = [
@@ -253,6 +263,14 @@ func draw_room(room_data : RoomData) -> Room:
 	room.data = room_data
 	
 	return room
+
+func draw_node(node_data : NodeData) -> NodeMarker:
+	const BASE_NODE_MARKER : PackedScene = preload("res://resources/node_marker.tscn")
+	
+	var node_marker := BASE_NODE_MARKER.instantiate()
+	node_marker.data = node_data
+	
+	return node_marker
 
 func load_rdv(data : Dictionary) -> void:
 	var _version : String = data["info"]["randovania_version"]
