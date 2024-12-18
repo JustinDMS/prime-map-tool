@@ -246,6 +246,8 @@ func init_tricks_display(inventory : PrimeInventory) -> void:
 				inventory.tricks[key] = int(new_value)
 				inventory_changed.emit()
 				)
+		
+		slider.value = inventory.tricks[key]
 
 func tricks_visibility_button_pressed() -> void:
 	tricks_panel.visible = !tricks_panel.visible

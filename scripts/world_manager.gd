@@ -265,6 +265,8 @@ func load_rdv(data : Dictionary) -> void:
 	var tricks : Dictionary = data["info"]["presets"][0]["configuration"]["trick_level"]["specific_levels"]
 	inventory.init_tricks(tricks)
 	
+	inventory_initialized.emit(inventory)
+	
 	var start_location : PackedStringArray = data["game_modifications"][0]["starting_location"].split("/")
 	start_node = get_node_data(start_location[0], start_location[1], start_location[2])
 	
@@ -283,8 +285,6 @@ func init_current_inventory(data : Array = []) -> void:
 		for i in data:
 			if inventory.state.has(i):
 				inventory.state[i] += 1
-	
-	inventory_initialized.emit(inventory)
 
 func get_room_obj(region : Region, room_name : String) -> Room:
 	var data : RoomData = world_data[REGION_NAME[region]][room_name]
