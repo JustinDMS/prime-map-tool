@@ -15,7 +15,7 @@ const REGION_DISPLAY_NAME : Array[String] = [
 ]
 const INVENTORY_ICON_MAP := {
 	"Morph Ball" : preload("res://data/icons/Morph Ball.png"),
-	"Boost Ball" : preload("res://data/icons/Morph Ball.png"),
+	"Boost Ball" : preload("res://data/icons/Boost Ball.png"),
 	"Spider Ball" : preload("res://data/icons/Spider Ball.png"),
 	"Morph Ball Bomb" : preload("res://data/icons/Morph Ball Bomb.png"),
 	
@@ -24,10 +24,10 @@ const INVENTORY_ICON_MAP := {
 	"Missile Launcher" : preload("res://data/icons/Missile Expansion.png"),
 	"Grapple Beam" : preload("res://data/icons/Grapple Beam.png"),
 	
-	"Power Suit" : preload("res://data/icons/Varia Suit.png"),
+	"Power Suit" : preload("res://data/icons/Power Suit.png"),
 	"Varia Suit" : preload("res://data/icons/Varia Suit.png"),
 	"Gravity Suit" : preload("res://data/icons/Gravity Suit.png"),
-	"Phazon Suit" : preload("res://data/icons/Varia Suit.png"),
+	"Phazon Suit" : preload("res://data/icons/Phazon Suit.png"),
 	
 	"Charge Beam" : preload("res://data/icons/Charge Beam.png"),
 	"Power Beam" : preload("res://data/icons/Power Beam.png"),
@@ -35,11 +35,11 @@ const INVENTORY_ICON_MAP := {
 	"Ice Beam" : preload("res://data/icons/Ice Beam.png"),
 	"Plasma Beam" : preload("res://data/icons/Plasma Beam.png"),
 	
-	"Combat Visor" : preload("res://data/icons/Thermal Visor.png"),
-	"Scan Visor" : preload("res://data/icons/Thermal Visor.png"),
+	"Combat Visor" : preload("res://data/icons/Combat Visor.png"),
+	"Scan Visor" : preload("res://data/icons/Scan Visor.png"),
 	
 	"Thermal Visor" : preload("res://data/icons/Thermal Visor.png"),
-	"X-Ray Visor" : preload("res://data/icons/Thermal Visor.png"),
+	"X-Ray Visor" : preload("res://data/icons/X-Ray Visor.png"),
 	
 	"Super Missile" : preload("res://data/icons/Super Missile.png"),
 	"Wavebuster" : preload("res://data/icons/Wavebuster.png"),
@@ -104,7 +104,19 @@ const TRICK_LEVEL_NAME : Array[String] = [
 @export var inventory_visibility_button : Button
 @export var inventory_panel : Panel
 @export var inventory_label : Label
+@export var etank_container : HBoxContainer
+@export var missile_count_label : Label
+@export var missile_increase_button : Button
+@export var missile_decrease_button : Button
+@export var has_launcher_checkbox : CheckBox
+@export var requires_launcher_checkbox : CheckBox
+@export var pb_count_label : Label
+@export var pb_increase_button : Button
+@export var pb_decrease_button : Button
+@export var has_main_pb_checkbox : CheckBox
+@export var requires_main_pb_checkbox : CheckBox
 @export var inventory_container : GridContainer
+@export var artifact_container : Control
 @export var give_all_button : Button
 @export var clear_button : Button
 @export_category("Tricks")
@@ -113,6 +125,8 @@ const TRICK_LEVEL_NAME : Array[String] = [
 @export var max_button : Button
 @export var none_button : Button
 @export var tricks_container : VBoxContainer
+
+var etank_buttons : Array[TextureButton] = []
 
 @onready var display_panels : Array[Panel] = [inventory_panel, tricks_panel]
 
@@ -136,9 +150,10 @@ func room_stop_hover(_room : Room) -> void:
 	room_name_label.text = ""
 
 func import_rdv_pressed() -> void:
-	const MIN_DIALOG_SIZE := Vector2i(300, 100)
+	const MIN_DIALOG_SIZE := Vector2i(400, 100)
 	var line_edit := LineEdit.new()
 	line_edit.theme = THEME
+	line_edit.shortcut_keys_enabled = true
 	
 	var accept_dialog := AcceptDialog.new()
 	accept_dialog.min_size = MIN_DIALOG_SIZE
@@ -166,30 +181,203 @@ func rdv_imported(raw_text : String) -> void:
 	rdvgame_loaded.emit(data)
 
 func init_inventory_display(inventory : PrimeInventory) -> void:
-	const BUTTON_SIZE := Vector2(95, 70)
-	
 	for node in inventory_container.get_children():
 		node.queue_free()
 	
 	for key in inventory.state.keys():
-		var checkbox := CheckBox.new()
-		inventory_container.add_child(checkbox)
-		checkbox.theme = THEME
-		checkbox.icon = INVENTORY_ICON_MAP[key]
-		checkbox.set_icon_alignment(HORIZONTAL_ALIGNMENT_CENTER)
-		checkbox.expand_icon = true
-		checkbox.focus_mode = Control.FOCUS_NONE
-		checkbox.custom_minimum_size = BUTTON_SIZE
-		checkbox.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND 
-		#checkbox.text = key
-		checkbox.button_pressed = inventory.state[key] > 0
-		checkbox.mouse_entered.connect(func(): set_inventory_text(key))
-		checkbox.mouse_exited.connect(func(): set_inventory_text("Inventory"))
-		checkbox.toggled.connect(
-			func(on : bool): 
-			inventory.state[key] = 1 if on else 0
+		var item_count : int = inventory.state[key]
+		match key:
+			"Missile Launcher":
+				has_launcher_checkbox.button_pressed = inventory.state[key] > 0
+				has_launcher_checkbox.toggled.connect(
+					func(on : bool):
+					inventory.state[key] = 1 if on else 0
+					update_missile_count(inventory)
+					inventory_changed.emit()
+				)
+				requires_launcher_checkbox.button_pressed = inventory.requires_launcher
+				requires_launcher_checkbox.toggled.connect(
+					func(on : bool):
+					inventory.requires_launcher = on
+					inventory_changed.emit()
+				)
+				update_missile_count(inventory)
+			"Missile Expansion":
+				const MAX_EXPANSIONS : int = 49
+				missile_increase_button.pressed.connect(
+					func():
+					inventory.state[key] += 1
+					inventory.state[key] = clampi(inventory.state[key], 0, MAX_EXPANSIONS)
+					update_missile_count(inventory)
+					inventory_changed.emit()
+				)
+				missile_decrease_button.pressed.connect(
+					func():
+					inventory.state[key] -= 1
+					inventory.state[key] = clampi(inventory.state[key], 0, MAX_EXPANSIONS)
+					update_missile_count(inventory)
+					inventory_changed.emit()
+				)
+				update_missile_count(inventory)
+			"Power Bomb":
+				has_main_pb_checkbox.button_pressed = inventory.state[key] > 0
+				has_main_pb_checkbox.toggled.connect(
+					func(on : bool):
+					inventory.state[key] = 1 if on else 0
+					update_pb_count(inventory)
+					inventory_changed.emit()
+				)
+				requires_main_pb_checkbox.button_pressed = inventory.requires_main_pb
+				requires_main_pb_checkbox.toggled.connect(
+					func(on : bool):
+					inventory.requires_main_pb = on
+					inventory_changed.emit()
+				)
+				update_pb_count(inventory)
+			"Power Bomb Expansion":
+				const MAX_EXPANSIONS : int = 4
+				pb_increase_button.pressed.connect(
+					func():
+					inventory.state[key] += 1
+					inventory.state[key] = clampi(inventory.state[key], 0, MAX_EXPANSIONS)
+					update_pb_count(inventory)
+					inventory_changed.emit()
+				)
+				pb_decrease_button.pressed.connect(
+					func():
+					inventory.state[key] -= 1
+					inventory.state[key] = clampi(inventory.state[key], 0, MAX_EXPANSIONS)
+					update_pb_count(inventory)
+					inventory_changed.emit()
+				)
+				update_pb_count(inventory)
+			"Energy Tank":
+				make_energy_tank_buttons(INVENTORY_ICON_MAP[key], inventory)
+			"Artifact of Truth", "Artifact of Strength", "Artifact of Elder", "Artifact of Wild", "Artifact of Lifegiver", "Artifact of Warrior", "Artifact of Chozo", "Artifact of Nature", "Artifact of Sun", "Artifact of World", "Artifact of Spirit", "Artifact of Newborn":
+				add_artifact_button(INVENTORY_ICON_MAP[key], key, inventory)
+			_:
+				make_item_checkbox(INVENTORY_ICON_MAP[key], key, inventory)
+
+func update_missile_count(inventory : PrimeInventory) -> void:
+	const MISSILES_PER_EXPANSION : int = 5
+	
+	var expansions : int = inventory.state["Missile Expansion"]
+	var launcher : int = inventory.state["Missile Launcher"]
+	var text := "%d" % ((expansions * MISSILES_PER_EXPANSION) + (launcher * MISSILES_PER_EXPANSION))
+	missile_count_label.set_text(text)
+
+func update_pb_count(inventory : PrimeInventory) -> void:
+	const MAIN_PB_COUNT : int = 4
+	
+	var expansions : int = inventory.state["Power Bomb Expansion"]
+	var main : int = inventory.state["Power Bomb"]
+	var text = "%d" % ((main * MAIN_PB_COUNT) + expansions)
+	pb_count_label.set_text(text)
+
+func make_item_checkbox(texture : Texture2D, item_name : String, inventory : PrimeInventory):
+	const BUTTON_SIZE := Vector2(95, 65)
+	
+	var checkbox := CheckBox.new()
+	inventory_container.add_child(checkbox)
+	checkbox.theme = THEME
+	checkbox.icon = texture
+	checkbox.set_icon_alignment(HORIZONTAL_ALIGNMENT_CENTER)
+	checkbox.expand_icon = true
+	checkbox.focus_mode = Control.FOCUS_NONE
+	checkbox.custom_minimum_size = BUTTON_SIZE
+	checkbox.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND 
+	checkbox.button_pressed = inventory.state[item_name] > 0
+	checkbox.mouse_entered.connect(func(): set_inventory_text(item_name))
+	checkbox.mouse_exited.connect(func(): set_inventory_text("Inventory"))
+	checkbox.toggled.connect(
+		func(on : bool): 
+		inventory.state[item_name] = 1 if on else 0
+		inventory_changed.emit()
+		)
+
+func make_energy_tank_buttons(texture : Texture2D, inventory : PrimeInventory) -> void:
+	const MAX_TANKS : int = 14
+	const SCALE : float = 0.095
+	const EMPTY_TANK_TEXTURE : Texture2D = preload("res://data/icons/Empty Energy Tank.png")
+	
+	for i in range(MAX_TANKS):
+		var texture_button := TextureButton.new()
+		texture_button.texture_normal = EMPTY_TANK_TEXTURE
+		texture_button.texture_pressed = texture
+		texture_button.ignore_texture_size = true
+		texture_button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+		texture_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		
+		texture_button.set_toggle_mode(true)
+		texture_button.button_pressed = inventory.state["Energy Tank"] > i
+		texture_button.action_mode = BaseButton.ACTION_MODE_BUTTON_RELEASE
+		
+		texture_button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND 
+		
+		texture_button.mouse_entered.connect(
+			func(): 
+			var text : String = "Energy Tank: %d" % inventory.state["Energy Tank"]
+			set_inventory_text(text)
+			)
+		texture_button.mouse_exited.connect(func(): set_inventory_text("Inventory"))
+		texture_button.toggled.connect(
+			func(on : bool):
+			if inventory.state["Energy Tank"] > i + 1:
+				inventory.state["Energy Tank"] = i + 1
+			elif inventory.state["Energy Tank"] < i + 1:
+				inventory.state["Energy Tank"] = i + 1
+			else:
+				inventory.state["Energy Tank"] = i
+			var text : String = "Energy Tank: %d" % inventory.state["Energy Tank"]
+			set_inventory_text(text)
+			update_etank_display_state(inventory, MAX_TANKS)
 			inventory_changed.emit()
 			)
+		
+		etank_container.add_child(texture_button)
+		etank_buttons.append(texture_button)
+	
+	etank_container.custom_minimum_size.y = etank_container.size.y
+
+func update_etank_display_state(inventory : PrimeInventory, max_count : int) -> void:
+	for i in range(max_count):
+		etank_buttons[i].set_pressed_no_signal(inventory.state["Energy Tank"] >= i + 1)
+
+func add_artifact_button(texture : Texture2D, item_name : String, inventory : PrimeInventory) -> void:
+	const NORMAL_COLOR := Color("#4CDAF5")
+	const PRESSED_COLOR := Color("#F1A34C")
+	const SCALE := 0.3
+	const COLOR_CHANGE_DURATION : float = 0.2
+	
+	var texture_button := TextureButton.new()
+	texture_button.toggle_mode = true
+	texture_button.texture_normal = texture
+	texture_button.ignore_texture_size = true
+	texture_button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	texture_button.custom_minimum_size = texture.get_size() * SCALE
+	texture_button.position -= (texture.get_size() * SCALE) * 0.5
+	texture_button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	artifact_container.add_child(texture_button)
+	
+	var image := texture.get_image()
+	var bitmap := BitMap.new()
+	bitmap.create_from_image_alpha(image, 0.1)
+	texture_button.texture_click_mask = bitmap
+	
+	texture_button.mouse_entered.connect(func(): set_inventory_text(item_name))
+	texture_button.mouse_exited.connect(func(): set_inventory_text("Inventory"))
+	texture_button.toggled.connect(
+		func(on : bool):
+		inventory.state[item_name] = 1 if on else 0
+		var tween := create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+		tween.tween_property(
+			texture_button, 
+			"self_modulate", PRESSED_COLOR if on else NORMAL_COLOR,
+			COLOR_CHANGE_DURATION
+			)
+		inventory_changed.emit()
+	)
+	texture_button.button_pressed = inventory.state[item_name] > 0
 
 func inventory_visibility_button_pressed() -> void:
 	inventory_panel.visible = !inventory_panel.visible

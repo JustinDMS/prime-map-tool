@@ -27,40 +27,41 @@ const TRICK_VALUE_MAP : Dictionary = {
 @export var requires_launcher := false
 @export var requires_main_pb := false
 @export var state := {
+	"Energy Tank" : 14,
+	
+	"Missile Launcher" : 1,
+	"Missile Expansion" : 49,
+	"Power Bomb" : 1,
+	"Power Bomb Expansion" : 4,
+	
 	"Morph Ball" : 1,
+	"Morph Ball Bomb" : 1,
 	"Boost Ball" : 1,
 	"Spider Ball" : 1,
-	"Morph Ball Bomb" : 1,
-	
-	"Power Bomb" : 1,
-	"Space Jump Boots" : 1,
-	"Charge Beam" : 1,
-	"Grapple Beam" : 1,
 	
 	"Power Suit" : 1,
 	"Varia Suit" : 1,
 	"Gravity Suit" : 1,
 	"Phazon Suit" : 1,
 	
-	"Power Beam" : 1,
-	"Wave Beam" : 1,
-	"Ice Beam" : 1,
-	"Plasma Beam" : 1,
-	
 	"Combat Visor" : 1,
 	"Scan Visor" : 1,
 	"Thermal Visor" : 1,
 	"X-Ray Visor" : 1,
+	
+	"Power Beam" : 1,
+	"Wave Beam" : 1,
+	"Ice Beam" : 1,
+	"Plasma Beam" : 1,
 	
 	"Super Missile" : 1,
 	"Wavebuster" : 1,
 	"Ice Spreader" : 1,
 	"Flamethrower" : 1,
 	
-	"Missile Launcher" : 1,
-	"Energy Tank" : 14,
-	"Missile Expansion" : 49,
-	"Power Bomb Expansion" : 4,
+	"Space Jump Boots" : 1,
+	"Charge Beam" : 1,
+	"Grapple Beam" : 1,
 	
 	"Artifact of Truth" : 1,
 	"Artifact of Strength" : 1,
