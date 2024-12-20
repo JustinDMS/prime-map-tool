@@ -24,6 +24,10 @@ const TRICK_VALUE_MAP : Dictionary = {
 	"hypermode": 5
 }
 
+const ETANK_MAX : int = 14
+const MISSILE_EXPANSION_MAX : int = 49
+const PB_EXPANSION_MAX : int = 4
+
 @export var requires_launcher := false
 @export var requires_main_pb := false
 @export var state := {
@@ -215,6 +219,18 @@ func has_artifact(a : Artifact) -> bool:
 	return false
 
 ########
+
+func all() -> void:
+	for item in state.keys():
+		match item:
+			"Energy Tank":
+				state[item] = ETANK_MAX
+			"Missile Expansion":
+				state[item] = MISSILE_EXPANSION_MAX
+			"Power Bomb Expansion":
+				state[item] = PB_EXPANSION_MAX
+			_:
+				state[item] = 1
 
 func clear() -> void:
 	for item in state.keys():

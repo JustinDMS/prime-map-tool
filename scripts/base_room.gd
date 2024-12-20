@@ -15,13 +15,11 @@ enum State {
 const COLOR_CHANGE_DURATION : float = 0.2
 
 const ROOM_COLOR : Array[Color] = [
-	"#999999",
 	"#EA8C55",
 	"#C9D6EA",
 	"#7FB685",
 	"#BC96E6",
 	"#A7333F",
-	"#700000"
 ]
 ## Rooms that need to have their z index increased to better match the game
 const MANUAL_Z_ROOMS : Array[String] = [

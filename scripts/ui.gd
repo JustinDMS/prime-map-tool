@@ -4,15 +4,6 @@ signal rdvgame_loaded(data : Dictionary)
 signal inventory_changed()
 
 const THEME := preload("res://resources/theme.tres")
-const REGION_DISPLAY_NAME : Array[String] = [
-	"Frigate Orpheon",
-	"Chozo Ruins",
-	"Phendrana Drifts",
-	"Tallon Overworld",
-	"Phazon Mines",
-	"Magmoor Caverns",
-	"Impact Crater"
-]
 const INVENTORY_ICON_MAP := {
 	"Morph Ball" : preload("res://data/icons/Morph Ball.png"),
 	"Boost Ball" : preload("res://data/icons/Boost Ball.png"),
@@ -134,15 +125,13 @@ func _ready() -> void:
 	import_rdv_button.pressed.connect(import_rdv_pressed)
 	
 	inventory_visibility_button.pressed.connect(inventory_visibility_button_pressed)
-	give_all_button.pressed.connect(give_all_pressed)
-	clear_button.pressed.connect(clear_pressed)
 	
 	tricks_visibility_button.pressed.connect(tricks_visibility_button_pressed)
 	max_button.pressed.connect(max_pressed)
 	none_button.pressed.connect(none_pressed)
 
 func room_hover(room : Room) -> void:
-	region_name_label.text = REGION_DISPLAY_NAME[room.data.region]
+	region_name_label.text = World.REGION_NAME[room.data.region]
 	room_name_label.text = room.name
 
 func room_stop_hover(_room : Room) -> void:
@@ -185,7 +174,6 @@ func init_inventory_display(inventory : PrimeInventory) -> void:
 		node.queue_free()
 	
 	for key in inventory.state.keys():
-		var item_count : int = inventory.state[key]
 		match key:
 			"Missile Launcher":
 				has_launcher_checkbox.button_pressed = inventory.state[key] > 0
@@ -203,18 +191,17 @@ func init_inventory_display(inventory : PrimeInventory) -> void:
 				)
 				update_missile_count(inventory)
 			"Missile Expansion":
-				const MAX_EXPANSIONS : int = 49
 				missile_increase_button.pressed.connect(
 					func():
 					inventory.state[key] += 1
-					inventory.state[key] = clampi(inventory.state[key], 0, MAX_EXPANSIONS)
+					inventory.state[key] = clampi(inventory.state[key], 0, inventory.MISSILE_EXPANSION_MAX)
 					update_missile_count(inventory)
 					inventory_changed.emit()
 				)
 				missile_decrease_button.pressed.connect(
 					func():
 					inventory.state[key] -= 1
-					inventory.state[key] = clampi(inventory.state[key], 0, MAX_EXPANSIONS)
+					inventory.state[key] = clampi(inventory.state[key], 0, inventory.MISSILE_EXPANSION_MAX)
 					update_missile_count(inventory)
 					inventory_changed.emit()
 				)
@@ -235,18 +222,17 @@ func init_inventory_display(inventory : PrimeInventory) -> void:
 				)
 				update_pb_count(inventory)
 			"Power Bomb Expansion":
-				const MAX_EXPANSIONS : int = 4
 				pb_increase_button.pressed.connect(
 					func():
 					inventory.state[key] += 1
-					inventory.state[key] = clampi(inventory.state[key], 0, MAX_EXPANSIONS)
+					inventory.state[key] = clampi(inventory.state[key], 0, inventory.PB_EXPANSION_MAX)
 					update_pb_count(inventory)
 					inventory_changed.emit()
 				)
 				pb_decrease_button.pressed.connect(
 					func():
 					inventory.state[key] -= 1
-					inventory.state[key] = clampi(inventory.state[key], 0, MAX_EXPANSIONS)
+					inventory.state[key] = clampi(inventory.state[key], 0, inventory.PB_EXPANSION_MAX)
 					update_pb_count(inventory)
 					inventory_changed.emit()
 				)
@@ -257,6 +243,9 @@ func init_inventory_display(inventory : PrimeInventory) -> void:
 				add_artifact_button(INVENTORY_ICON_MAP[key], key, inventory)
 			_:
 				make_item_checkbox(INVENTORY_ICON_MAP[key], key, inventory)
+	
+	give_all_button.pressed.connect(give_all_pressed.bind(inventory))
+	clear_button.pressed.connect(clear_pressed.bind(inventory))
 
 func update_missile_count(inventory : PrimeInventory) -> void:
 	const MISSILES_PER_EXPANSION : int = 5
@@ -296,11 +285,9 @@ func make_item_checkbox(texture : Texture2D, item_name : String, inventory : Pri
 		)
 
 func make_energy_tank_buttons(texture : Texture2D, inventory : PrimeInventory) -> void:
-	const MAX_TANKS : int = 14
-	const SCALE : float = 0.095
 	const EMPTY_TANK_TEXTURE : Texture2D = preload("res://data/icons/Empty Energy Tank.png")
 	
-	for i in range(MAX_TANKS):
+	for i in range(inventory.ETANK_MAX):
 		var texture_button := TextureButton.new()
 		texture_button.texture_normal = EMPTY_TANK_TEXTURE
 		texture_button.texture_pressed = texture
@@ -321,7 +308,7 @@ func make_energy_tank_buttons(texture : Texture2D, inventory : PrimeInventory) -
 			)
 		texture_button.mouse_exited.connect(func(): set_inventory_text("Inventory"))
 		texture_button.toggled.connect(
-			func(on : bool):
+			func(_on : bool):
 			if inventory.state["Energy Tank"] > i + 1:
 				inventory.state["Energy Tank"] = i + 1
 			elif inventory.state["Energy Tank"] < i + 1:
@@ -330,7 +317,7 @@ func make_energy_tank_buttons(texture : Texture2D, inventory : PrimeInventory) -
 				inventory.state["Energy Tank"] = i
 			var text : String = "Energy Tank: %d" % inventory.state["Energy Tank"]
 			set_inventory_text(text)
-			update_etank_display_state(inventory, MAX_TANKS)
+			update_etank_display_state(inventory)
 			inventory_changed.emit()
 			)
 		
@@ -339,8 +326,8 @@ func make_energy_tank_buttons(texture : Texture2D, inventory : PrimeInventory) -
 	
 	etank_container.custom_minimum_size.y = etank_container.size.y
 
-func update_etank_display_state(inventory : PrimeInventory, max_count : int) -> void:
-	for i in range(max_count):
+func update_etank_display_state(inventory : PrimeInventory) -> void:
+	for i in range(inventory.ETANK_MAX):
 		etank_buttons[i].set_pressed_no_signal(inventory.state["Energy Tank"] >= i + 1)
 
 func add_artifact_button(texture : Texture2D, item_name : String, inventory : PrimeInventory) -> void:
@@ -390,13 +377,39 @@ func inventory_visibility_button_pressed() -> void:
 func set_inventory_text(new_text : String) -> void:
 	inventory_label.text = new_text
 
-func give_all_pressed() -> void:
+func give_all_pressed(inventory : PrimeInventory) -> void:
+	inventory.all()
+	
+	update_etank_display_state(inventory)
+	has_launcher_checkbox.set_pressed_no_signal(true)
+	update_missile_count(inventory)
+	has_main_pb_checkbox.set_pressed_no_signal(true)
+	update_pb_count(inventory)
+	
 	for cb in inventory_container.get_children():
-		cb.button_pressed = true
+		cb.set_pressed_no_signal(true)
+	
+	for a in artifact_container.get_children():
+		a.button_pressed = true
+	
+	inventory_changed.emit()
 
-func clear_pressed() -> void:
+func clear_pressed(inventory : PrimeInventory) -> void:
+	inventory.clear()
+	
+	update_etank_display_state(inventory)
+	has_launcher_checkbox.set_pressed_no_signal(false)
+	update_missile_count(inventory)
+	has_main_pb_checkbox.set_pressed_no_signal(false)
+	update_pb_count(inventory)
+	
 	for cb in inventory_container.get_children():
-		cb.button_pressed = false
+		cb.set_pressed_no_signal(false)
+	
+	for a in artifact_container.get_children():
+		a.button_pressed = false
+	
+	inventory_changed.emit()
 
 func init_tricks_display(inventory : PrimeInventory) -> void:
 	const MAX_TRICK_LEVEL := 5

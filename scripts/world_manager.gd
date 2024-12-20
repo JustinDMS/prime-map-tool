@@ -5,13 +5,11 @@ signal map_resolved(visited_nodes : Dictionary)
 signal inventory_initialized(inv : PrimeInventory)
 
 enum Region {
-	FRIGATE,
 	CHOZO,
 	PHENDRANA,
 	TALLON,
 	MINES,
 	MAGMOOR,
-	CRATER,
 	MAX
 }
 enum {
@@ -22,31 +20,25 @@ enum {
 }
 
 const ROOM_DATA : Array[String] = [
-	"res://data/Frigate Orpheon.json",
 	"res://data/Chozo Ruins.json",
 	"res://data/Phendrana Drifts.json",
 	"res://data/Tallon Overworld.json",
 	"res://data/Phazon Mines.json",
 	"res://data/Magmoor Caverns.json",
-	"res://data/Impact Crater.json"
 ]
 const REGION_OFFSET : Array[Vector2] = [
-	Vector2(0, -900),
 	Vector2(2250, -300),
 	Vector2(500, 0),
 	Vector2(2500, 700),
 	Vector2(1250, 1100),
 	Vector2(1000, -500),
-	Vector2(700, -900)
 ]
 const REGION_NAME : Array[String] = [
-	"Frigate Orpheon",
 	"Chozo Ruins",
 	"Phendrana Drifts",
 	"Tallon Overworld",
 	"Phazon Mines",
 	"Magmoor Caverns",
-	"Impact Crater"
 ]
 const MINES_OFFSET : Array[Vector2] = [
 	Vector2(500, 0),
@@ -58,13 +50,11 @@ const MINES_OFFSET : Array[Vector2] = [
 
 var region_data : Array[Dictionary] = []
 var world_data := {
-	REGION_NAME[Region.FRIGATE] : {},
 	REGION_NAME[Region.CHOZO] : {},
 	REGION_NAME[Region.PHENDRANA] : {},
 	REGION_NAME[Region.TALLON] : {},
 	REGION_NAME[Region.MINES] : {},
 	REGION_NAME[Region.MAGMOOR] : {},
-	REGION_NAME[Region.CRATER] : {}
 }
 var room_map := {}
 var region_map := {}
@@ -130,9 +120,6 @@ func draw_map() -> void:
 			room.set_name(j) # Set name in SceneTree
 		
 		region.position = REGION_OFFSET[i]
-		
-		if i in [Region.FRIGATE, Region.CRATER]:
-			region.hide()
 	
 	# Now that every room and its nodes have been
 	# created, finish initializing node connections
@@ -176,8 +163,7 @@ func get_region_data(region : Region) -> Dictionary:
 
 func make_room_data(region : Region, room_name : String, data : Dictionary) -> RoomData:
 	var room_data := RoomData.new()
-	if not region in [Region.FRIGATE, Region.CRATER]:
-		room_data.texture = get_room_texture(REGION_NAME[region], room_name)
+	room_data.texture = get_room_texture(REGION_NAME[region], room_name)
 	room_data.region = region
 	room_data.name = room_name
 	room_data.aabb = [
@@ -310,13 +296,11 @@ func resolve_map() -> void:
 	
 	var visited_nodes := {}
 	var visited_rooms := {
-		REGION_NAME[Region.FRIGATE] : [],
 		REGION_NAME[Region.CHOZO] : [],
 		REGION_NAME[Region.PHENDRANA] : [],
 		REGION_NAME[Region.TALLON] : [],
 		REGION_NAME[Region.MINES] : [],
 		REGION_NAME[Region.MAGMOOR] : [],
-		REGION_NAME[Region.CRATER] : []
 	}
 	
 	while len(queue) > 0:
