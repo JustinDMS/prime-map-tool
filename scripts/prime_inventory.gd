@@ -14,19 +14,26 @@ enum Artifact {
 	SPIRIT,
 	NEWBORN
 }
-
-const TRICK_VALUE_MAP : Dictionary = {
-	"disabled" : 0,
-	"beginner" : 1,
-	"intermediate" : 2,
-	"advanced" : 3,
-	"expert" : 4,
-	"hypermode": 5
+enum TrickLevel {
+	DISABLED,
+	BEGINNER,
+	INTERMEDIATE,
+	ADVANCED,
+	EXPERT,
+	HYPERMODE
 }
-
+const TRICK_VALUE_MAP : Dictionary = {
+	"disabled" : TrickLevel.DISABLED,
+	"beginner" : TrickLevel.BEGINNER,
+	"intermediate" : TrickLevel.INTERMEDIATE,
+	"advanced" : TrickLevel.ADVANCED,
+	"expert" : TrickLevel.EXPERT,
+	"hypermode": TrickLevel.HYPERMODE
+}
 const ETANK_MAX : int = 14
 const MISSILE_EXPANSION_MAX : int = 49
 const PB_EXPANSION_MAX : int = 4
+const ENERGY_PER_TANK : float = 100.0
 
 @export var requires_launcher := false
 @export var requires_main_pb := false
@@ -81,29 +88,46 @@ const PB_EXPANSION_MAX : int = 4
 	"Artifact of Newborn" : 1,
 }
 @export var tricks := {
-	"BJ" : TRICK_VALUE_MAP["disabled"],
-	"BSJ" : TRICK_VALUE_MAP["disabled"],
-	"BoostlessSpiner" : TRICK_VALUE_MAP["disabled"],
-	"CBJ" : TRICK_VALUE_MAP["disabled"],
-	"ClipThruObjects" : TRICK_VALUE_MAP["disabled"],
-	"Combat" : TRICK_VALUE_MAP["disabled"],
-	"DBoosting" : TRICK_VALUE_MAP["disabled"],
-	"Dash" : TRICK_VALUE_MAP["disabled"],
-	"HeatRun" : TRICK_VALUE_MAP["disabled"],
-	"IS" : TRICK_VALUE_MAP["disabled"],
-	"IUJ" : TRICK_VALUE_MAP["disabled"],
-	"InvisibleObjects" : TRICK_VALUE_MAP["disabled"],
-	"Knowledge" : TRICK_VALUE_MAP["disabled"],
-	"LJump" : TRICK_VALUE_MAP["disabled"],
-	"Movement" : TRICK_VALUE_MAP["disabled"],
-	"OoB" : TRICK_VALUE_MAP["disabled"],
-	"RJump" : TRICK_VALUE_MAP["disabled"],
-	"SJump" : TRICK_VALUE_MAP["disabled"],
-	"StandEnemies" : TRICK_VALUE_MAP["disabled"],
-	"Standable" : TRICK_VALUE_MAP["disabled"],
-	"UnderwaterMovement" : TRICK_VALUE_MAP["disabled"],
-	"WallBoost" : TRICK_VALUE_MAP["disabled"]
+	"BJ" : TrickLevel.HYPERMODE,
+	"BSJ" : TrickLevel.HYPERMODE,
+	"BoostlessSpiner" : TrickLevel.HYPERMODE,
+	"CBJ" : TrickLevel.HYPERMODE,
+	"ClipThruObjects" : TrickLevel.HYPERMODE,
+	"Combat" : TrickLevel.HYPERMODE,
+	"DBoosting" : TrickLevel.HYPERMODE,
+	"Dash" : TrickLevel.HYPERMODE,
+	"HeatRun" : TrickLevel.HYPERMODE,
+	"IS" : TrickLevel.HYPERMODE,
+	"IUJ" : TrickLevel.HYPERMODE,
+	"InvisibleObjects" : TrickLevel.HYPERMODE,
+	"Knowledge" : TrickLevel.HYPERMODE,
+	"LJump" : TrickLevel.HYPERMODE,
+	"Movement" : TrickLevel.HYPERMODE,
+	"OoB" : TrickLevel.HYPERMODE,
+	"RJump" : TrickLevel.HYPERMODE,
+	"SJump" : TrickLevel.HYPERMODE,
+	"StandEnemies" : TrickLevel.HYPERMODE,
+	"Standable" : TrickLevel.HYPERMODE,
+	"UnderwaterMovement" : TrickLevel.HYPERMODE,
+	"WallBoost" : TrickLevel.HYPERMODE
 }
+@export var misc_settings := {
+	"NoGravity" : 0,
+	"main_plaza_door" : 0,
+	"backwards_frigate" : 0,
+	"backwards_labs" : 0,
+	"backwards_upper_mines" : 0,
+	"backwards_lower_mines" : 0,
+	"phazon_elite_without_dynamo" : 0,
+	"small" : 0,
+	"dock_rando" : 0,
+	"hard_mode" : 0,
+	"room_rando" : 0,
+	"remove_bars_great_tree_hall" : 0,
+	"vanilla_heat" : 0,
+}
+
+var energy : float = ENERGY_PER_TANK
 
 func has_morph() -> bool:
 	return state["Morph Ball"] > 0
@@ -236,6 +260,9 @@ func clear() -> void:
 	for item in state.keys():
 		state[item] = 0
 
+func set_energy_full() -> void:
+	energy = ENERGY_PER_TANK + (get_etanks() * ENERGY_PER_TANK)
+
 func has_missile() -> bool:
 	if requires_launcher:
 		return has_launcher()
@@ -246,30 +273,42 @@ func has_pb() -> bool:
 		return has_main_pb()
 	return (has_main_pb() or get_power_bomb_expansions() > 0)
 
-func can_shoot() -> bool:
+func can_use_arm_cannon() -> bool:
 	return (
 		has_combat_visor() or
 		has_thermal() or 
 		has_xray()
-		) and (
+	)
+
+func can_shoot_any_beam() -> bool:
+	return (
+		can_use_arm_cannon() and (
 			has_power_beam() or 
 			has_wave() or 
 			has_ice_beam() or 
 			has_plasma()
+			)
 		)
+
+func is_misc_setting_enabled(setting_name : String) -> bool:
+	if not misc_settings.has(setting_name):
+		push_error("Unhandled misc settings: %s" % setting_name)
+		return false
+	#print("%s = %s" % [setting_name, misc_settings[setting_name] > 0])
+	return misc_settings[setting_name] > 0
 
 func can_pass_dock(weakness : String) -> bool:
 	match weakness:
 		"Normal Door", "Circular Door":
-			return can_shoot() or (has_morph() and (has_bombs() or has_pb()))
+			return can_shoot_any_beam() or (has_morph() and (has_bombs() or has_pb()))
 		"Missile Blast Shield":
-			return can_shoot() and has_missile()
+			return can_shoot_any_beam() and has_missile()
 		"Wave Door":
-			return can_shoot() and has_wave()
+			return can_use_arm_cannon() and has_wave()
 		"Ice Door":
-			return can_shoot() and has_ice_beam()
+			return can_use_arm_cannon() and has_ice_beam()
 		"Plasma Door":
-			return can_shoot() and has_plasma()
+			return can_use_arm_cannon() and has_plasma()
 		"Teleporter", "Square Door":
 			return true
 		"Morph Ball Door":
@@ -323,6 +362,10 @@ func parse_item_name(item_name : String) -> bool:
 			return has_ice_beam()
 		"Plasma":
 			return has_plasma()
+		"Wave":
+			return has_wave()
+		"Wavebuster":
+			return has_wavebuster()
 		
 		# Artifacts
 		"Chozo":
@@ -355,6 +398,13 @@ func parse_item_name(item_name : String) -> bool:
 	
 	return false
 
+func can_take_damage(amount : float) -> bool:
+	var new_energy : float = energy - amount
+	if new_energy > 0.0:
+		energy = new_energy
+		return true
+	return false
+
 func can_reach(logic : Dictionary) -> bool:
 	match logic["type"]:
 		"and":
@@ -381,34 +431,43 @@ func can_reach(logic : Dictionary) -> bool:
 				"tricks":
 					return can_perform_trick(logic["data"]["name"], logic["data"]["amount"])
 				"damage":
-					return true # TODO
+					return can_take_damage(logic["data"]["amount"])
 				"misc":
-					return true # TODO
+					return is_misc_setting_enabled(logic["data"]["name"])
 				_:
 					push_error("Unhandled resource type: %s" % logic["data"]["type"])
 		
 		"template":
+			# Manually entered data from Randovania's header.json
 			match logic["data"]:
-				"Shoot Any Beam":
-					return can_shoot()
-				"Shoot Power Beam":
-					return can_shoot() and has_power_beam()
-				"Shoot Wave Beam":
-					return can_shoot() and has_wave()
-				"Shoot Ice Beam":
-					return can_shoot() and has_ice_beam()
-				"Shoot Plasma Beam":
-					return can_shoot() and has_plasma()
+				"Shoot Super Missile":
+					return can_use_arm_cannon() and has_power_beam() and has_missile() and has_charge() and has_supers()
 				"Have all Beams":
 					return has_power_beam() and has_wave() and has_ice_beam() and has_plasma()
-				"Shoot Super Missile":
-					return can_shoot() and has_missile() and has_charge() and has_supers()
-				"Use Grapple Beam":
-					return can_shoot() and has_grapple()
 				"Heat-Resisting Suit":
 					return has_varia()
+				"Can Use Arm Cannon":
+					return can_use_arm_cannon()
+				"Shoot Any Beam":
+					return can_shoot_any_beam()
+				"Shoot Power Beam":
+					return can_use_arm_cannon() and has_power_beam()
+				"Shoot Wave Beam":
+					return can_use_arm_cannon() and has_wave()
+				"Shoot Ice Beam":
+					return can_use_arm_cannon() and has_ice_beam()
+				"Shoot Plasma Beam":
+					return can_use_arm_cannon() and has_plasma()
+				"Use Grapple Beam":
+					return can_use_arm_cannon() and has_grapple()
+				"Open Normal Door":
+					return can_shoot_any_beam() or (has_morph() and has_bombs() and has_scan())
 				"Move Past Scatter Bombu":
-					return true
+					return (
+						has_morph() or 
+						(can_perform_trick("Movement", TrickLevel.BEGINNER) and can_take_damage(12)) or 
+						(can_perform_trick("Movement", TrickLevel.INTERMEDIATE) and can_take_damage(30) and (can_use_arm_cannon() and has_wave()))
+						)
 				_:
 					push_error("Unhandled template type: %s" % logic["data"])
 		_:
@@ -425,3 +484,39 @@ func can_perform_trick(type : String, value : int) -> bool:
 	if tricks[type] >= value:
 		return true
 	return false
+
+func init_from_rdv(data : Dictionary) -> void:
+	for key in data.keys():
+		match key:
+			"allow_underwater_movement_without_gravity": # 2 different names
+				misc_settings["NoGravity"] = 1
+			"main_plaza_door":
+				misc_settings[key] = 1 if data[key] else 0
+			"backwards_frigate":
+				misc_settings[key] = 1 if data[key] else 0
+			"backwards_labs":
+				misc_settings[key] = 1 if data[key] else 0
+			"backwards_upper_mines":
+				misc_settings[key] = 1 if data[key] else 0
+			"backwards_lower_mines":
+				misc_settings[key] = 1 if data[key] else 0
+			"phazon_elite_without_dynamo":
+				misc_settings[key] = 1 if data[key] else 0
+			"small_samus": # 2 different names
+				misc_settings["small"] = 1 if data[key] else 0
+			"dock_rando":
+				misc_settings[key] = 0 if data[key]["mode"] == "Vanilla" else 1
+			"ingame_difficulty":
+				misc_settings[key] = 0 if data[key] == "Normal" else 1
+			"room_rando":
+				misc_settings[key] = 0 if data[key] == "None" else 1
+			"remove_bars_great_tree_hall":
+				misc_settings[key] = 1 if data[key] else 0
+			"heat_damage":
+				misc_settings["vanilla_heat"] = 1 if is_equal_approx(data[key], 10.0) else 0
+			"damage_strictness":
+				pass
+			_:
+				# This will push a lot of errors
+				#push_error("Unhandled Randovania configuration: %s" % key)
+				pass

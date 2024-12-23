@@ -86,11 +86,24 @@ const TRICK_LEVEL_NAME : Array[String] = [
 	"Expert",
 	"Hypermode"
 ]
+const RANDOVANIA_MISC_SETTINGS_MAP : Dictionary = {
+	"NoGravity" : "Allow Dangerous Gravity Suit Logic",
+	"main_plaza_door" : "Main Plaza Vault Door Unlocked",
+	"backwards_frigate" : "Backwards Frigate",
+	"backwards_labs" : "Backwards Labs",
+	"backwards_upper_mines" : "Backwards Upper Mines",
+	"backwards_lower_mines" : "Backwards Lower Mines",
+	"phazon_elite_without_dynamo" : "Phazon Elite without Dynamo",
+	"small" : "Small Samus",
+	"dock_rando" : "Dock Randomizer",
+	"hard_mode" : "Hard Mode",
+	"room_rando" : "Entrance Randomizer",
+	"remove_bars_great_tree_hall" : "Remove Bars in Great Tree Hall",
+	"vanilla_heat" : "Vanilla Heat Resistance"
+}
 
 @export var region_name_label : Label
 @export var room_name_label : Label
-@export var import_rdv_button : Button
-@export var rdv_game_hash_label : Label
 @export_category("Inventory")
 @export var inventory_visibility_button : Button
 @export var inventory_panel : Panel
@@ -116,13 +129,19 @@ const TRICK_LEVEL_NAME : Array[String] = [
 @export var max_button : Button
 @export var none_button : Button
 @export var tricks_container : VBoxContainer
+@export_category("Randovania")
+@export var randovania_panel : Panel
+@export var randovania_visibility_button : Button
+@export var import_line_edit : LineEdit
+@export var import_status_label : Label
+@export var misc_settings_container : VBoxContainer
 
 var etank_buttons : Array[TextureButton] = []
-
-@onready var display_panels : Array[Panel] = [inventory_panel, tricks_panel]
+var import_status_tween : Tween
 
 func _ready() -> void:
-	import_rdv_button.pressed.connect(import_rdv_pressed)
+	randovania_visibility_button.pressed.connect(randovania_visibility_button_pressed)
+	import_line_edit.text_submitted.connect(rdv_imported)
 	
 	inventory_visibility_button.pressed.connect(inventory_visibility_button_pressed)
 	
@@ -138,36 +157,59 @@ func room_stop_hover(_room : Room) -> void:
 	region_name_label.text = ""
 	room_name_label.text = ""
 
-func import_rdv_pressed() -> void:
-	const MIN_DIALOG_SIZE := Vector2i(400, 100)
-	var line_edit := LineEdit.new()
-	line_edit.theme = THEME
-	line_edit.shortcut_keys_enabled = true
+func randovania_visibility_button_pressed() -> void:
+	randovania_panel.visible = !randovania_panel.visible
 	
-	var accept_dialog := AcceptDialog.new()
-	accept_dialog.min_size = MIN_DIALOG_SIZE
-	accept_dialog.title = "Paste contents of .rdvgame"
-	accept_dialog.ok_button_text = "Import"
-	accept_dialog.get_ok_button().focus_mode = Control.FOCUS_NONE
-	accept_dialog.close_requested.connect(func(): accept_dialog.queue_free())
-	accept_dialog.confirmed.connect(
-		func(): 
-		rdv_imported(line_edit.text)
-		accept_dialog.queue_free()
+	if randovania_panel.visible:
+		randovania_visibility_button.text = "< Randovania"
+	else:
+		randovania_visibility_button.text = "> Randovania"
+
+func init_misc_settings(inventory : PrimeInventory) -> void:
+	for node in misc_settings_container.get_children():
+		node.queue_free()
+	
+	for key in RANDOVANIA_MISC_SETTINGS_MAP.keys():
+		var checkbox := CheckBox.new()
+		checkbox.text = RANDOVANIA_MISC_SETTINGS_MAP[key]
+		checkbox.focus_mode = Control.FOCUS_NONE
+		checkbox.alignment = HORIZONTAL_ALIGNMENT_CENTER
+		checkbox.button_pressed = inventory.is_misc_setting_enabled(key)
+		checkbox.toggled.connect(
+			func(on : bool):
+			inventory.misc_settings[key] = 1 if on else 0
+			inventory_changed.emit()
 		)
-	
-	accept_dialog.add_child(line_edit)
-	accept_dialog.register_text_enter(line_edit)
-	
-	add_child(accept_dialog)
-	accept_dialog.popup_centered()
+		misc_settings_container.add_child(checkbox)
 
 func rdv_imported(raw_text : String) -> void:
-	var data = JSON.parse_string(raw_text)
-	if typeof(data) != TYPE_DICTIONARY:
+	if raw_text.is_empty():
+		show_import_status_message("Input is empty!")
 		return
-	rdv_game_hash_label.set_text(data.info.word_hash)
+	
+	var data = JSON.parse_string(raw_text)
+	if typeof(data) != TYPE_DICTIONARY or not data.has_all(["schema_version", "info", "game_modifications", "item_order", "checksum"]):
+		show_import_status_message("Input is invalid!")
+		return
+	
+	show_import_status_message("Import successful!\n%s" % data["info"]["word_hash"])
+	import_line_edit.clear()
+	
 	rdvgame_loaded.emit(data)
+
+func show_import_status_message(text : String) -> void:
+	const DURATION : float = 0.5
+	const DISPLAY_TIME : float = 2.0
+	
+	import_status_label.self_modulate = Color.TRANSPARENT
+	
+	if import_status_tween and import_status_tween.is_valid():
+		import_status_tween.kill()
+	
+	import_status_tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+	import_status_tween.tween_callback(import_status_label.set_text.bind(text))
+	import_status_tween.tween_property(import_status_label, "self_modulate", Color.WHITE, DURATION)
+	import_status_tween.tween_property(import_status_label, "self_modulate", Color.TRANSPARENT, DURATION).set_delay(DISPLAY_TIME)
 
 func init_inventory_display(inventory : PrimeInventory) -> void:
 	for node in inventory_container.get_children():
@@ -176,7 +218,7 @@ func init_inventory_display(inventory : PrimeInventory) -> void:
 	for key in inventory.state.keys():
 		match key:
 			"Missile Launcher":
-				has_launcher_checkbox.button_pressed = inventory.state[key] > 0
+				has_launcher_checkbox.set_pressed_no_signal(inventory.state[key] > 0)
 				has_launcher_checkbox.toggled.connect(
 					func(on : bool):
 					inventory.state[key] = 1 if on else 0
@@ -207,7 +249,7 @@ func init_inventory_display(inventory : PrimeInventory) -> void:
 				)
 				update_missile_count(inventory)
 			"Power Bomb":
-				has_main_pb_checkbox.button_pressed = inventory.state[key] > 0
+				has_main_pb_checkbox.set_pressed_no_signal(inventory.state[key] > 0)
 				has_main_pb_checkbox.toggled.connect(
 					func(on : bool):
 					inventory.state[key] = 1 if on else 0
@@ -244,8 +286,10 @@ func init_inventory_display(inventory : PrimeInventory) -> void:
 			_:
 				make_item_checkbox(INVENTORY_ICON_MAP[key], key, inventory)
 	
-	give_all_button.pressed.connect(give_all_pressed.bind(inventory))
-	clear_button.pressed.connect(clear_pressed.bind(inventory))
+	if not give_all_button.pressed.is_connected(give_all_pressed):
+		give_all_button.pressed.connect(give_all_pressed.bind(inventory))
+	if not clear_button.pressed.is_connected(clear_pressed):
+		clear_button.pressed.connect(clear_pressed.bind(inventory))
 
 func update_missile_count(inventory : PrimeInventory) -> void:
 	const MISSILES_PER_EXPANSION : int = 5
@@ -286,6 +330,10 @@ func make_item_checkbox(texture : Texture2D, item_name : String, inventory : Pri
 
 func make_energy_tank_buttons(texture : Texture2D, inventory : PrimeInventory) -> void:
 	const EMPTY_TANK_TEXTURE : Texture2D = preload("res://data/icons/Empty Energy Tank.png")
+	
+	for node in etank_container.get_children():
+		node.queue_free()
+	etank_buttons.clear()
 	
 	for i in range(inventory.ETANK_MAX):
 		var texture_button := TextureButton.new()
@@ -330,11 +378,20 @@ func update_etank_display_state(inventory : PrimeInventory) -> void:
 	for i in range(inventory.ETANK_MAX):
 		etank_buttons[i].set_pressed_no_signal(inventory.state["Energy Tank"] >= i + 1)
 
-func add_artifact_button(texture : Texture2D, item_name : String, inventory : PrimeInventory) -> void:
-	const NORMAL_COLOR := Color("#4CDAF5")
-	const PRESSED_COLOR := Color("#F1A34C")
-	const SCALE := 0.3
+func set_artifact_color(texture_button : TextureButton, is_pressed : bool) -> void:
+	const NORMAL_COLOR := Color("#4CDAF5") # Blue
+	const PRESSED_COLOR := Color("#F1A34C") # Orange
 	const COLOR_CHANGE_DURATION : float = 0.2
+	
+	var tween := create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+	tween.tween_property(
+			texture_button, 
+			"self_modulate", PRESSED_COLOR if is_pressed else NORMAL_COLOR,
+			COLOR_CHANGE_DURATION
+			)
+
+func add_artifact_button(texture : Texture2D, item_name : String, inventory : PrimeInventory) -> void:
+	const SCALE := 0.3
 	
 	var texture_button := TextureButton.new()
 	texture_button.toggle_mode = true
@@ -356,15 +413,11 @@ func add_artifact_button(texture : Texture2D, item_name : String, inventory : Pr
 	texture_button.toggled.connect(
 		func(on : bool):
 		inventory.state[item_name] = 1 if on else 0
-		var tween := create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
-		tween.tween_property(
-			texture_button, 
-			"self_modulate", PRESSED_COLOR if on else NORMAL_COLOR,
-			COLOR_CHANGE_DURATION
-			)
+		set_artifact_color(texture_button, on)
 		inventory_changed.emit()
 	)
-	texture_button.button_pressed = inventory.state[item_name] > 0
+	texture_button.set_pressed_no_signal(inventory.state[item_name] > 0)
+	set_artifact_color(texture_button, texture_button.button_pressed)
 
 func inventory_visibility_button_pressed() -> void:
 	inventory_panel.visible = !inventory_panel.visible
@@ -390,7 +443,8 @@ func give_all_pressed(inventory : PrimeInventory) -> void:
 		cb.set_pressed_no_signal(true)
 	
 	for a in artifact_container.get_children():
-		a.button_pressed = true
+		a.set_pressed_no_signal(true)
+		set_artifact_color(a, true)
 	
 	inventory_changed.emit()
 
@@ -407,7 +461,8 @@ func clear_pressed(inventory : PrimeInventory) -> void:
 		cb.set_pressed_no_signal(false)
 	
 	for a in artifact_container.get_children():
-		a.button_pressed = false
+		a.set_pressed_no_signal(false)
+		set_artifact_color(a, false)
 	
 	inventory_changed.emit()
 
@@ -448,7 +503,8 @@ func init_tricks_display(inventory : PrimeInventory) -> void:
 				inventory_changed.emit()
 				)
 		
-		slider.value = inventory.tricks[key]
+		level_label.text = TRICK_LEVEL_NAME[int(inventory.tricks[key])]
+		slider.set_value_no_signal(inventory.tricks[key])
 
 func tricks_visibility_button_pressed() -> void:
 	tricks_panel.visible = !tricks_panel.visible

@@ -66,6 +66,7 @@ func _ready() -> void:
 	ui.inventory_changed.connect(resolve_map)
 	inventory_initialized.connect(ui.init_inventory_display)
 	inventory_initialized.connect(ui.init_tricks_display)
+	inventory_initialized.connect(ui.init_misc_settings)
 	
 	draw_map()
 	
@@ -188,6 +189,7 @@ func make_node_data(room_data : RoomData, data : Dictionary) -> void:
 		node_data.room_name = room_data.name
 		node_data.display_name = node
 		node_data.node_type = data[node]["node_type"]
+		node_data.heal = true if (node_data.node_type == "generic" and data[node]["heal"]) else false
 		
 		if node_data.node_type == "dock":
 			node_data.dock_type = data[node]["dock_type"]
@@ -209,6 +211,12 @@ func make_node_data(room_data : RoomData, data : Dictionary) -> void:
 		
 		
 		nodes.append(node_data)
+	
+	for i in range(len(nodes)):
+		for j in range(len(nodes)):
+			if nodes[i] == nodes[j]:
+				continue
+			nodes[i].connections.append(nodes[j])
 	
 	room_data.nodes = nodes
 
@@ -254,6 +262,9 @@ func load_rdv(data : Dictionary) -> void:
 	var tricks : Dictionary = data["info"]["presets"][0]["configuration"]["trick_level"]["specific_levels"]
 	inventory.init_tricks(tricks)
 	
+	var rdv_misc_settings = data["info"]["presets"][0]["configuration"]
+	inventory.init_from_rdv(rdv_misc_settings)
+	
 	inventory_initialized.emit(inventory)
 	
 	var start_location : PackedStringArray = data["game_modifications"][0]["starting_location"].split("/")
@@ -284,10 +295,14 @@ func set_all_unreachable() -> void:
 		room_map[key].set_state(Room.State.UNREACHABLE)
 
 func resolve_map() -> void:
+	print_debug("---\nResolving map\n---")
+	
 	if not start_node:
 		start_node = get_node_data(REGION_NAME[Region.TALLON], "Landing Site", "Ship")
 	
 	set_all_unreachable()
+	
+	inventory.set_energy_full()
 	
 	var queue : Array[NodeData] = []
 	queue.append(start_node)
@@ -305,7 +320,8 @@ func resolve_map() -> void:
 	
 	while len(queue) > 0:
 		var node : NodeData = queue.pop_front()
-		visited_nodes[node] = true
+		visited_nodes[node] = inventory.energy
+		
 		if not node.room_name in visited_rooms[REGION_NAME[node.region]]:
 			visited_rooms[REGION_NAME[node.region]].append(node.room_name)
 		
@@ -315,10 +331,23 @@ func resolve_map() -> void:
 				queue.append(default)
 		
 		for n in node.connections:
-			if visited_nodes.has(n):
+			if n == node or n in queue:
 				continue
+			if visited_nodes.has(n):
+				if inventory.energy < visited_nodes[n]:
+					inventory.energy = visited_nodes[n]
+				continue
+			
 			if can_reach_internal(node, n):
+				if inventory.energy > visited_nodes[node]:
+					visited_nodes[node] = inventory.energy
+				#print("Reached!")
 				queue.append(n)
+				continue
+			#print("Couldn't reach!")
+	
+	for key in visited_nodes.keys():
+		print("%s : %.1f" % [key.display_name, visited_nodes[key]])
 	
 	for i in range(Region.MAX):
 		for j in visited_rooms[REGION_NAME[i]]:
@@ -331,7 +360,9 @@ func resolve_map() -> void:
 	map_resolved.emit(visited_nodes)
 
 func can_reach_internal(from_node : NodeData, to_node : NodeData) -> bool:
+	#print(region_data[from_node.region]["areas"][from_node.room_name]["nodes"][from_node.display_name]["connections"].keys())
 	var logic : Dictionary = region_data[from_node.region]["areas"][from_node.room_name]["nodes"][from_node.display_name]["connections"][to_node.display_name]
+	#print("From %s; %s | To %s; %s" % [from_node.room_name, from_node.display_name, to_node.room_name, to_node.display_name])
 	return inventory.can_reach(logic)
 
 func can_reach_external(from_node : NodeData, to_node : NodeData) -> bool:
