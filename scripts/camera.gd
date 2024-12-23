@@ -14,7 +14,7 @@ func _ready() -> void:
 var current_zoom : float = START_ZOOM:
 	set(value):
 		current_zoom = value
-		#print("Zoom = %.2f" % value)
+		print("Zoom = %.2f" % value)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action("zoom_in"):
@@ -33,4 +33,4 @@ func update_zoom(amount : float) -> void:
 	tween.tween_property(self, "zoom", Vector2(current_zoom, current_zoom), ZOOM_DURATION)
 
 func move_map(event : InputEventMouseMotion) -> void:
-	position -= event.relative
+	position -= (event.relative / current_zoom)
