@@ -126,6 +126,65 @@ const ENERGY_PER_TANK : float = 100.0
 	"remove_bars_great_tree_hall" : 0,
 	"vanilla_heat" : 0,
 }
+@export var events := {
+	"Event1" : 0,
+	"Event2" : 0,
+	"Event3" : 0,
+	"Event4" : 0,
+	"Event5" : 0,
+	"Event6" : 0,
+	"Event7" : 0,
+	"Event8" : 0,
+	"Event9" : 0,
+	"Event10" : 0,
+	"Event11" : 0,
+	"Event12" : 0,
+	"Event13" : 0,
+	"Event14" : 0,
+	"Event15" : 0,
+	"Event16" : 0,
+	"Event17" : 0,
+	"Event18" : 0,
+	"Event19" : 0,
+	"Event20" : 0,
+	"Event21" : 0,
+	"Event22" : 0,
+	"Event23" : 0,
+	"Event24" : 0,
+	"Event25" : 0,
+	"Event26" : 0,
+	"Event27" : 0,
+	"Event28" : 0,
+	"Event29" : 0,
+	"Event30" : 0,
+	"Event31" : 0,
+	"Event32" : 0,
+	"Event33" : 0,
+	"Event34" : 0,
+	"Event35" : 0,
+	"Event36" : 0,
+	"Event37" : 0,
+	"Event38" : 0,
+	"Event39" : 0,
+	"Event40" : 0,
+	"Event41" : 0,
+	"Event42" : 0,
+	"Event43" : 0,
+	"Event44" : 0,
+	"Event45" : 0,
+	"Event46" : 0,
+	"Event47" : 0,
+	"Event48" : 0,
+	"Event49" : 0,
+	"Event50" : 0,
+	"Event51" : 0,
+	"Event52" : 0,
+	"Event53" : 0,
+	"Event54" : 0,
+	"Event55" : 0,
+	"Event56" : 0,
+	"Event57" : 0,
+}
 
 var energy : float = ENERGY_PER_TANK
 
@@ -297,6 +356,16 @@ func is_misc_setting_enabled(setting_name : String) -> bool:
 	#print("%s = %s" % [setting_name, misc_settings[setting_name] > 0])
 	return misc_settings[setting_name] > 0
 
+func set_event_status(event_name : String, occurred : bool) -> void:
+	events[event_name] = 1 if occurred else 0
+
+func has_event_occured(event_name : String) -> bool:
+	if not events.has(event_name):
+		push_error("Unhandled event name: %s" % event_name)
+		return false
+	print(event_name)
+	return events[event_name] > 0
+
 func can_pass_dock(weakness : String) -> bool:
 	match weakness:
 		"Normal Door", "Circular Door":
@@ -399,11 +468,7 @@ func parse_item_name(item_name : String) -> bool:
 	return false
 
 func can_take_damage(amount : float) -> bool:
-	var new_energy : float = energy - amount
-	if new_energy > 0.0:
-		energy = new_energy
-		return true
-	return false
+	return energy > amount
 
 func can_reach(logic : Dictionary) -> bool:
 	match logic["type"]:
@@ -427,10 +492,10 @@ func can_reach(logic : Dictionary) -> bool:
 				"items":
 					return parse_item_name(logic["data"]["name"])
 				"events":
-					return true # TODO
+					return has_event_occured(logic["data"]["name"])
 				"tricks":
 					return can_perform_trick(logic["data"]["name"], logic["data"]["amount"])
-				"damage":
+				"damage": # TODO
 					return can_take_damage(logic["data"]["amount"])
 				"misc":
 					return is_misc_setting_enabled(logic["data"]["name"])
@@ -520,3 +585,7 @@ func init_from_rdv(data : Dictionary) -> void:
 				# This will push a lot of errors
 				#push_error("Unhandled Randovania configuration: %s" % key)
 				pass
+
+func clear_events() -> void:
+	for key in events.keys():
+		set_event_status(key, false)

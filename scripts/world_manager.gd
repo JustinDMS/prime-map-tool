@@ -303,6 +303,7 @@ func resolve_map() -> void:
 	set_all_unreachable()
 	
 	inventory.set_energy_full()
+	inventory.clear_events()
 	
 	var queue : Array[NodeData] = []
 	queue.append(start_node)
@@ -346,8 +347,8 @@ func resolve_map() -> void:
 				continue
 			#print("Couldn't reach!")
 	
-	for key in visited_nodes.keys():
-		print("%s : %.1f" % [key.display_name, visited_nodes[key]])
+	#for key in visited_nodes.keys():
+		#print("%s : %.1f" % [key.display_name, visited_nodes[key]])
 	
 	for i in range(Region.MAX):
 		for j in visited_rooms[REGION_NAME[i]]:
@@ -362,6 +363,12 @@ func resolve_map() -> void:
 func can_reach_internal(from_node : NodeData, to_node : NodeData) -> bool:
 	#print(region_data[from_node.region]["areas"][from_node.room_name]["nodes"][from_node.display_name]["connections"].keys())
 	var logic : Dictionary = region_data[from_node.region]["areas"][from_node.room_name]["nodes"][from_node.display_name]["connections"][to_node.display_name]
+	if from_node.node_type == "event":
+		var event_logic = region_data[from_node.region]["areas"][from_node.room_name]["nodes"][from_node.display_name]["connections"][to_node.display_name]
+		inventory.set_event_status(
+			region_data[to_node.region]["areas"][from_node.room_name]["nodes"][from_node.display_name]["event_name"],
+			inventory.can_reach(event_logic)
+		)
 	#print("From %s; %s | To %s; %s" % [from_node.room_name, from_node.display_name, to_node.room_name, to_node.display_name])
 	return inventory.can_reach(logic)
 

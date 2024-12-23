@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/elevator_manager.gd" id="1_gb56k"]
 [ext_resource type="Script" path="res://scripts/world_manager.gd" id="1_rofpd"]
 [ext_resource type="Theme" uid="uid://dbk0vd03ipng1" path="res://resources/theme.tres" id="3_4glie"]
-[ext_resource type="Script" path="res://camera.gd" id="3_et3qh"]
+[ext_resource type="Script" path="res://scripts/camera.gd" id="3_et3qh"]
 [ext_resource type="Script" path="res://scripts/ui.gd" id="3_fapwp"]
 [ext_resource type="Texture2D" uid="uid://dabxqxfeyelsc" path="res://data/icons/Missile Expansion.png" id="6_6j0ik"]
 [ext_resource type="Texture2D" uid="uid://drpnoq1pm5q46" path="res://data/icons/Power Bomb Expansion.png" id="7_ntsns"]
