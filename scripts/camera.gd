@@ -14,7 +14,7 @@ func _ready() -> void:
 var current_zoom : float = START_ZOOM:
 	set(value):
 		current_zoom = value
-		print("Zoom = %.2f" % value)
+		#print("Zoom = %.2f" % value)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action("zoom_in"):

@@ -358,12 +358,13 @@ func is_misc_setting_enabled(setting_name : String) -> bool:
 
 func set_event_status(event_name : String, occurred : bool) -> void:
 	events[event_name] = 1 if occurred else 0
+	if events[event_name] == 0: print(event_name)
 
 func has_event_occured(event_name : String) -> bool:
 	if not events.has(event_name):
 		push_error("Unhandled event name: %s" % event_name)
 		return false
-	print(event_name)
+	print("%s = %s" % [event_name, events[event_name] > 0])
 	return events[event_name] > 0
 
 func can_pass_dock(weakness : String) -> bool:
@@ -531,7 +532,8 @@ func can_reach(logic : Dictionary) -> bool:
 					return (
 						has_morph() or 
 						(can_perform_trick("Movement", TrickLevel.BEGINNER) and can_take_damage(12)) or 
-						(can_perform_trick("Movement", TrickLevel.INTERMEDIATE) and can_take_damage(30) and (can_use_arm_cannon() and has_wave()))
+						(can_perform_trick("Movement", TrickLevel.INTERMEDIATE) and can_take_damage(30) and 
+						(can_use_arm_cannon() and has_wave()))
 						)
 				_:
 					push_error("Unhandled template type: %s" % logic["data"])

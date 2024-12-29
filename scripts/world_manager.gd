@@ -363,12 +363,11 @@ func resolve_map() -> void:
 func can_reach_internal(from_node : NodeData, to_node : NodeData) -> bool:
 	#print(region_data[from_node.region]["areas"][from_node.room_name]["nodes"][from_node.display_name]["connections"].keys())
 	var logic : Dictionary = region_data[from_node.region]["areas"][from_node.room_name]["nodes"][from_node.display_name]["connections"][to_node.display_name]
-	if from_node.node_type == "event":
-		var event_logic = region_data[from_node.region]["areas"][from_node.room_name]["nodes"][from_node.display_name]["connections"][to_node.display_name]
-		inventory.set_event_status(
-			region_data[to_node.region]["areas"][from_node.room_name]["nodes"][from_node.display_name]["event_name"],
-			inventory.can_reach(event_logic)
-		)
+	if to_node.node_type == "event":
+		var event_name : String = region_data[to_node.region]["areas"][to_node.room_name]["nodes"][to_node.display_name]["event_name"]
+		var event_logic : Dictionary = region_data[to_node.region]["areas"][to_node.room_name]["nodes"][from_node.display_name]["connections"][to_node.display_name]
+		if not inventory.has_event_occured(event_name):
+			inventory.set_event_status(event_name, inventory.can_reach(event_logic))
 	#print("From %s; %s | To %s; %s" % [from_node.room_name, from_node.display_name, to_node.room_name, to_node.display_name])
 	return inventory.can_reach(logic)
 
