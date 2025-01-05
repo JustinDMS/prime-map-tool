@@ -1,13 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://qw3bgt3468bw"]
 
-[ext_resource type="Texture2D" uid="uid://g0pqr8detjpm" path="res://resources/node_marker.png" id="1_stxgc"]
+[ext_resource type="Texture2D" uid="uid://g0pqr8detjpm" path="res://data/icons/node_marker.png" id="1_54dd8"]
 [ext_resource type="Script" path="res://scripts/node_marker.gd" id="2_bykt2"]
 
-[node name="node_marker" type="TextureButton"]
+[node name="node_marker" type="Sprite2D"]
 z_index = 1
-offset_right = 28.0
-offset_bottom = 28.0
-mouse_filter = 1
-mouse_default_cursor_shape = 2
-texture_normal = ExtResource("1_stxgc")
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("1_54dd8")
 script = ExtResource("2_bykt2")

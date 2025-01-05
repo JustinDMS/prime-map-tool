@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://br45wp8jdj0tx"]
+[gd_scene load_steps=13 format=3 uid="uid://br45wp8jdj0tx"]
 
 [ext_resource type="Script" path="res://scripts/elevator_manager.gd" id="1_gb56k"]
 [ext_resource type="Script" path="res://scripts/world_manager.gd" id="1_rofpd"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/ui.gd" id="3_fapwp"]
 [ext_resource type="Texture2D" uid="uid://dabxqxfeyelsc" path="res://data/icons/Missile Expansion.png" id="6_6j0ik"]
 [ext_resource type="Texture2D" uid="uid://drpnoq1pm5q46" path="res://data/icons/Power Bomb Expansion.png" id="7_ntsns"]
+[ext_resource type="Script" path="res://addons/html5_file_dialog/HTML5FileDialog.gd" id="8_qaioy"]
 
 [sub_resource type="SystemFont" id="SystemFont_82onk"]
 font_names = PackedStringArray("Times New Roman")
@@ -66,7 +67,7 @@ script = ExtResource("3_et3qh")
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="ui" type="Control" parent="UI" node_paths=PackedStringArray("region_name_label", "room_name_label", "inventory_visibility_button", "inventory_panel", "inventory_label", "etank_container", "missile_count_label", "missile_increase_button", "missile_decrease_button", "has_launcher_checkbox", "requires_launcher_checkbox", "pb_count_label", "pb_increase_button", "pb_decrease_button", "has_main_pb_checkbox", "requires_main_pb_checkbox", "inventory_container", "artifact_container", "give_all_button", "clear_button", "tricks_visibility_button", "tricks_panel", "max_button", "none_button", "tricks_container", "randovania_panel", "randovania_visibility_button", "import_line_edit", "import_status_label", "misc_settings_container")]
+[node name="ui" type="Control" parent="UI" node_paths=PackedStringArray("region_name_label", "room_name_label", "node_name_label", "inventory_visibility_button", "inventory_panel", "inventory_label", "etank_container", "missile_count_label", "missile_increase_button", "missile_decrease_button", "has_launcher_checkbox", "requires_launcher_checkbox", "pb_count_label", "pb_increase_button", "pb_decrease_button", "has_main_pb_checkbox", "requires_main_pb_checkbox", "inventory_container", "artifact_container", "give_all_button", "clear_button", "tricks_visibility_button", "tricks_panel", "max_button", "none_button", "tricks_container", "randovania_panel", "randovania_visibility_button", "import_rdvgame_button", "file_dialog", "import_status_label", "misc_settings_container")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -77,6 +78,7 @@ mouse_filter = 2
 script = ExtResource("3_fapwp")
 region_name_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/region_name")
 room_name_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/room_name")
+node_name_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/node_name")
 inventory_visibility_button = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/VBoxContainer/inventory_visibility")
 inventory_panel = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel")
 inventory_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/Label")
@@ -102,7 +104,8 @@ none_button = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContain
 tricks_container = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/tricks_panel/MarginContainer/VBoxContainer/ScrollContainer/tricks_container")
 randovania_panel = NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel")
 randovania_visibility_button = NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_visibility_button")
-import_line_edit = NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel/MarginContainer/VBoxContainer/LineEdit")
+import_rdvgame_button = NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel/MarginContainer/VBoxContainer/import_rdvgame")
+file_dialog = NodePath("HTML5FileDialog")
 import_status_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel/MarginContainer/VBoxContainer/import_status")
 misc_settings_container = NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel/MarginContainer/VBoxContainer/rdv_misc_container")
 
@@ -133,7 +136,6 @@ size_flags_vertical = 3
 theme_override_constants/separation = 25
 
 [node name="randovania_panel" type="Panel" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
-visible = false
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_vertical = 3
@@ -162,14 +164,10 @@ horizontal_alignment = 1
 [node name="HSeparator" type="HSeparator" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label3" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel/MarginContainer/VBoxContainer"]
+[node name="import_rdvgame" type="Button" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Paste .rdvgame contents and press enter:"
-horizontal_alignment = 1
-
-[node name="LineEdit" type="LineEdit" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-select_all_on_focus = true
+size_flags_horizontal = 4
+text = "Upload .rdvgame"
 
 [node name="import_status" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel/MarginContainer/VBoxContainer"]
 self_modulate = Color(1, 1, 1, 0)
@@ -208,6 +206,10 @@ size_flags_horizontal = 6
 size_flags_vertical = 0
 mouse_filter = 0
 
+[node name="node_name" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+horizontal_alignment = 1
+
 [node name="room_name" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
 theme = ExtResource("3_4glie")
@@ -232,6 +234,7 @@ theme_override_constants/separation = 10
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 0
 
 [node name="inventory_visibility" type="Button" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/VBoxContainer"]
 layout_mode = 2
@@ -523,3 +526,7 @@ text = "None"
 [node name="HSeparator3" type="HSeparator" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/tricks_panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("3_4glie")
+
+[node name="HTML5FileDialog" type="Node" parent="UI/ui"]
+script = ExtResource("8_qaioy")
+filters = PackedStringArray(".rdvgame")

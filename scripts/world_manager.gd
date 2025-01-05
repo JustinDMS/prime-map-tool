@@ -112,11 +112,15 @@ func draw_map() -> void:
 				if n.coordinates == Vector3.ZERO:
 					continue
 				var node_marker := draw_node(n)
-				node_marker.room_size = Vector2(
-					abs(room_data.aabb[3] - room_data.aabb[0]),
-					abs(room_data.aabb[4] - room_data.aabb[1])
-				)
-				room.add_child(node_marker)
+				node_marker.started_hover.connect(ui.node_hover)
+				node_marker.stopped_hover.connect(ui.node_stop_hover)
+				if i == Region.MINES:
+					var sub_region := determine_mines_region(room_data.aabb[2])
+					var sub_region_node : Control = region.get_child(sub_region)
+					sub_region_node.add_child(node_marker)
+				else:
+					region.add_child(node_marker)
+				room.node_markers.append(node_marker)
 			
 			room.set_name(j) # Set name in SceneTree
 		
@@ -194,21 +198,20 @@ func make_node_data(room_data : RoomData, data : Dictionary) -> void:
 		if node_data.node_type == "dock":
 			node_data.dock_type = data[node]["dock_type"]
 			node_data.default_dock_weakness = data[node]["default_dock_weakness"]
-			
-			if node_data.dock_type == "teleporter":
-				node_data.coordinates = Vector3(
-					room_data.aabb[0],
-					room_data.aabb[1],
-					room_data.aabb[2]
-				)
 		
-		if data[node]["coordinates"] != null:
+		if data[node]["extra"].has("world_position"):
 			node_data.coordinates = Vector3(
-				data[node]["coordinates"]["x"],
-				data[node]["coordinates"]["y"],
-				data[node]["coordinates"]["z"]
+				data[node]["extra"]["world_position"][0],
+				data[node]["extra"]["world_position"][1],
+				data[node]["extra"]["world_position"][2]
 			)
-		
+			
+			if data[node]["extra"].has("world_rotation"):
+				node_data.rotation = Vector3(
+				data[node]["extra"]["world_rotation"][0],
+				data[node]["extra"]["world_rotation"][1],
+				data[node]["extra"]["world_rotation"][2]
+			)
 		
 		nodes.append(node_data)
 	

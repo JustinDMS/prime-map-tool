@@ -104,6 +104,7 @@ const RANDOVANIA_MISC_SETTINGS_MAP : Dictionary = {
 
 @export var region_name_label : Label
 @export var room_name_label : Label
+@export var node_name_label : Label
 @export_category("Inventory")
 @export var inventory_visibility_button : Button
 @export var inventory_panel : Panel
@@ -132,16 +133,21 @@ const RANDOVANIA_MISC_SETTINGS_MAP : Dictionary = {
 @export_category("Randovania")
 @export var randovania_panel : Panel
 @export var randovania_visibility_button : Button
-@export var import_line_edit : LineEdit
+@export var import_rdvgame_button : Button
+@export var file_dialog : HTML5FileDialog
 @export var import_status_label : Label
 @export var misc_settings_container : VBoxContainer
 
 var etank_buttons : Array[TextureButton] = []
 var import_status_tween : Tween
+var last_hovered_node : NodeMarker
 
 func _ready() -> void:
 	randovania_visibility_button.pressed.connect(randovania_visibility_button_pressed)
-	import_line_edit.text_submitted.connect(rdv_imported)
+	
+	if OS.get_name() == 'Web':
+		import_rdvgame_button.pressed.connect(file_dialog.show)
+		file_dialog.file_selected.connect(file_uploaded)
 	
 	inventory_visibility_button.pressed.connect(inventory_visibility_button_pressed)
 	
@@ -157,6 +163,20 @@ func room_stop_hover(_room : Room) -> void:
 	region_name_label.text = ""
 	room_name_label.text = ""
 
+func node_hover(marker : NodeMarker) -> void:
+	region_name_label.text = World.REGION_NAME[marker.data.region]
+	room_name_label.text = marker.data.room_name
+	node_name_label.text = marker.data.display_name
+	
+	last_hovered_node = marker
+
+func node_stop_hover(marker : NodeMarker) -> void:
+	if marker != last_hovered_node:
+		return
+	region_name_label.text = ""
+	room_name_label.text = ""
+	node_name_label.text = ""
+
 func randovania_visibility_button_pressed() -> void:
 	randovania_panel.visible = !randovania_panel.visible
 	
@@ -164,6 +184,10 @@ func randovania_visibility_button_pressed() -> void:
 		randovania_visibility_button.text = "< Randovania"
 	else:
 		randovania_visibility_button.text = "> Randovania"
+
+func file_uploaded(file : HTML5FileHandle) -> void:
+	var text : String = await file.as_text()
+	rdv_imported(text)
 
 func init_misc_settings(inventory : PrimeInventory) -> void:
 	for node in misc_settings_container.get_children():
@@ -188,12 +212,11 @@ func rdv_imported(raw_text : String) -> void:
 		return
 	
 	var data = JSON.parse_string(raw_text)
-	if typeof(data) != TYPE_DICTIONARY or not data.has_all(["schema_version", "info", "game_modifications", "item_order", "checksum"]):
+	if typeof(data) != TYPE_DICTIONARY or not data.has_all(["schema_version", "info"]):
 		show_import_status_message("Input is invalid!")
 		return
 	
 	show_import_status_message("Import successful!\n%s" % data["info"]["word_hash"])
-	import_line_edit.clear()
 	
 	rdvgame_loaded.emit(data)
 

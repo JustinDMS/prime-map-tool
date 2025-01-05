@@ -8,5 +8,6 @@ class_name NodeData extends Resource
 @export var dock_type : String
 @export var default_dock_weakness : String
 @export var coordinates : Vector3
+@export var rotation : Vector3
 @export var connections : Array[NodeData]
 @export var default_connection : NodeData

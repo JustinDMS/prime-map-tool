@@ -21,6 +21,10 @@ window/size/viewport_height=1080
 window/size/mode=2
 window/stretch/mode="viewport"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/html5_file_dialog/plugin.cfg")
+
 [gui]
 
 theme/custom="res://resources/theme.tres"
