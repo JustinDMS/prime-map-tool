@@ -1,29 +1,49 @@
-[gd_scene load_steps=13 format=3 uid="uid://br45wp8jdj0tx"]
+[gd_scene load_steps=45 format=3 uid="uid://br45wp8jdj0tx"]
 
 [ext_resource type="Script" path="res://scripts/elevator_manager.gd" id="1_gb56k"]
 [ext_resource type="Script" path="res://scripts/world_manager.gd" id="1_rofpd"]
-[ext_resource type="Theme" uid="uid://dbk0vd03ipng1" path="res://resources/theme.tres" id="3_4glie"]
 [ext_resource type="Script" path="res://scripts/camera.gd" id="3_et3qh"]
-[ext_resource type="Script" path="res://scripts/ui.gd" id="3_fapwp"]
+[ext_resource type="Script" path="res://scripts/ui_tabs.gd" id="4_0yqv7"]
 [ext_resource type="Texture2D" uid="uid://dabxqxfeyelsc" path="res://data/icons/Missile Expansion.png" id="6_6j0ik"]
 [ext_resource type="Texture2D" uid="uid://drpnoq1pm5q46" path="res://data/icons/Power Bomb Expansion.png" id="7_ntsns"]
-[ext_resource type="Script" path="res://addons/html5_file_dialog/HTML5FileDialog.gd" id="8_qaioy"]
-
-[sub_resource type="SystemFont" id="SystemFont_82onk"]
-font_names = PackedStringArray("Times New Roman")
-oversampling = 2.0
-
-[sub_resource type="LabelSettings" id="LabelSettings_3g8em"]
-font = SubResource("SystemFont_82onk")
-font_size = 26
-
-[sub_resource type="LabelSettings" id="LabelSettings_ebq5s"]
-font = SubResource("SystemFont_82onk")
-font_size = 32
-
-[sub_resource type="LabelSettings" id="LabelSettings_57nyd"]
-font = SubResource("SystemFont_82onk")
-font_size = 26
+[ext_resource type="Script" path="res://scripts/inventory_interface.gd" id="9_cfl7w"]
+[ext_resource type="Texture2D" uid="uid://bc6xsokxy6c4v" path="res://data/icons/Morph Ball.png" id="10_kut4r"]
+[ext_resource type="Texture2D" uid="uid://bcps050v5w31i" path="res://data/icons/Energy Tank.png" id="10_pry43"]
+[ext_resource type="Texture2D" uid="uid://dru606t8hdv5r" path="res://data/icons/Artifact of Truth.png" id="11_gg2hy"]
+[ext_resource type="Texture2D" uid="uid://dqjqg5123rjhy" path="res://data/icons/Morph Ball Bomb.png" id="11_k32ci"]
+[ext_resource type="Texture2D" uid="uid://bwig2yoyfso4g" path="res://data/icons/Boost Ball.png" id="12_d1sf4"]
+[ext_resource type="Texture2D" uid="uid://jrhb555rnrls" path="res://data/icons/Artifact of Strength.png" id="12_jt8qc"]
+[ext_resource type="Texture2D" uid="uid://dk8skvooliu7k" path="res://data/icons/Spider Ball.png" id="13_ss08w"]
+[ext_resource type="Texture2D" uid="uid://mcvvufcgjlyd" path="res://data/icons/Artifact of Elder.png" id="13_w3vbq"]
+[ext_resource type="Texture2D" uid="uid://8toni85jy7ou" path="res://data/icons/Artifact of Wild.png" id="14_c23cq"]
+[ext_resource type="Texture2D" uid="uid://c2gk5j6rhimb3" path="res://data/icons/Power Suit.png" id="14_h3m2s"]
+[ext_resource type="Texture2D" uid="uid://bggp45xw8r6jw" path="res://data/icons/Artifact of Lifegiver.png" id="15_abyi6"]
+[ext_resource type="Texture2D" uid="uid://c7lmh3e2lq15j" path="res://data/icons/Varia Suit.png" id="15_hij7d"]
+[ext_resource type="Texture2D" uid="uid://mx1keyhme5g4" path="res://data/icons/Gravity Suit.png" id="16_0jsk2"]
+[ext_resource type="Texture2D" uid="uid://dy15545k0cm1r" path="res://data/icons/Artifact of Warrior.png" id="16_rweuk"]
+[ext_resource type="Texture2D" uid="uid://d3tspph55g1qw" path="res://data/icons/Phazon Suit.png" id="17_3n2di"]
+[ext_resource type="Texture2D" uid="uid://sorsdkk0sfxs" path="res://data/icons/Artifact of Chozo.png" id="17_kf7j8"]
+[ext_resource type="Texture2D" uid="uid://dnpugerxuc4en" path="res://data/icons/Artifact of Nature.png" id="18_octgp"]
+[ext_resource type="Texture2D" uid="uid://ckufvb6qrcq32" path="res://data/icons/Combat Visor.png" id="18_t33sj"]
+[ext_resource type="Texture2D" uid="uid://dl75t1ndplrc" path="res://data/icons/Scan Visor.png" id="19_jvtm1"]
+[ext_resource type="Texture2D" uid="uid://b2e247dlpkj4r" path="res://data/icons/Artifact of Sun.png" id="19_xmxxi"]
+[ext_resource type="Texture2D" uid="uid://flde7u3if8ll" path="res://data/icons/Thermal Visor.png" id="20_gqktq"]
+[ext_resource type="Texture2D" uid="uid://kkedkw36sjwe" path="res://data/icons/Artifact of World.png" id="20_ykum6"]
+[ext_resource type="Texture2D" uid="uid://cg480wbpaybu2" path="res://data/icons/Artifact of Spirit.png" id="21_mr3cf"]
+[ext_resource type="Texture2D" uid="uid://cow6mm35qj7mf" path="res://data/icons/X-Ray Visor.png" id="21_polxb"]
+[ext_resource type="Texture2D" uid="uid://bnl1q5o74j2ne" path="res://data/icons/Artifact of Newborn.png" id="22_6oynj"]
+[ext_resource type="Texture2D" uid="uid://cwynq2ftb65ew" path="res://data/icons/Power Beam.png" id="22_7wnnf"]
+[ext_resource type="Texture2D" uid="uid://dmwxhjv583orb" path="res://data/icons/Wave Beam.png" id="23_d2hg3"]
+[ext_resource type="Texture2D" uid="uid://o0sb4a50d484" path="res://data/icons/Ice Beam.png" id="24_riedu"]
+[ext_resource type="Texture2D" uid="uid://dndbo17kgekxp" path="res://data/icons/Plasma Beam.png" id="25_e2b3b"]
+[ext_resource type="Texture2D" uid="uid://b0uu71n5lhak5" path="res://data/icons/Super Missile.png" id="26_f6yiy"]
+[ext_resource type="Texture2D" uid="uid://10esic23audb" path="res://data/icons/Wavebuster.png" id="27_xip3y"]
+[ext_resource type="Texture2D" uid="uid://j12lsyyyrr2" path="res://data/icons/Ice Spreader.png" id="28_mtvc2"]
+[ext_resource type="Texture2D" uid="uid://bbavbhexs6vg7" path="res://data/icons/Flamethrower.png" id="29_tdoby"]
+[ext_resource type="Texture2D" uid="uid://cujjgfbq7qtl5" path="res://data/icons/Space Jump Boots.png" id="30_leyhf"]
+[ext_resource type="Texture2D" uid="uid://dc6fc27xpslgt" path="res://data/icons/Charge Beam.png" id="31_vulfn"]
+[ext_resource type="Texture2D" uid="uid://5gd5b6bdmfj0" path="res://data/icons/Grapple Beam.png" id="32_lukqw"]
+[ext_resource type="Script" path="res://scripts/tricks_interface.gd" id="44_rbq56"]
 
 [node name="main" type="Node2D"]
 
@@ -38,7 +58,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 mouse_default_cursor_shape = 3
-color = Color(0.168627, 0.176471, 0.258824, 1)
+color = Color(0.141176, 0.141176, 0.141176, 1)
 
 [node name="elevator_manager" type="Control" parent="." node_paths=PackedStringArray("world_manager")]
 layout_mode = 3
@@ -48,7 +68,7 @@ offset_bottom = 40.0
 script = ExtResource("1_gb56k")
 world_manager = NodePath("../world_manager")
 
-[node name="world_manager" type="Control" parent="." node_paths=PackedStringArray("ui")]
+[node name="world_manager" type="Control" parent="." node_paths=PackedStringArray("inventory_interface", "trick_interface")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -58,7 +78,8 @@ grow_vertical = 2
 mouse_filter = 1
 mouse_default_cursor_shape = 3
 script = ExtResource("1_rofpd")
-ui = NodePath("../UI/ui")
+inventory_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory")
+trick_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Tricks")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position_smoothing_enabled = true
@@ -67,7 +88,7 @@ script = ExtResource("3_et3qh")
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="ui" type="Control" parent="UI" node_paths=PackedStringArray("region_name_label", "room_name_label", "node_name_label", "inventory_visibility_button", "inventory_panel", "inventory_label", "etank_container", "missile_count_label", "missile_increase_button", "missile_decrease_button", "has_launcher_checkbox", "requires_launcher_checkbox", "pb_count_label", "pb_increase_button", "pb_decrease_button", "has_main_pb_checkbox", "requires_main_pb_checkbox", "inventory_container", "artifact_container", "give_all_button", "clear_button", "tricks_visibility_button", "tricks_panel", "max_button", "none_button", "tricks_container", "randovania_panel", "randovania_visibility_button", "import_rdvgame_button", "file_dialog", "import_status_label", "misc_settings_container")]
+[node name="ui" type="Control" parent="UI"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -75,39 +96,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-script = ExtResource("3_fapwp")
-region_name_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/region_name")
-room_name_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/room_name")
-node_name_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/node_name")
-inventory_visibility_button = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/VBoxContainer/inventory_visibility")
-inventory_panel = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel")
-inventory_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/Label")
-etank_container = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer/etank_container")
-missile_count_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer/HBoxContainer/missile_expansion_label")
-missile_increase_button = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/missile_up")
-missile_decrease_button = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer/missile_down")
-has_launcher_checkbox = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer2/VBoxContainer3/has_launcher")
-requires_launcher_checkbox = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer2/VBoxContainer3/req_launcher")
-pb_count_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer/HBoxContainer3/pb_label")
-pb_increase_button = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer/HBoxContainer3/VBoxContainer/pb_up")
-pb_decrease_button = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer/HBoxContainer3/VBoxContainer/pb_down")
-has_main_pb_checkbox = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer2/VBoxContainer2/has_main")
-requires_main_pb_checkbox = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer2/VBoxContainer2/req_main")
-inventory_container = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/item_container")
-artifact_container = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/artifact_container")
-give_all_button = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/HBoxContainer/giveall")
-clear_button = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/HBoxContainer/clear")
-tricks_visibility_button = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/VBoxContainer/tricks_visibility")
-tricks_panel = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/tricks_panel")
-max_button = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/tricks_panel/MarginContainer/VBoxContainer/HBoxContainer/max")
-none_button = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/tricks_panel/MarginContainer/VBoxContainer/HBoxContainer/none")
-tricks_container = NodePath("MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/tricks_panel/MarginContainer/VBoxContainer/ScrollContainer/tricks_container")
-randovania_panel = NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel")
-randovania_visibility_button = NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_visibility_button")
-import_rdvgame_button = NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel/MarginContainer/VBoxContainer/import_rdvgame")
-file_dialog = NodePath("HTML5FileDialog")
-import_status_label = NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel/MarginContainer/VBoxContainer/import_status")
-misc_settings_container = NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel/MarginContainer/VBoxContainer/rdv_misc_container")
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/ui"]
 layout_mode = 1
@@ -116,417 +104,599 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
-theme_override_constants/margin_left = 5
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 5
-theme_override_constants/margin_bottom = 5
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/ui/MarginContainer"]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer"]
-layout_mode = 2
 size_flags_horizontal = 2
+size_flags_vertical = 10
+mouse_filter = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer"]
 layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 25
+mouse_filter = 2
 
-[node name="randovania_panel" type="Panel" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
-custom_minimum_size = Vector2(400, 0)
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 5
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 5
-
-[node name="Label" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "Randovania"
-label_settings = SubResource("LabelSettings_3g8em")
-horizontal_alignment = 1
-
-[node name="HSeparator" type="HSeparator" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="import_rdvgame" type="Button" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Upload .rdvgame"
-
-[node name="import_status" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel/MarginContainer/VBoxContainer"]
-self_modulate = Color(1, 1, 1, 0)
-layout_mode = 2
-text = "Status Message Here"
-horizontal_alignment = 1
-
-[node name="spacer" type="Control" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="HSeparator2" type="HSeparator" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="Label2" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "Misc Settings"
-label_settings = SubResource("LabelSettings_3g8em")
-horizontal_alignment = 1
-
-[node name="HSeparator3" type="HSeparator" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="rdv_misc_container" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/randovania_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="randovania_visibility_button" type="Button" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 0
-focus_mode = 0
-text = "Randovania >"
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 6
-size_flags_vertical = 0
-mouse_filter = 0
-
-[node name="node_name" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer2"]
-layout_mode = 2
-horizontal_alignment = 1
-
-[node name="room_name" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer2"]
-layout_mode = 2
-theme = ExtResource("3_4glie")
-label_settings = SubResource("LabelSettings_ebq5s")
-horizontal_alignment = 1
-
-[node name="region_name" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer2"]
-layout_mode = 2
-theme = ExtResource("3_4glie")
-label_settings = SubResource("LabelSettings_57nyd")
-horizontal_alignment = 1
-
-[node name="VBoxContainer3" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 10
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3"]
-layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 3
-theme_override_constants/separation = 10
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 0
-
-[node name="inventory_visibility" type="Button" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 0
-focus_mode = 0
-mouse_default_cursor_shape = 2
-theme = ExtResource("3_4glie")
-text = "< Inventory"
-
-[node name="tricks_visibility" type="Button" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 0
-focus_mode = 0
-mouse_default_cursor_shape = 2
-theme = ExtResource("3_4glie")
-text = "< Tricks"
-
-[node name="inventory_panel" type="Panel" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer"]
-visible = false
-custom_minimum_size = Vector2(400, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_force_pass_scroll_events = false
-theme = ExtResource("3_4glie")
-
-[node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-theme_override_constants/margin_top = 10
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer"]
-layout_mode = 2
-theme = ExtResource("3_4glie")
-
-[node name="Label" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme = ExtResource("3_4glie")
-text = "Inventory"
-label_settings = SubResource("LabelSettings_3g8em")
-horizontal_alignment = 1
-
-[node name="HSeparator" type="HSeparator" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme = ExtResource("3_4glie")
-
-[node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.5
-theme_override_constants/margin_left = 5
-theme_override_constants/margin_right = 5
-
-[node name="etank_container" type="HBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer"]
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-size_flags_vertical = 4
-
-[node name="MarginContainer2" type="MarginContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 1.5
-theme_override_constants/margin_left = 5
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-alignment = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer/HBoxContainer"]
+[node name="TabContainer" type="TabContainer" parent="UI/ui/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
+size_flags_vertical = 0
+current_tab = 1
+all_tabs_in_front = true
+tab_focus_mode = 0
+deselect_enabled = true
+script = ExtResource("4_0yqv7")
+
+[node name="Inventory" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("missile_label", "missile_slider", "pb_label", "pb_slider", "require_launcher_button", "has_launcher_button", "require_main_pb_button", "has_main_pb_button", "etank_label", "etank_slider", "artifact_label", "artifact_slider", "artifact_container", "item_buttons", "all_button", "none_button")]
+visible = false
+layout_mode = 2
+mouse_filter = 1
+script = ExtResource("9_cfl7w")
+missile_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/missile_count")
+missile_slider = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/missile_slider")
+pb_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/HBoxContainer/VBoxContainer/pb_count")
+pb_slider = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/HBoxContainer/VBoxContainer/pb_slider")
+require_launcher_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer2/require_launcher")
+has_launcher_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer2/has_launcher")
+require_main_pb_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/VBoxContainer2/require_main")
+has_main_pb_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/VBoxContainer2/has_main")
+etank_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer/VBoxContainer/etank_count")
+etank_slider = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer/VBoxContainer/etank_slider")
+artifact_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/VBoxContainer/artifact_count")
+artifact_slider = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/VBoxContainer/artifact_slider")
+artifact_container = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container")
+item_buttons = [NodePath("MarginContainer/VBoxContainer/HBoxContainer2/suits/Power Suit"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/suits/Varia Suit"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/suits/Gravity Suit"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/suits/Phazon Suit"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/visors/Combat Visor"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/visors/Scan Visor"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/visors/Thermal Visor"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/visors/X-Ray Visor"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/upgrades/Space Jump Boots"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/upgrades/Morph Ball"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/upgrades/Morph Ball Bomb"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/upgrades/Boost Ball"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/upgrades/Spider Ball"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/beams/Charge Beam"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/beams/Power Beam"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/beams/Wave Beam"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/beams/Ice Beam"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/beams/Plasma Beam"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/combos/Grapple Beam"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/combos/Super Missile"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/combos/Wavebuster"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/combos/Ice Spreader"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/combos/Flamethrower")]
+all_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer2/suits/all")
+none_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer2/visors/none")
+metadata/_tab_index = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer"]
+layout_mode = 2
+alignment = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
 alignment = 1
 
-[node name="missile_up" type="Button" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "⇑"
-
-[node name="missile_down" type="Button" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "⇓"
-
-[node name="missile_expansion_label" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 6
-text = "0"
-horizontal_alignment = 1
-
-[node name="TextureRect" type="TextureRect" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer/HBoxContainer"]
+[node name="suits" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="all" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/suits"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+text = "All"
+
+[node name="Power Suit" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/suits"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("14_h3m2s")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Varia Suit" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/suits"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("15_hij7d")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Gravity Suit" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/suits"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("16_0jsk2")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Phazon Suit" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/suits"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("17_3n2di")
+icon_alignment = 1
+expand_icon = true
+
+[node name="visors" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="none" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/visors"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+text = "None"
+
+[node name="Combat Visor" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/visors"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("18_t33sj")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Scan Visor" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/visors"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("19_jvtm1")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Thermal Visor" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/visors"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("20_gqktq")
+icon_alignment = 1
+expand_icon = true
+
+[node name="X-Ray Visor" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/visors"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("21_polxb")
+icon_alignment = 1
+expand_icon = true
+
+[node name="upgrades" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Space Jump Boots" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/upgrades"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("30_leyhf")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Morph Ball" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/upgrades"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("10_kut4r")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Morph Ball Bomb" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/upgrades"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("11_k32ci")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Boost Ball" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/upgrades"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("12_d1sf4")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Spider Ball" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/upgrades"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("13_ss08w")
+icon_alignment = 1
+expand_icon = true
+
+[node name="beams" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Charge Beam" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/beams"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("31_vulfn")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Power Beam" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/beams"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("22_7wnnf")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Wave Beam" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/beams"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("23_d2hg3")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Ice Beam" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/beams"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("24_riedu")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Plasma Beam" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/beams"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("25_e2b3b")
+icon_alignment = 1
+expand_icon = true
+
+[node name="combos" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Grapple Beam" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/combos"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("32_lukqw")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Super Missile" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/combos"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("26_f6yiy")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Wavebuster" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/combos"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("27_xip3y")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Ice Spreader" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/combos"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("28_mtvc2")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Flamethrower" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/combos"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+icon = ExtResource("29_tdoby")
+icon_alignment = 1
+expand_icon = true
+
+[node name="HSeparator" type="HSeparator" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="TextureRect" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
 texture = ExtResource("6_6j0ik")
-expand_mode = 1
+expand_mode = 2
 stretch_mode = 5
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 3
+alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer/HBoxContainer3"]
+[node name="missile_count" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "250"
+horizontal_alignment = 1
+
+[node name="missile_slider" type="HSlider" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+size_flags_vertical = 2
+focus_mode = 0
+max_value = 49.0
+value = 49.0
+rounded = true
+tick_count = 3
+ticks_on_borders = true
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="pb_up" type="Button" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer/HBoxContainer3/VBoxContainer"]
+[node name="has_launcher" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer2"]
 layout_mode = 2
 focus_mode = 0
-text = "⇑"
+theme_override_font_sizes/font_size = 16
+text = "Has Launcher?"
 
-[node name="pb_down" type="Button" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer/HBoxContainer3/VBoxContainer"]
+[node name="require_launcher" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer2"]
 layout_mode = 2
 focus_mode = 0
-text = "⇓"
+theme_override_font_sizes/font_size = 16
+text = "Require Launcher?"
 
-[node name="pb_label" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer/HBoxContainer3"]
-layout_mode = 2
-size_flags_horizontal = 6
-text = "0"
-horizontal_alignment = 1
-
-[node name="TextureRect" type="TextureRect" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer/HBoxContainer3"]
-layout_mode = 2
-size_flags_horizontal = 3
-texture = ExtResource("7_ntsns")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="Control" type="Control" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2"]
+[node name="VSeparator" type="VSeparator" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.1
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="TextureRect" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("7_ntsns")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+alignment = 1
+
+[node name="pb_count" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "8"
+horizontal_alignment = 1
+
+[node name="pb_slider" type="HSlider" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+size_flags_vertical = 2
+focus_mode = 0
+max_value = 4.0
+value = 4.0
+rounded = true
+tick_count = 3
+ticks_on_borders = true
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+alignment = 1
+
+[node name="has_main" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/VBoxContainer2"]
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 16
+text = "Has Main PB?"
+
+[node name="require_main" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/VBoxContainer2"]
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 16
+text = "Require Main PB?"
+
+[node name="VSeparator2" type="VSeparator" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3"]
+layout_mode = 2
 size_flags_vertical = 6
 
-[node name="has_launcher" type="CheckBox" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer2/VBoxContainer3"]
+[node name="TextureRect" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer"]
 layout_mode = 2
-focus_mode = 0
-text = "Has Launcher?"
-alignment = 1
+texture = ExtResource("10_pry43")
+expand_mode = 2
+stretch_mode = 5
 
-[node name="req_launcher" type="CheckBox" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer2/VBoxContainer3"]
-layout_mode = 2
-size_flags_horizontal = 8
-focus_mode = 0
-text = "Require Launcher?"
-alignment = 1
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer2"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+alignment = 1
+
+[node name="etank_count" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "14"
+horizontal_alignment = 1
+
+[node name="etank_slider" type="HSlider" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+size_flags_vertical = 2
+focus_mode = 0
+max_value = 14.0
+value = 14.0
+rounded = true
+tick_count = 3
+ticks_on_borders = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3"]
+layout_mode = 2
 size_flags_vertical = 6
 
-[node name="has_main" type="CheckBox" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer2/VBoxContainer2"]
-layout_mode = 2
-focus_mode = 0
-text = "Has Main?"
-alignment = 1
-
-[node name="req_main" type="CheckBox" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/MarginContainer2/HBoxContainer2/VBoxContainer2/VBoxContainer2"]
-layout_mode = 2
-focus_mode = 0
-text = "Require Main?"
-alignment = 1
-
-[node name="item_container" type="GridContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 3
-theme = ExtResource("3_4glie")
-theme_override_constants/v_separation = 20
-columns = 4
-
-[node name="artifact_container" type="Control" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 6
-size_flags_stretch_ratio = 1.25
-theme = ExtResource("3_4glie")
-
-[node name="HSeparator2" type="HSeparator" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme = ExtResource("3_4glie")
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-alignment = 1
-
-[node name="giveall" type="Button" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "All"
-
-[node name="clear" type="Button" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "Clear"
-
-[node name="HSeparator3" type="HSeparator" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/inventory_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme = ExtResource("3_4glie")
-
-[node name="tricks_panel" type="Panel" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer"]
-visible = false
-custom_minimum_size = Vector2(400, 0)
+[node name="artifact_container" type="Control" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
-mouse_force_pass_scroll_events = false
-theme = ExtResource("3_4glie")
 
-[node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/tricks_panel"]
+[node name="truth" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("11_gg2hy")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="strength" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("12_jt8qc")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="elder" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("13_w3vbq")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="wild" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("14_c23cq")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="lifegiver" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("15_abyi6")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="warrior" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("16_rweuk")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="chozo" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("17_kf7j8")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="nature" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("18_octgp")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="sun" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("19_xmxxi")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="world" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("20_ykum6")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="spirit" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("21_mr3cf")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="newborn" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("22_6oynj")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="artifact_count" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/VBoxContainer"]
+layout_mode = 2
+text = "12"
+horizontal_alignment = 1
+
+[node name="artifact_slider" type="HSlider" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/VBoxContainer"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+size_flags_vertical = 2
+focus_mode = 0
+max_value = 12.0
+value = 12.0
+rounded = true
+tick_count = 3
+ticks_on_borders = true
+
+[node name="Tricks" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("tricks_container")]
+layout_mode = 2
+script = ExtResource("44_rbq56")
+tricks_container = NodePath("MarginContainer/ScrollContainer/VBoxContainer")
+metadata/_tab_index = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Tricks"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="ScrollContainer" type="ScrollContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Tricks/MarginContainer"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Tricks/MarginContainer/ScrollContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/margin_top = 10
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/tricks_panel/MarginContainer"]
-layout_mode = 2
-theme = ExtResource("3_4glie")
-
-[node name="Label" type="Label" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/tricks_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme = ExtResource("3_4glie")
-text = "Tricks"
-label_settings = SubResource("LabelSettings_3g8em")
-horizontal_alignment = 1
-
-[node name="HSeparator" type="HSeparator" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/tricks_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme = ExtResource("3_4glie")
-
-[node name="ScrollContainer" type="ScrollContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/tricks_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
 size_flags_vertical = 3
-
-[node name="tricks_container" type="VBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/tricks_panel/MarginContainer/VBoxContainer/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 6
-size_flags_vertical = 6
-theme = ExtResource("3_4glie")
-
-[node name="HSeparator2" type="HSeparator" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/tricks_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme = ExtResource("3_4glie")
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/tricks_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-alignment = 1
-
-[node name="max" type="Button" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/tricks_panel/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "Max"
-
-[node name="none" type="Button" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/tricks_panel/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "None"
-
-[node name="HSeparator3" type="HSeparator" parent="UI/ui/MarginContainer/HBoxContainer/VBoxContainer3/HBoxContainer/tricks_panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme = ExtResource("3_4glie")
-
-[node name="HTML5FileDialog" type="Node" parent="UI/ui"]
-script = ExtResource("8_qaioy")
-filters = PackedStringArray(".rdvgame")
+theme_override_constants/separation = 20

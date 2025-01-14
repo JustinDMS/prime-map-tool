@@ -12,7 +12,8 @@ enum Artifact {
 	SUN,
 	WORLD,
 	SPIRIT,
-	NEWBORN
+	NEWBORN,
+	MAX
 }
 enum TrickLevel {
 	DISABLED,
@@ -187,6 +188,7 @@ const ENERGY_PER_TANK : float = 100.0
 }
 
 var energy : float = ENERGY_PER_TANK
+var last_failed_event_id : String
 
 func has_morph() -> bool:
 	return state["Morph Ball"] > 0
@@ -301,6 +303,33 @@ func has_artifact(a : Artifact) -> bool:
 	
 	return false
 
+func set_artifact(a : Artifact, owned : bool) -> void:
+	match a:
+		Artifact.TRUTH:
+			state["Artifact of Truth"] = 1 if owned else 0
+		Artifact.STRENGTH:
+			state["Artifact of Strength"] = 1 if owned else 0
+		Artifact.ELDER:
+			state["Artifact of Elder"] = 1 if owned else 0
+		Artifact.WILD:
+			state["Artifact of Wild"] = 1 if owned else 0
+		Artifact.LIFEGIVER:
+			state["Artifact of Lifegiver"] = 1 if owned else 0
+		Artifact.WARRIOR:
+			state["Artifact of Warrior"] = 1 if owned else 0
+		Artifact.CHOZO:
+			state["Artifact of Chozo"] = 1 if owned else 0
+		Artifact.NATURE:
+			state["Artifact of Nature"] = 1 if owned else 0
+		Artifact.SUN:
+			state["Artifact of Sun"] = 1 if owned else 0
+		Artifact.WORLD:
+			state["Artifact of World"] = 1 if owned else 0
+		Artifact.SPIRIT:
+			state["Artifact of Spirit"] = 1 if owned else 0
+		Artifact.NEWBORN:
+			state["Artifact of Newborn"] = 1 if owned else 0
+
 ########
 
 func all() -> void:
@@ -358,20 +387,19 @@ func is_misc_setting_enabled(setting_name : String) -> bool:
 
 func set_event_status(event_name : String, occurred : bool) -> void:
 	events[event_name] = 1 if occurred else 0
-	if events[event_name] == 0: print(event_name)
 
 func has_event_occured(event_name : String) -> bool:
 	if not events.has(event_name):
+		events[event_name] = 0
 		push_error("Unhandled event name: %s" % event_name)
-		return false
-	print("%s = %s" % [event_name, events[event_name] > 0])
+	
 	return events[event_name] > 0
 
 func can_pass_dock(weakness : String) -> bool:
 	match weakness:
 		"Normal Door", "Circular Door":
 			return can_shoot_any_beam() or (has_morph() and (has_bombs() or has_pb()))
-		"Missile Blast Shield":
+		"Missile Blast Shield", "Missile Blast Shield (randomprime)":
 			return can_shoot_any_beam() and has_missile()
 		"Wave Door":
 			return can_use_arm_cannon() and has_wave()
@@ -468,23 +496,20 @@ func parse_item_name(item_name : String) -> bool:
 	
 	return false
 
-func can_take_damage(amount : float) -> bool:
-	return energy > amount
-
-func can_reach(logic : Dictionary) -> bool:
+func can_reach(logic : Dictionary, _depth : int = 0) -> bool:
 	match logic["type"]:
 		"and":
 			if logic["data"]["items"].is_empty():
 				return true
 			
 			for i in range(logic["data"]["items"].size()):
-				if not can_reach(logic["data"]["items"][i]):
+				if not can_reach(logic["data"]["items"][i], _depth + 1):
 					return false
 			return true
 		
 		"or":
 			for i in range(logic["data"]["items"].size()):
-				if can_reach(logic["data"]["items"][i]):
+				if can_reach(logic["data"]["items"][i], _depth + 1):
 					return true
 			return false
 		
@@ -493,11 +518,14 @@ func can_reach(logic : Dictionary) -> bool:
 				"items":
 					return parse_item_name(logic["data"]["name"])
 				"events":
-					return has_event_occured(logic["data"]["name"])
+					var has_occured := has_event_occured(logic["data"]["name"])
+					if not has_occured:
+						last_failed_event_id = logic["data"]["name"]
+					return has_occured
 				"tricks":
 					return can_perform_trick(logic["data"]["name"], logic["data"]["amount"])
 				"damage": # TODO
-					return can_take_damage(logic["data"]["amount"])
+					return true
 				"misc":
 					return is_misc_setting_enabled(logic["data"]["name"])
 				_:
@@ -529,12 +557,7 @@ func can_reach(logic : Dictionary) -> bool:
 				"Open Normal Door":
 					return can_shoot_any_beam() or (has_morph() and has_bombs() and has_scan())
 				"Move Past Scatter Bombu":
-					return (
-						has_morph() or 
-						(can_perform_trick("Movement", TrickLevel.BEGINNER) and can_take_damage(12)) or 
-						(can_perform_trick("Movement", TrickLevel.INTERMEDIATE) and can_take_damage(30) and 
-						(can_use_arm_cannon() and has_wave()))
-						)
+					return true
 				_:
 					push_error("Unhandled template type: %s" % logic["data"])
 		_:
@@ -552,7 +575,7 @@ func can_perform_trick(type : String, value : int) -> bool:
 		return true
 	return false
 
-func init_from_rdv(data : Dictionary) -> void:
+func init_misc_settings(data : Dictionary) -> void:
 	for key in data.keys():
 		match key:
 			"allow_underwater_movement_without_gravity": # 2 different names

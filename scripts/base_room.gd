@@ -61,7 +61,7 @@ var _is_hovered : bool = false:
 var room_color_tween : Tween = null
 var node_markers : Array[NodeMarker] = []
 
-func _unhandled_input(event: InputEvent) -> void:
+func _gui_input(event: InputEvent) -> void:
 	if not data:
 		return
 	
@@ -133,16 +133,10 @@ func set_state(new_state : State) -> void:
 func room_hover() -> void:
 	set_state(State.HOVERED)
 	_is_hovered = true
-	
-	for n in node_markers:
-		n.toggle_visible(true)
 
 func room_stop_hover() -> void:
 	set_state(prev_state)
 	_is_hovered = false
-	
-	for n in node_markers:
-		n.toggle_visible(false)
 
 func room_clicked() -> void:
 	print_debug(data.name)

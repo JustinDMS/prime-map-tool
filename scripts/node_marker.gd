@@ -21,8 +21,14 @@ const COLOR_MAP := {
 	"event" : Color.INDIAN_RED,
 	"generic" : Color.WHEAT,
 }
-const DOOR_MARKER_OFFSET : float = 50.0
 
+const DOOR_MARKER_OFFSET : float = 50.0
+const NORMAL_SCALE := Vector2(0.1, 0.1)
+const HOVER_SCALE := Vector2(0.15, 0.15)
+const HOVER_DURATION : float = 0.15
+
+var marker_offset := Vector2.ZERO
+var marker_offset_tween : Tween
 var data : NodeData = null
 var target_color : Color
 var _is_hovered : bool = false:
@@ -40,7 +46,7 @@ var _is_hovered : bool = false:
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
-		_is_hovered = Rect2(offset - (texture.get_size() * 0.5), texture.get_size()).has_point(get_local_mouse_position())
+		_is_hovered = Rect2(marker_offset - (texture.get_size() * 0.5), texture.get_size()).has_point(get_local_mouse_position())
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not data:
@@ -64,36 +70,59 @@ func init_node() -> void:
 	name = "n_%s" % data.display_name
 	toggle_visible(false)
 	
-	if data.node_type == "dock":
-		match data.dock_type:
-			"door":
-				target_color = DOOR_COLOR_MAP[data.default_dock_weakness]
-				rotation_degrees = data.rotation.z
-				offset.x = -DOOR_MARKER_OFFSET
-			"teleporter", "morph_ball":
-				target_color = COLOR_MAP[data.dock_type]
-		self_modulate = target_color
-		return
-	target_color = COLOR_MAP[data.node_type]
-	self_modulate = target_color
+	match data.node_type:
+		"dock":
+			match data.dock_type:
+				"door":
+					texture = preload("res://data/icons/door.png")
+					target_color = DOOR_COLOR_MAP[data.default_dock_weakness]
+					rotation_degrees = data.rotation.z
+					marker_offset.x = -DOOR_MARKER_OFFSET
+				"teleporter":
+					texture = preload("res://data/icons/teleporter_marker.png")
+					target_color = COLOR_MAP[data.dock_type]
+				"morph_ball":
+					target_color = COLOR_MAP[data.dock_type]
+		"pickup":
+			target_color = COLOR_MAP[data.node_type]
+		"event":
+			target_color = COLOR_MAP[data.node_type]
+			texture = preload("res://data/icons/event_marker.png")
+		"generic":
+			target_color = COLOR_MAP[data.node_type]
+			texture = preload("res://data/icons/generic_marker.png")
+			flip_v = true
+	
+	offset = marker_offset
+	set_color(target_color)
+
+func set_color(color : Color) -> void:
+	self_modulate = color
 
 func node_clicked() -> void:
 	print(data.display_name)
 
 func node_hover() -> void:
-	_is_hovered = true
-	print("Hovered %s" % data.display_name)
+	if marker_offset_tween and marker_offset_tween.is_running():
+		marker_offset_tween.kill()
+	
+	marker_offset_tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+	marker_offset_tween.tween_property(self, "scale", HOVER_SCALE, HOVER_DURATION)
 
 func node_stop_hover() -> void:
-	_is_hovered = false
+	if marker_offset_tween and marker_offset_tween.is_running():
+		marker_offset_tween.kill()
+	
+	marker_offset_tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+	marker_offset_tween.tween_property(self, "scale", NORMAL_SCALE, HOVER_DURATION)
 
 func toggle_visible(on : bool) -> void:
-	const VISIBILITY_CHANGE_DURATION : float = 0.25
+	const VISIBILITY_CHANGE_DURATION : float = 0.175
 	
 	var tween := create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 	tween.tween_property(
 		self, 
 		"self_modulate", 
-		target_color if on else Color.TRANSPARENT, 
+		target_color if on else Room.UNREACHABLE_COLOR, 
 		VISIBILITY_CHANGE_DURATION
 		)

@@ -1,8 +1,9 @@
 class_name World extends Control
 
 signal map_drawn(elevator_data : Dictionary)
-signal map_resolved(visited_nodes : Dictionary)
+signal map_resolved(reached_nodes : Array[NodeData])
 signal inventory_initialized(inv : PrimeInventory)
+signal rdv_load_failed(error_message : String)
 
 enum Region {
 	CHOZO,
@@ -47,6 +48,8 @@ const MINES_OFFSET : Array[Vector2] = [
 ]
 
 @export var ui : Control
+@export var inventory_interface : Panel
+@export var trick_interface : Panel
 
 var region_data : Array[Dictionary] = []
 var world_data := {
@@ -56,17 +59,22 @@ var world_data := {
 	REGION_NAME[Region.MINES] : {},
 	REGION_NAME[Region.MAGMOOR] : {},
 }
+var node_map := {}
 var room_map := {}
 var region_map := {}
 var inventory : PrimeInventory = null
 var start_node : NodeData = null
+var rdv_game : RDVGame = null
 
 func _ready() -> void:
-	ui.rdvgame_loaded.connect(load_rdv)
-	ui.inventory_changed.connect(resolve_map)
-	inventory_initialized.connect(ui.init_inventory_display)
-	inventory_initialized.connect(ui.init_tricks_display)
-	inventory_initialized.connect(ui.init_misc_settings)
+	#ui.rdvgame_loaded.connect(load_rdv)
+	inventory_initialized.connect(inventory_interface.set_inventory)
+	inventory_initialized.connect(trick_interface.set_inventory)
+	inventory_interface.inventory_changed.connect(resolve_map)
+	trick_interface.tricks_changed.connect(resolve_map)
+	#inventory_initialized.connect(ui.init_tricks_display)
+	#inventory_initialized.connect(ui.init_misc_settings)
+	#rdv_load_failed.connect(ui.show_import_status_message)
 	
 	draw_map()
 	
@@ -95,8 +103,8 @@ func draw_map() -> void:
 			room_data.default_node = get_node_data(REGION_NAME[i], j, region_data[i]["areas"][j]["default_node"])
 			
 			var room := draw_room(room_data)
-			room.started_hover.connect(ui.room_hover)
-			room.stopped_hover.connect(ui.room_stop_hover)
+			#room.started_hover.connect(ui.room_hover)
+			#room.stopped_hover.connect(ui.room_stop_hover)
 			
 			room_map[room_data] = room
 			
@@ -112,8 +120,8 @@ func draw_map() -> void:
 				if n.coordinates == Vector3.ZERO:
 					continue
 				var node_marker := draw_node(n)
-				node_marker.started_hover.connect(ui.node_hover)
-				node_marker.stopped_hover.connect(ui.node_stop_hover)
+				#node_marker.started_hover.connect(ui.node_hover)
+				#node_marker.stopped_hover.connect(ui.node_stop_hover)
 				if i == Region.MINES:
 					var sub_region := determine_mines_region(room_data.aabb[2])
 					var sub_region_node : Control = region.get_child(sub_region)
@@ -121,6 +129,7 @@ func draw_map() -> void:
 				else:
 					region.add_child(node_marker)
 				room.node_markers.append(node_marker)
+				node_map[n] = node_marker
 			
 			room.set_name(j) # Set name in SceneTree
 		
@@ -198,6 +207,8 @@ func make_node_data(room_data : RoomData, data : Dictionary) -> void:
 		if node_data.node_type == "dock":
 			node_data.dock_type = data[node]["dock_type"]
 			node_data.default_dock_weakness = data[node]["default_dock_weakness"]
+		elif node_data.node_type == "event":
+			node_data.event_id = region_data[node_data.region]["areas"][node_data.room_name]["nodes"][node_data.display_name]["event_name"]
 		
 		if data[node]["extra"].has("world_position"):
 			node_data.coordinates = Vector3(
@@ -252,31 +263,36 @@ func draw_node(node_data : NodeData) -> NodeMarker:
 	return node_marker
 
 func load_rdv(data : Dictionary) -> void:
-	var _version : String = data["info"]["randovania_version"]
-	var game : String = data["game_modifications"][0]["game"]
+	const SUPPORTED_VERSIONS : Array[String] = [
+		"8.7.1",
+	]
+	if not (data.has("info") and data["info"].has("randovania_version")):
+		rdv_load_failed.emit("Failed to read .rdvgame\nPlease report this along with the file")
+		return
 	
-	if game != "prime1":
+	rdv_game = RDVGame.new()
+	rdv_game.parse(data)
+	
+	if rdv_game._game != "prime1":
 		print_debug("Not a prime 1 rdvgame")
 		return
 	
-	var start_inventory : Array = data["game_modifications"][0]["starting_equipment"]["pickups"]
-	init_current_inventory(start_inventory)
-	
-	var tricks : Dictionary = data["info"]["presets"][0]["configuration"]["trick_level"]["specific_levels"]
-	inventory.init_tricks(tricks)
-	
-	var rdv_misc_settings = data["info"]["presets"][0]["configuration"]
-	inventory.init_from_rdv(rdv_misc_settings)
+	init_current_inventory(rdv_game._starting_pickups)
+	inventory.init_tricks(rdv_game._trick_levels)
+	inventory.init_misc_settings(rdv_game._config)
 	
 	inventory_initialized.emit(inventory)
 	
-	var start_location : PackedStringArray = data["game_modifications"][0]["starting_location"].split("/")
-	start_node = get_node_data(start_location[0], start_location[1], start_location[2])
+	start_node = get_node_data(
+		rdv_game._start_region_name, 
+		rdv_game._start_room_name, 
+		rdv_game._start_node_name
+		)
 	
-	var start_room_data : RoomData = world_data[start_location[0]][start_location[1]]
+	var start_room_data : RoomData = world_data[rdv_game._start_region_name][rdv_game._start_room_name]
 	var _start_room : Room = room_map[start_room_data]
 	
-	map_drawn.emit(data["game_modifications"][0]["dock_connections"])
+	map_drawn.emit(rdv_game._dock_connections)
 	
 	resolve_map()
 
@@ -296,6 +312,8 @@ func get_room_obj(region : Region, room_name : String) -> Room:
 func set_all_unreachable() -> void:
 	for key in room_map.keys():
 		room_map[key].set_state(Room.State.UNREACHABLE)
+		for node in room_map[key].node_markers:
+			node.self_modulate = Room.UNREACHABLE_COLOR
 
 func resolve_map() -> void:
 	print_debug("---\nResolving map\n---")
@@ -313,7 +331,8 @@ func resolve_map() -> void:
 	for n in start_node.connections:
 		queue.append(n)
 	
-	var visited_nodes := {}
+	var reached_nodes : Array[NodeData] = []
+	var unreached_nodes := {}
 	var visited_rooms := {
 		REGION_NAME[Region.CHOZO] : [],
 		REGION_NAME[Region.PHENDRANA] : [],
@@ -322,56 +341,93 @@ func resolve_map() -> void:
 		REGION_NAME[Region.MAGMOOR] : [],
 	}
 	
+	reached_nodes.append(start_node)
 	while len(queue) > 0:
 		var node : NodeData = queue.pop_front()
-		visited_nodes[node] = inventory.energy
 		
 		if not node.room_name in visited_rooms[REGION_NAME[node.region]]:
 			visited_rooms[REGION_NAME[node.region]].append(node.room_name)
 		
-		var default : NodeData = node.default_connection
-		if default:
-			if not visited_nodes.has(default) and can_reach_external(node, default):
-				queue.append(default)
+		var default_connection : NodeData = node.default_connection
+		if default_connection:
+			if not default_connection in reached_nodes and can_reach_external(node, default_connection):
+				queue.append(default_connection)
 		
 		for n in node.connections:
-			if n == node or n in queue:
-				continue
-			if visited_nodes.has(n):
-				if inventory.energy < visited_nodes[n]:
-					inventory.energy = visited_nodes[n]
+			if n in reached_nodes:
 				continue
 			
 			if can_reach_internal(node, n):
-				if inventory.energy > visited_nodes[node]:
-					visited_nodes[node] = inventory.energy
-				#print("Reached!")
+				reached_nodes.append(n)
+				
+				if n.node_type == "event":
+					inventory.set_event_status(n.event_id, true)
+					
+					var sub_queue : Array = []
+					if unreached_nodes.has(n.event_id):
+						sub_queue = unreached_nodes[n.event_id]
+					
+					while len(sub_queue) > 0:
+						var tmp : Array = sub_queue.pop_front()
+						var from_node : NodeData = tmp[0]
+						var to_node : NodeData = tmp[1]
+						
+						if to_node in reached_nodes:
+							continue
+						
+						if can_reach_internal(from_node, to_node):
+							reached_nodes.append(to_node)
+							queue.append(to_node)
+							
+							if to_node.node_type == "event":
+								var marker : NodeMarker = node_map[n]
+								marker.set_color(marker.target_color)
+								
+								inventory.set_event_status(to_node.event_id, true)
+								if unreached_nodes.has(to_node.event_id):
+									sub_queue.append_array(unreached_nodes[to_node.event_id])
+				
 				queue.append(n)
 				continue
-			#print("Couldn't reach!")
+			
+			#
+			# Failed to reached
+			#
+			if n.node_type == "event":
+				var marker : NodeMarker = node_map[n]
+				marker.set_color(marker.target_color)
+			
+			if inventory.last_failed_event_id.is_empty():
+				continue
+			
+			if not unreached_nodes.has(inventory.last_failed_event_id):
+				unreached_nodes[inventory.last_failed_event_id] = []
+			unreached_nodes[inventory.last_failed_event_id].append([node, n])
 	
-	#for key in visited_nodes.keys():
-		#print("%s : %.1f" % [key.display_name, visited_nodes[key]])
+	# For events to work correctly, I need to keeping track of what nodes
+	# weren't reached due to requiring an event. When said event is reached,
+	# re-add the nodes that needed it back to the queue
 	
 	for i in range(Region.MAX):
 		for j in visited_rooms[REGION_NAME[i]]:
 			var room_obj := get_room_obj(i, j)
 			room_obj.set_state(Room.State.DEFAULT)
+			for k in room_obj.node_markers:
+				if k.data in reached_nodes:
+					if k.data.node_type == "event":
+						k.set_color(Color.SEA_GREEN)
+						continue
+					k.set_color(k.target_color)
 	
 	var starter_room := get_room_obj(start_node.region, start_node.room_name)
 	starter_room.set_state(Room.State.STARTER)
 	
-	map_resolved.emit(visited_nodes)
+	map_resolved.emit(reached_nodes)
 
 func can_reach_internal(from_node : NodeData, to_node : NodeData) -> bool:
 	#print(region_data[from_node.region]["areas"][from_node.room_name]["nodes"][from_node.display_name]["connections"].keys())
+	inventory.last_failed_event_id = ""
 	var logic : Dictionary = region_data[from_node.region]["areas"][from_node.room_name]["nodes"][from_node.display_name]["connections"][to_node.display_name]
-	if to_node.node_type == "event":
-		var event_name : String = region_data[to_node.region]["areas"][to_node.room_name]["nodes"][to_node.display_name]["event_name"]
-		var event_logic : Dictionary = region_data[to_node.region]["areas"][to_node.room_name]["nodes"][from_node.display_name]["connections"][to_node.display_name]
-		if not inventory.has_event_occured(event_name):
-			inventory.set_event_status(event_name, inventory.can_reach(event_logic))
-	#print("From %s; %s | To %s; %s" % [from_node.room_name, from_node.display_name, to_node.room_name, to_node.display_name])
 	return inventory.can_reach(logic)
 
 func can_reach_external(from_node : NodeData, to_node : NodeData) -> bool:

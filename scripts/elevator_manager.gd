@@ -104,10 +104,12 @@ func new_connection_line(global_from : Vector2, global_to : Vector2, line_color 
 	
 	return line2d
 
-func update_lines_from_visited(visited_nodes : Dictionary) -> void:
-	for key in lines:
-		var line : Line2D = lines[key]
-		if visited_nodes.get(key, false):
-			line.modulate = color_map[line]
-			continue
-		line.modulate = Room.UNREACHABLE_COLOR
+func update_lines_from_visited(reached_nodes : Array[NodeData]) -> void:
+	for data in lines.keys():
+		lines[data].modulate = Room.UNREACHABLE_COLOR
+	
+	for node in reached_nodes:
+		if node.node_type == "dock" and node.dock_type == "teleporter":
+			if node in lines.keys():
+				var line : Line2D = lines[node]
+				line.modulate = color_map[line]
