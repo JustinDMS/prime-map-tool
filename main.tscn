@@ -1,9 +1,10 @@
-[gd_scene load_steps=45 format=3 uid="uid://br45wp8jdj0tx"]
+[gd_scene load_steps=49 format=3 uid="uid://br45wp8jdj0tx"]
 
 [ext_resource type="Script" path="res://scripts/elevator_manager.gd" id="1_gb56k"]
 [ext_resource type="Script" path="res://scripts/world_manager.gd" id="1_rofpd"]
 [ext_resource type="Script" path="res://scripts/camera.gd" id="3_et3qh"]
 [ext_resource type="Script" path="res://scripts/ui_tabs.gd" id="4_0yqv7"]
+[ext_resource type="Script" path="res://scripts/ui.gd" id="4_kybu4"]
 [ext_resource type="Texture2D" uid="uid://dabxqxfeyelsc" path="res://data/icons/Missile Expansion.png" id="6_6j0ik"]
 [ext_resource type="Texture2D" uid="uid://drpnoq1pm5q46" path="res://data/icons/Power Bomb Expansion.png" id="7_ntsns"]
 [ext_resource type="Script" path="res://scripts/inventory_interface.gd" id="9_cfl7w"]
@@ -44,6 +45,11 @@
 [ext_resource type="Texture2D" uid="uid://dc6fc27xpslgt" path="res://data/icons/Charge Beam.png" id="31_vulfn"]
 [ext_resource type="Texture2D" uid="uid://5gd5b6bdmfj0" path="res://data/icons/Grapple Beam.png" id="32_lukqw"]
 [ext_resource type="Script" path="res://scripts/tricks_interface.gd" id="44_rbq56"]
+[ext_resource type="Script" path="res://scripts/randovania_interface.gd" id="45_px4t2"]
+[ext_resource type="Script" path="res://addons/html5_file_dialog/HTML5FileDialog.gd" id="46_tfmeg"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_rr1j8"]
+font_size = 32
 
 [node name="main" type="Node2D"]
 
@@ -68,7 +74,7 @@ offset_bottom = 40.0
 script = ExtResource("1_gb56k")
 world_manager = NodePath("../world_manager")
 
-[node name="world_manager" type="Control" parent="." node_paths=PackedStringArray("inventory_interface", "trick_interface")]
+[node name="world_manager" type="Control" parent="." node_paths=PackedStringArray("ui", "inventory_interface", "trick_interface", "randovania_interface")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -78,8 +84,10 @@ grow_vertical = 2
 mouse_filter = 1
 mouse_default_cursor_shape = 3
 script = ExtResource("1_rofpd")
+ui = NodePath("../UI/ui")
 inventory_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory")
 trick_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Tricks")
+randovania_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position_smoothing_enabled = true
@@ -88,7 +96,7 @@ script = ExtResource("3_et3qh")
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="ui" type="Control" parent="UI"]
+[node name="ui" type="Control" parent="UI" node_paths=PackedStringArray("region_name_label", "room_name_label", "node_name_label")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -96,6 +104,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+script = ExtResource("4_kybu4")
+region_name_label = NodePath("MarginContainer/MarginContainer/VBoxContainer2/hovered_world_name")
+room_name_label = NodePath("MarginContainer/MarginContainer/VBoxContainer2/hovered_room_name")
+node_name_label = NodePath("MarginContainer/MarginContainer/VBoxContainer2/hovered_node_name")
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/ui"]
 layout_mode = 1
@@ -116,7 +128,7 @@ mouse_filter = 2
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-current_tab = 1
+current_tab = 2
 all_tabs_in_front = true
 tab_focus_mode = 0
 deselect_enabled = true
@@ -674,6 +686,7 @@ tick_count = 3
 ticks_on_borders = true
 
 [node name="Tricks" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("tricks_container")]
+visible = false
 layout_mode = 2
 script = ExtResource("44_rbq56")
 tricks_container = NodePath("MarginContainer/ScrollContainer/VBoxContainer")
@@ -700,3 +713,71 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 20
+
+[node name="Randovania" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("import_rdvgame_button", "file_dialog", "import_status_label")]
+custom_minimum_size = Vector2(400, 200)
+layout_mode = 2
+script = ExtResource("45_px4t2")
+import_rdvgame_button = NodePath("MarginContainer/VBoxContainer/import_rdvgame")
+file_dialog = NodePath("HTML5FileDialog")
+import_status_label = NodePath("MarginContainer/VBoxContainer/import_status")
+metadata/_tab_index = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Import .rdvgame"
+horizontal_alignment = 1
+
+[node name="import_rdvgame" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Upload"
+
+[node name="import_status" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_alignment = 1
+
+[node name="HTML5FileDialog" type="Node" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania"]
+script = ExtResource("46_tfmeg")
+filters = PackedStringArray()
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_top = 20
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/ui/MarginContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="hovered_node_name" type="Label" parent="UI/ui/MarginContainer/MarginContainer/VBoxContainer2"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="hovered_room_name" type="Label" parent="UI/ui/MarginContainer/MarginContainer/VBoxContainer2"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_rr1j8")
+horizontal_alignment = 1
+
+[node name="hovered_world_name" type="Label" parent="UI/ui/MarginContainer/MarginContainer/VBoxContainer2"]
+layout_mode = 2
+horizontal_alignment = 1

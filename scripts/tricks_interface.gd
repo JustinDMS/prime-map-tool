@@ -3,6 +3,7 @@ extends Panel
 signal tricks_changed()
 
 const TRICK_NAME_MAP : Dictionary = {
+	"all" : "Set All Tricks",
 	"BJ" : "Bomb Jump",
 	"BSJ" : "Bomb Space Jump",
 	"BoostlessSpiner" : "Spinners without Boost",
@@ -41,6 +42,7 @@ var inventory : PrimeInventory = null
 var trick_slider_map : Dictionary = {}
 
 func _gui_input(event: InputEvent) -> void:
+	# Capture the scroll event
 	if event is InputEventMouseButton:
 		get_viewport().set_input_as_handled()
 
@@ -50,6 +52,22 @@ func set_inventory(new_inventory : PrimeInventory) -> void:
 	trick_slider_map.clear()
 	for node in tricks_container.get_children():
 		node.queue_free()
+	
+	var all_container := new_trick("all", PrimeInventory.TrickLevel.HYPERMODE)
+	tricks_container.add_child(all_container)
+	var all_slider : HSlider = trick_slider_map["all"]
+	all_slider.drag_ended.connect(
+		func(changed : bool) -> void:
+			if not changed:
+				return
+			
+			var new_value := int(all_slider.get_value())
+			for key in inventory.tricks.keys():
+				inventory.tricks[key] = new_value
+				trick_slider_map[key].set_value_no_signal(new_value)
+			
+			tricks_changed.emit()
+	)
 	
 	for key in inventory.tricks.keys():
 		var container := new_trick(key, inventory.tricks[key])

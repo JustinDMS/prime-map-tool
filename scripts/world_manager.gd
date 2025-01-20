@@ -3,6 +3,7 @@ class_name World extends Control
 signal map_drawn(elevator_data : Dictionary)
 signal map_resolved(reached_nodes : Array[NodeData])
 signal inventory_initialized(inv : PrimeInventory)
+signal rdv_load_success(rdvgame : RDVGame)
 signal rdv_load_failed(error_message : String)
 
 enum Region {
@@ -50,6 +51,7 @@ const MINES_OFFSET : Array[Vector2] = [
 @export var ui : Control
 @export var inventory_interface : Panel
 @export var trick_interface : Panel
+@export var randovania_interface : Panel
 
 var region_data : Array[Dictionary] = []
 var world_data := {
@@ -67,14 +69,12 @@ var start_node : NodeData = null
 var rdv_game : RDVGame = null
 
 func _ready() -> void:
-	#ui.rdvgame_loaded.connect(load_rdv)
 	inventory_initialized.connect(inventory_interface.set_inventory)
 	inventory_initialized.connect(trick_interface.set_inventory)
 	inventory_interface.inventory_changed.connect(resolve_map)
 	trick_interface.tricks_changed.connect(resolve_map)
-	#inventory_initialized.connect(ui.init_tricks_display)
-	#inventory_initialized.connect(ui.init_misc_settings)
-	#rdv_load_failed.connect(ui.show_import_status_message)
+	rdv_load_failed.connect(randovania_interface.rdvgame_load_failed)
+	rdv_load_success.connect(randovania_interface.rdvgame_load_success)
 	
 	draw_map()
 	
@@ -103,8 +103,8 @@ func draw_map() -> void:
 			room_data.default_node = get_node_data(REGION_NAME[i], j, region_data[i]["areas"][j]["default_node"])
 			
 			var room := draw_room(room_data)
-			#room.started_hover.connect(ui.room_hover)
-			#room.stopped_hover.connect(ui.room_stop_hover)
+			room.started_hover.connect(ui.room_hover)
+			room.stopped_hover.connect(ui.room_stop_hover)
 			
 			room_map[room_data] = room
 			
@@ -120,8 +120,8 @@ func draw_map() -> void:
 				if n.coordinates == Vector3.ZERO:
 					continue
 				var node_marker := draw_node(n)
-				#node_marker.started_hover.connect(ui.node_hover)
-				#node_marker.stopped_hover.connect(ui.node_stop_hover)
+				node_marker.started_hover.connect(ui.node_hover)
+				node_marker.stopped_hover.connect(ui.node_stop_hover)
 				if i == Region.MINES:
 					var sub_region := determine_mines_region(room_data.aabb[2])
 					var sub_region_node : Control = region.get_child(sub_region)
@@ -274,7 +274,10 @@ func load_rdv(data : Dictionary) -> void:
 	rdv_game.parse(data)
 	
 	if rdv_game._game != "prime1":
-		print_debug("Not a prime 1 rdvgame")
+		rdv_load_failed.emit("Not a Prime .rdvgame")
+		return
+	if rdv_game._version not in SUPPORTED_VERSIONS:
+		rdv_load_failed.emit("Randovania version %s not supported!" % rdv_game._version)
 		return
 	
 	init_current_inventory(rdv_game._starting_pickups)
@@ -357,35 +360,44 @@ func resolve_map() -> void:
 			if n in reached_nodes:
 				continue
 			
+			var event_queue : Array = []
+			
 			if can_reach_internal(node, n):
 				reached_nodes.append(n)
 				
 				if n.node_type == "event":
 					inventory.set_event_status(n.event_id, true)
 					
-					var sub_queue : Array = []
 					if unreached_nodes.has(n.event_id):
-						sub_queue = unreached_nodes[n.event_id]
+						while len(unreached_nodes[n.event_id]) > 0:
+							event_queue.append(unreached_nodes[n.event_id].pop_front())
+						unreached_nodes.erase(n.event_id)
+				
+				while len(event_queue) > 0:
+					var tmp = event_queue.pop_front()
+					var from_node : NodeData = tmp[0]
+					var to_node : NodeData = tmp[1]
 					
-					while len(sub_queue) > 0:
-						var tmp : Array = sub_queue.pop_front()
-						var from_node : NodeData = tmp[0]
-						var to_node : NodeData = tmp[1]
+					if to_node in reached_nodes:
+						continue
+					
+					if can_reach_internal(from_node, to_node):
+						reached_nodes.append(to_node)
+						queue.append(to_node)
 						
-						if to_node in reached_nodes:
-							continue
-						
-						if can_reach_internal(from_node, to_node):
-							reached_nodes.append(to_node)
-							queue.append(to_node)
+						if to_node.node_type == "event":
+							var marker : NodeMarker = node_map[to_node]
+							marker.set_color(marker.target_color)
 							
-							if to_node.node_type == "event":
-								var marker : NodeMarker = node_map[n]
-								marker.set_color(marker.target_color)
-								
-								inventory.set_event_status(to_node.event_id, true)
-								if unreached_nodes.has(to_node.event_id):
-									sub_queue.append_array(unreached_nodes[to_node.event_id])
+							inventory.set_event_status(to_node.event_id, true)
+							if unreached_nodes.has(to_node.event_id):
+								while len(unreached_nodes[to_node.event_id]) > 0:
+									event_queue.append(unreached_nodes[to_node.event_id].pop_front())
+								unreached_nodes.erase(to_node.event_id)
+					else:
+						if not unreached_nodes.has(inventory.last_failed_event_id):
+							unreached_nodes[inventory.last_failed_event_id] = []
+						unreached_nodes[inventory.last_failed_event_id].append([from_node, to_node])
 				
 				queue.append(n)
 				continue
@@ -403,10 +415,6 @@ func resolve_map() -> void:
 			if not unreached_nodes.has(inventory.last_failed_event_id):
 				unreached_nodes[inventory.last_failed_event_id] = []
 			unreached_nodes[inventory.last_failed_event_id].append([node, n])
-	
-	# For events to work correctly, I need to keeping track of what nodes
-	# weren't reached due to requiring an event. When said event is reached,
-	# re-add the nodes that needed it back to the queue
 	
 	for i in range(Region.MAX):
 		for j in visited_rooms[REGION_NAME[i]]:
