@@ -516,11 +516,18 @@ func can_reach(logic : Dictionary, _depth : int = 0) -> bool:
 		"resource":
 			match logic["data"]["type"]:
 				"items":
-					return parse_item_name(logic["data"]["name"])
+					var negate : bool = logic["data"]["negate"]
+					var has_item := parse_item_name(logic["data"]["name"])
+					if negate:
+						has_item = not has_item
+					return has_item
 				"events":
+					var negate : bool = logic["data"]["negate"]
 					var has_occured := has_event_occured(logic["data"]["name"])
-					if not has_occured:
+					if not has_occured and not negate:
 						last_failed_event_id = logic["data"]["name"]
+					if negate:
+						has_occured = not has_occured
 					return has_occured
 				"tricks":
 					return can_perform_trick(logic["data"]["name"], logic["data"]["amount"])
