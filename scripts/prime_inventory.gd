@@ -34,7 +34,7 @@ const TRICK_VALUE_MAP : Dictionary = {
 const ETANK_MAX : int = 14
 const MISSILE_EXPANSION_MAX : int = 49
 const PB_EXPANSION_MAX : int = 4
-const ENERGY_PER_TANK : float = 100.0
+const ENERGY_PER_TANK : int = 100
 
 @export var requires_launcher := false
 @export var requires_main_pb := false
@@ -187,7 +187,7 @@ const ENERGY_PER_TANK : float = 100.0
 	"Event57" : 0,
 }
 
-var energy : float = ENERGY_PER_TANK
+var energy : int = ENERGY_PER_TANK
 var last_failed_event_id : String
 
 func has_morph() -> bool:
@@ -496,7 +496,12 @@ func parse_item_name(item_name : String) -> bool:
 	
 	return false
 
+func take_damage(amount : int) -> void:
+	energy -= amount
+
 func can_reach(logic : Dictionary, _depth : int = 0) -> bool:
+	var starting_energy : int = energy
+	
 	match logic["type"]:
 		"and":
 			if logic["data"]["items"].is_empty():
@@ -504,14 +509,26 @@ func can_reach(logic : Dictionary, _depth : int = 0) -> bool:
 			
 			for i in range(logic["data"]["items"].size()):
 				if not can_reach(logic["data"]["items"][i], _depth + 1):
+					energy = starting_energy
 					return false
 			return true
 		
 		"or":
+			var reached_energy : Array[int] = []
 			for i in range(logic["data"]["items"].size()):
 				if can_reach(logic["data"]["items"][i], _depth + 1):
-					return true
-			return false
+					reached_energy.append(energy)
+			
+			# No paths reached
+			if reached_energy.is_empty():
+				return false
+			
+			var highest_energy : int = reached_energy[0]
+			for e in reached_energy:
+				if e > highest_energy:
+					highest_energy = e
+			energy = highest_energy
+			return true
 		
 		"resource":
 			match logic["data"]["type"]:

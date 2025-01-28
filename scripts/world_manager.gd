@@ -32,7 +32,7 @@ const REGION_OFFSET : Array[Vector2] = [
 	Vector2(2250, -300),
 	Vector2(500, 0),
 	Vector2(2500, 700),
-	Vector2(1250, 1100),
+	Vector2(1600, 1250),
 	Vector2(1000, -500),
 ]
 const REGION_NAME : Array[String] = [
@@ -43,9 +43,9 @@ const REGION_NAME : Array[String] = [
 	"Magmoor Caverns",
 ]
 const MINES_OFFSET : Array[Vector2] = [
-	Vector2(500, 0),
+	Vector2(375, 125),
 	Vector2(0, -200),
-	Vector2(250, -650)
+	Vector2(215, -600)
 ]
 
 @export var ui : Control
@@ -354,7 +354,8 @@ func resolve_map() -> void:
 		var default_connection : NodeData = node.default_connection
 		if default_connection:
 			if not default_connection in reached_nodes and can_reach_external(node, default_connection):
-				queue.append(default_connection)
+				reached_nodes.append(default_connection)
+				queue.insert(0, default_connection)
 		
 		for n in node.connections:
 			if n in reached_nodes:
@@ -372,6 +373,9 @@ func resolve_map() -> void:
 						while len(unreached_nodes[n.event_id]) > 0:
 							event_queue.append(unreached_nodes[n.event_id].pop_front())
 						unreached_nodes.erase(n.event_id)
+				
+				if n.heal:
+					inventory.set_energy_full()
 				
 				while len(event_queue) > 0:
 					var tmp = event_queue.pop_front()
@@ -394,6 +398,9 @@ func resolve_map() -> void:
 								while len(unreached_nodes[to_node.event_id]) > 0:
 									event_queue.append(unreached_nodes[to_node.event_id].pop_front())
 								unreached_nodes.erase(to_node.event_id)
+						
+						if to_node.heal:
+							inventory.set_energy_full()
 					else:
 						if not unreached_nodes.has(inventory.last_failed_event_id):
 							unreached_nodes[inventory.last_failed_event_id] = []
@@ -422,10 +429,13 @@ func resolve_map() -> void:
 			room_obj.set_state(Room.State.DEFAULT)
 			for k in room_obj.node_markers:
 				if k.data in reached_nodes:
-					if k.data.node_type == "event":
-						k.set_color(Color.SEA_GREEN)
-						continue
-					k.set_color(k.target_color)
+					match k.data.node_type:
+						"pickup":
+							k.set_color(Color.WHITE.lightened(0.25))
+						"event":
+							k.set_color(Color.SEA_GREEN)
+						_:
+							k.set_color(k.target_color)
 	
 	var starter_room := get_room_obj(start_node.region, start_node.room_name)
 	starter_room.set_state(Room.State.STARTER)
@@ -433,7 +443,7 @@ func resolve_map() -> void:
 	map_resolved.emit(reached_nodes)
 
 func can_reach_internal(from_node : NodeData, to_node : NodeData) -> bool:
-	#print(region_data[from_node.region]["areas"][from_node.room_name]["nodes"][from_node.display_name]["connections"].keys())
+	#print("Checking %s (%s) to %s (%s)" % [from_node.display_name, from_node.room_name, to_node.display_name, to_node.room_name])
 	inventory.last_failed_event_id = ""
 	var logic : Dictionary = region_data[from_node.region]["areas"][from_node.room_name]["nodes"][from_node.display_name]["connections"][to_node.display_name]
 	return inventory.can_reach(logic)

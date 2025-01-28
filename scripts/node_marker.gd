@@ -22,9 +22,14 @@ const COLOR_MAP := {
 	"generic" : Color.WHEAT,
 }
 
+const ARTIFACT_BLUE := Color("#4CDAF5")
+const ARTIFACT_ORANGE := Color("#F1A34C")
+
 const DOOR_MARKER_OFFSET : float = 50.0
 const NORMAL_SCALE := Vector2(0.1, 0.1)
 const HOVER_SCALE := Vector2(0.15, 0.15)
+const PICKUP_SCALE := Vector2(0.05, 0.05)
+const PICKUP_HOVER_SCALE := Vector2(0.1, 0.1)
 const HOVER_DURATION : float = 0.15
 
 var marker_offset := Vector2.ZERO
@@ -67,6 +72,12 @@ func init_node() -> void:
 		data.coordinates.y
 	)
 	
+	match data.node_type:
+		"pickup":
+			scale = PICKUP_SCALE
+		_:
+			scale = NORMAL_SCALE
+	
 	name = "n_%s" % data.display_name
 	toggle_visible(false)
 	
@@ -85,6 +96,23 @@ func init_node() -> void:
 					target_color = COLOR_MAP[data.dock_type]
 		"pickup":
 			target_color = COLOR_MAP[data.node_type]
+			# HACK This is ugly
+			var item_name : String = data.display_name.split("(")[1].split(")")[0]
+			match item_name:
+				"Main Power Bombs":
+					item_name = "Power Bomb"
+				"Morph Ball Bombs":
+					item_name = "Morph Ball Bomb"
+			if item_name.contains("Missile"):
+				item_name = "Missile Expansion"
+			if item_name.begins_with("Artifact"):
+				target_color = ARTIFACT_ORANGE
+			
+			var pickup_texture := load("res://data/icons/%s.png" % item_name)
+			if pickup_texture == null:
+				print(item_name)
+			texture = pickup_texture
+			flip_v = true
 		"event":
 			target_color = COLOR_MAP[data.node_type]
 			texture = preload("res://data/icons/event_marker.png")
@@ -107,14 +135,22 @@ func node_hover() -> void:
 		marker_offset_tween.kill()
 	
 	marker_offset_tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
-	marker_offset_tween.tween_property(self, "scale", HOVER_SCALE, HOVER_DURATION)
+	match data.node_type:
+		"pickup":
+			marker_offset_tween.tween_property(self, "scale", PICKUP_HOVER_SCALE, HOVER_DURATION)
+		_:
+			marker_offset_tween.tween_property(self, "scale", HOVER_SCALE, HOVER_DURATION)
 
 func node_stop_hover() -> void:
 	if marker_offset_tween and marker_offset_tween.is_running():
 		marker_offset_tween.kill()
 	
 	marker_offset_tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
-	marker_offset_tween.tween_property(self, "scale", NORMAL_SCALE, HOVER_DURATION)
+	match data.node_type:
+		"pickup":
+			marker_offset_tween.tween_property(self, "scale", PICKUP_SCALE, HOVER_DURATION)
+		_:
+			marker_offset_tween.tween_property(self, "scale", NORMAL_SCALE, HOVER_DURATION)
 
 func toggle_visible(on : bool) -> void:
 	const VISIBILITY_CHANGE_DURATION : float = 0.175

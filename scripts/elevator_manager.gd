@@ -38,7 +38,7 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
 	const MINES_SUBREGIONS := {
 		"Phazon Mines/Elevator B/Door to Elevator Access B" : "Phazon Mines/Elevator Access B/Door to Elevator B",
 		"Phazon Mines/Phazon Processing Center/Door to Processing Center Access" : "Phazon Mines/Processing Center Access/Door to Phazon Processing Center",
-		"Phazon Mines/Elevator A/Door to Elevator Access A" : "Phazon Mines/Elevator Access A/Door to Elevator A"
+		"Phazon Mines/Elevator Access A/Door to Elevator A" : "Phazon Mines/Elevator A/Door to Elevator Access A"
 	}
 	
 	for node in get_children():
@@ -64,21 +64,26 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
 		var from_node_data := world_manager.get_node_data(from[0], from[1], from[2])
 		var to_node_data := world_manager.get_node_data(to[0], to[1], to[2])
 		
+		var from_region : Control = world_manager.region_map[World.REGION_NAME[from_node_data.region]]
+		var to_region : Control = world_manager.region_map[World.REGION_NAME[to_node_data.region]]
+		
 		var from_room : Room = world_manager.get_room_obj(from_node_data.region, from_node_data.room_name)
 		var to_room : Room = world_manager.get_room_obj(to_node_data.region, to_node_data.room_name)
 		
-		var point_1 := from_room.global_position
-		var point_2 := to_room.global_position
+		var point_1 : Vector2 = from_region.position + Vector2(from_node_data.coordinates.x, -from_node_data.coordinates.y)
+		var point_2 : Vector2 = to_region.position + Vector2(to_node_data.coordinates.x, -to_node_data.coordinates.y)
 		
-		# Flip y coordinate because region Control scale.y == -1
-		point_1.x += from_room.custom_minimum_size.x * 0.5
-		point_1.y -= from_room.custom_minimum_size.y * 0.5
-		
-		point_2.x += to_room.custom_minimum_size.x * 0.5
-		point_2.y -= to_room.custom_minimum_size.y * 0.5
+		if from_node_data.region == World.Region.MINES:
+			var tmp : Vector2 = from_region.get_child(world_manager.determine_mines_region(from_room.data.aabb[2])).position
+			tmp.y *= -1
+			point_1 += tmp
+		if to_node_data.region == World.Region.MINES:
+			var tmp : Vector2 = to_region.get_child(world_manager.determine_mines_region(to_room.data.aabb[2])).position
+			tmp.y *= -1
+			point_2 += tmp
 		
 		var color := Room.ROOM_COLOR[from_node_data.region].lerp(Room.ROOM_COLOR[to_node_data.region], 0.5)
-		var line2d := new_connection_line(point_1, point_2, color)
+		var line2d := new_connection_line(point_1, point_2, color, to_node_data.region == World.Region.MINES)
 		lines[from_node_data] = line2d
 		color_map[line2d] = color
 		
@@ -87,7 +92,7 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
 		drawn.append(key)
 		drawn.append(connections[key])
 
-func new_connection_line(global_from : Vector2, global_to : Vector2, line_color : Color) -> Line2D:
+func new_connection_line(global_from : Vector2, global_to : Vector2, line_color : Color, draw_midpoint : bool = false) -> Line2D:
 	var line2d := Line2D.new()
 	line2d.width = LINE_WIDTH
 	line2d.begin_cap_mode = LINE_CAPS
@@ -101,6 +106,17 @@ func new_connection_line(global_from : Vector2, global_to : Vector2, line_color 
 	
 	line2d.add_point(local_from)
 	line2d.add_point(local_to)
+	
+	if not draw_midpoint:
+		return line2d
+	
+	var midpoint := Vector2(
+		(local_from.x + local_to.x) / 2,
+		(local_from.y + local_to.y) / 2
+	)
+	var direction : Vector2 = (local_to - local_from).normalized().rotated(PI/2)
+	midpoint += direction * 100.0
+	line2d.add_point(midpoint, 1)
 	
 	return line2d
 
