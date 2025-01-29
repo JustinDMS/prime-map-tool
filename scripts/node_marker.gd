@@ -98,12 +98,15 @@ func init_node() -> void:
 			target_color = COLOR_MAP[data.node_type]
 			# HACK This is ugly
 			var item_name : String = data.display_name.split("(")[1].split(")")[0]
+			print(item_name)
 			match item_name:
+				"Power Bomb":
+					item_name = "Power Bomb Expansion"
 				"Main Power Bombs":
 					item_name = "Power Bomb"
 				"Morph Ball Bombs":
 					item_name = "Morph Ball Bomb"
-			if item_name.contains("Missile"):
+			if item_name.contains("Missile") and not item_name.contains("Super"):
 				item_name = "Missile Expansion"
 			if item_name.begins_with("Artifact"):
 				target_color = ARTIFACT_ORANGE

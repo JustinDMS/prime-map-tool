@@ -64,7 +64,7 @@ func set_inventory(new_inventory : PrimeInventory) -> void:
 			var new_value := int(all_slider.get_value())
 			for key in inventory.tricks.keys():
 				inventory.tricks[key] = new_value
-				trick_slider_map[key].set_value_no_signal(new_value)
+				trick_slider_map[key].value = new_value
 			
 			tricks_changed.emit()
 	)

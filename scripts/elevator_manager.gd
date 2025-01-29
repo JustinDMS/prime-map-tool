@@ -40,6 +40,10 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
 		"Phazon Mines/Phazon Processing Center/Door to Processing Center Access" : "Phazon Mines/Processing Center Access/Door to Phazon Processing Center",
 		"Phazon Mines/Elevator Access A/Door to Elevator A" : "Phazon Mines/Elevator A/Door to Elevator Access A"
 	}
+	const PHEN_SUBREGIONS := {
+		"Phendrana Drifts/Observatory/Door to West Tower Entrance" : "Phendrana Drifts/West Tower Entrance/Door to Observatory",
+		"Phendrana Drifts/Research Lab Aether/Door to Aether Lab Entryway" : "Phendrana Drifts/Aether Lab Entryway/Door to Research Lab Aether",
+	}
 	
 	for node in get_children():
 		node.queue_free()
@@ -48,6 +52,7 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
 	
 	var connections := dock_connections.duplicate()
 	connections.merge(MINES_SUBREGIONS.duplicate())
+	connections.merge(PHEN_SUBREGIONS.duplicate())
 	
 	var drawn : Array[String] = []
 	
@@ -77,13 +82,28 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
 			var tmp : Vector2 = from_region.get_child(world_manager.determine_mines_region(from_room.data.aabb[2])).position
 			tmp.y *= -1
 			point_1 += tmp
+		elif from_node_data.region == World.Region.PHENDRANA:
+			var tmp : Vector2 = from_region.get_child(world_manager.determine_phendrana_region(from_room.data.name)).position
+			tmp.y *= -1
+			point_1 += tmp
+		
 		if to_node_data.region == World.Region.MINES:
 			var tmp : Vector2 = to_region.get_child(world_manager.determine_mines_region(to_room.data.aabb[2])).position
 			tmp.y *= -1
 			point_2 += tmp
+		elif to_node_data.region == World.Region.PHENDRANA:
+			var tmp : Vector2 = from_region.get_child(world_manager.determine_phendrana_region(to_room.data.name)).position
+			tmp.y *= -1
+			point_1 += tmp
 		
 		var color := Room.ROOM_COLOR[from_node_data.region].lerp(Room.ROOM_COLOR[to_node_data.region], 0.5)
-		var line2d := new_connection_line(point_1, point_2, color, to_node_data.region == World.Region.MINES)
+		var line2d := new_connection_line(
+			point_1, 
+			point_2, 
+			color, 
+			to_node_data.region == World.Region.MINES and not from_node_data.region == World.Region.MAGMOOR,
+			100.0
+			)
 		lines[from_node_data] = line2d
 		color_map[line2d] = color
 		
@@ -92,7 +112,7 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
 		drawn.append(key)
 		drawn.append(connections[key])
 
-func new_connection_line(global_from : Vector2, global_to : Vector2, line_color : Color, draw_midpoint : bool = false) -> Line2D:
+func new_connection_line(global_from : Vector2, global_to : Vector2, line_color : Color, draw_midpoint : bool = false, midpoint_offset : float = 0.0) -> Line2D:
 	var line2d := Line2D.new()
 	line2d.width = LINE_WIDTH
 	line2d.begin_cap_mode = LINE_CAPS
@@ -115,7 +135,7 @@ func new_connection_line(global_from : Vector2, global_to : Vector2, line_color 
 		(local_from.y + local_to.y) / 2
 	)
 	var direction : Vector2 = (local_to - local_from).normalized().rotated(PI/2)
-	midpoint += direction * 100.0
+	midpoint += direction * midpoint_offset
 	line2d.add_point(midpoint, 1)
 	
 	return line2d

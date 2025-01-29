@@ -20,6 +20,11 @@ enum {
 	MINES_3,
 	MINES_MAX
 }
+enum {
+	PHEN_1,
+	PHEN_2,
+	PHEN_MAX
+}
 
 const ROOM_DATA : Array[String] = [
 	"res://data/Chozo Ruins.json",
@@ -32,7 +37,7 @@ const REGION_OFFSET : Array[Vector2] = [
 	Vector2(2250, -300),
 	Vector2(500, 0),
 	Vector2(2500, 700),
-	Vector2(1600, 1250),
+	Vector2(1490, 1350),
 	Vector2(1000, -500),
 ]
 const REGION_NAME : Array[String] = [
@@ -43,9 +48,13 @@ const REGION_NAME : Array[String] = [
 	"Magmoor Caverns",
 ]
 const MINES_OFFSET : Array[Vector2] = [
-	Vector2(375, 125),
+	Vector2(230, 300),
 	Vector2(0, -200),
-	Vector2(215, -600)
+	Vector2(180, -600)
+]
+const PHENDRANA_OFFSET : Array[Vector2] = [
+	Vector2.ZERO,
+	Vector2(100, 75)
 ]
 
 @export var ui : Control
@@ -75,6 +84,7 @@ func _ready() -> void:
 	trick_interface.tricks_changed.connect(resolve_map)
 	rdv_load_failed.connect(randovania_interface.rdvgame_load_failed)
 	rdv_load_success.connect(randovania_interface.rdvgame_load_success)
+	randovania_interface.rdvgame_loaded.connect(load_rdv)
 	
 	draw_map()
 	
@@ -96,6 +106,11 @@ func draw_map() -> void:
 				var sub_region := Control.new()
 				region.add_child(sub_region)
 				sub_region.name = "Mines Level %d" % n
+		elif i == Region.PHENDRANA:
+			for n in range(PHEN_MAX):
+				var sub_region := Control.new()
+				region.add_child(sub_region)
+				sub_region.name = "Phendrana Level %d" % n
 		
 		for j in region_data[i]["areas"].keys():
 			var room_data := make_room_data(i, j, region_data[i]["areas"][j])
@@ -108,13 +123,18 @@ func draw_map() -> void:
 			
 			room_map[room_data] = room
 			
-			if not i == Region.MINES:
-				region.add_child(room)
-			else:
+			if i == Region.MINES:
 				var sub_region := determine_mines_region(room_data.aabb[2])
 				var sub_region_node : Control = region.get_child(sub_region)
 				sub_region_node.add_child(room)
 				sub_region_node.position = MINES_OFFSET[sub_region]
+			elif i == Region.PHENDRANA:
+				var sub_region := determine_phendrana_region(room_data.name)
+				var sub_region_node : Control = region.get_child(sub_region)
+				sub_region_node.add_child(room)
+				sub_region_node.position = PHENDRANA_OFFSET[sub_region]
+			else:
+				region.add_child(room)
 			
 			for n in room_data.nodes:
 				if n.coordinates == Vector3.ZERO:
@@ -124,6 +144,10 @@ func draw_map() -> void:
 				node_marker.stopped_hover.connect(ui.node_stop_hover)
 				if i == Region.MINES:
 					var sub_region := determine_mines_region(room_data.aabb[2])
+					var sub_region_node : Control = region.get_child(sub_region)
+					sub_region_node.add_child(node_marker)
+				elif i == Region.PHENDRANA:
+					var sub_region := determine_phendrana_region(room_data.name)
 					var sub_region_node : Control = region.get_child(sub_region)
 					sub_region_node.add_child(node_marker)
 				else:
@@ -170,6 +194,19 @@ func determine_mines_region(z : float) -> int:
 		return MINES_2
 	else:
 		return MINES_3
+
+func determine_phendrana_region(room_name : String) -> int:
+	const UPPER_LEVEL_ROOM_NAMES : Array[String] = [
+		"West Tower Entrance",
+		"West Tower",
+		"Control Tower",
+		"East Tower",
+		"Aether Lab Entryway"
+	]
+	
+	if room_name in UPPER_LEVEL_ROOM_NAMES:
+		return PHEN_2
+	return PHEN_1
 
 func get_region_data(region : Region) -> Dictionary:
 	var raw_json : JSON = load(ROOM_DATA[region])

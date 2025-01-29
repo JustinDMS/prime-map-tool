@@ -59,6 +59,11 @@ func _ready() -> void:
 	none_button.pressed.connect(
 		func():
 		inventory.clear()
+		inventory.state["Power Suit"] = 1
+		inventory.state["Combat Visor"] = 1
+		inventory.state["Scan Visor"] = 1
+		inventory.state["Power Beam"] = 1
+		
 		missile_slider.set_value_no_signal(0)
 		pb_slider.set_value_no_signal(0)
 		etank_slider.set_value_no_signal(0)

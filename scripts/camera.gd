@@ -24,10 +24,18 @@ func _physics_process(delta: float) -> void:
 	position = position.lerp(target_pos, DRAG_WEIGHT)
 
 func _unhandled_input(event: InputEvent) -> void:
+	handle_input(event)
+
+func handle_input(event : InputEvent) -> void:
 	if event.is_action("zoom_in"):
 		update_zoom(current_zoom + (ZOOM_RATE * current_zoom))
 	if event.is_action("zoom_out"):
 		update_zoom(current_zoom - (ZOOM_RATE * current_zoom))
+	
+	if event is InputEventMagnifyGesture:
+		current_zoom = lerpf(MAX_ZOOM, MIN_ZOOM, event.factor)
+		update_zoom(current_zoom)
+	
 	if Input.is_action_pressed("press") and event is InputEventMouseMotion:
 		move_map(event)
 

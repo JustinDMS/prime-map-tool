@@ -549,7 +549,7 @@ func can_reach(logic : Dictionary, _depth : int = 0) -> bool:
 				"tricks":
 					return can_perform_trick(logic["data"]["name"], logic["data"]["amount"])
 				"damage": # TODO
-					return true
+					return energy > logic["data"]["amount"]
 				"misc":
 					return is_misc_setting_enabled(logic["data"]["name"])
 				_:
