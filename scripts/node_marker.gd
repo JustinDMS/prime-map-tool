@@ -17,10 +17,12 @@ const DOOR_COLOR_MAP := {
 const COLOR_MAP := {
 	"teleporter" : Color.PURPLE,
 	"morph_ball" : Color.ORCHID,
-	"pickup" : Color.DARK_ORANGE,
+	"pickup" : Color.WHITE,
 	"event" : Color.INDIAN_RED,
 	"generic" : Color.WHEAT,
 }
+
+const OUTLINE_SHADER := preload("res://resources/highlight_shader.tres")
 
 const ARTIFACT_BLUE := Color("#4CDAF5")
 const ARTIFACT_ORANGE := Color("#F1A34C")
@@ -29,7 +31,7 @@ const DOOR_MARKER_OFFSET : float = 50.0
 const NORMAL_SCALE := Vector2(0.1, 0.1)
 const HOVER_SCALE := Vector2(0.15, 0.15)
 const PICKUP_SCALE := Vector2(0.05, 0.05)
-const PICKUP_HOVER_SCALE := Vector2(0.1, 0.1)
+const PICKUP_HOVER_SCALE := Vector2(0.07, 0.07)
 const HOVER_DURATION : float = 0.15
 
 var marker_offset := Vector2.ZERO
@@ -98,7 +100,6 @@ func init_node() -> void:
 			target_color = COLOR_MAP[data.node_type]
 			# HACK This is ugly
 			var item_name : String = data.display_name.split("(")[1].split(")")[0]
-			print(item_name)
 			match item_name:
 				"Power Bomb":
 					item_name = "Power Bomb Expansion"
@@ -116,6 +117,7 @@ func init_node() -> void:
 				print(item_name)
 			texture = pickup_texture
 			flip_v = true
+			material = OUTLINE_SHADER.duplicate()
 		"event":
 			target_color = COLOR_MAP[data.node_type]
 			texture = preload("res://data/icons/event_marker.png")
@@ -165,3 +167,7 @@ func toggle_visible(on : bool) -> void:
 		target_color if on else Room.UNREACHABLE_COLOR, 
 		VISIBILITY_CHANGE_DURATION
 		)
+
+func set_pickup_reachable(reached : bool) -> void:
+	assert(data.node_type == "pickup")
+	material.set_shader_parameter(&"color", Color.GREEN if reached else Color.RED)

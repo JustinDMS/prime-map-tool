@@ -77,6 +77,7 @@ func _ready() -> void:
 	mouse_entered.connect(room_hover)
 	mouse_exited.connect(room_stop_hover)
 	
+	set_outline(Color.TRANSPARENT, 0)
 	if data and data.texture:
 		init_room()
 
@@ -118,6 +119,7 @@ func change_to_color(new_color : Color, duration := COLOR_CHANGE_DURATION) -> vo
 func set_state(new_state : State) -> void:
 	prev_state = state
 	state = new_state
+	set_outline(Color.TRANSPARENT, 0)
 	
 	match state:
 		State.DEFAULT:
@@ -129,6 +131,7 @@ func set_state(new_state : State) -> void:
 		State.STARTER:
 			prev_state = State.STARTER
 			start_highlight_loop()
+			set_outline(Color.WHITE, 12)
 
 func room_hover() -> void:
 	set_state(State.HOVERED)
@@ -152,3 +155,9 @@ func start_highlight_loop() -> void:
 	
 	if state == State.STARTER:
 		start_highlight_loop()
+
+func set_outline(color : Color, width : float) -> void:
+	material.set_shader_parameter(&"color", color)
+	material.set_shader_parameter(&"width", width)
+	material.set_shader_parameter(&"pattern", 1)
+	material.set_shader_parameter(&"inside", true) 
