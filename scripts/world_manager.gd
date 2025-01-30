@@ -284,10 +284,12 @@ func get_node_data(region_name : String, room_name : String, node_name : String)
 
 func draw_room(room_data : RoomData) -> Room:
 	const BASE_ROOM : PackedScene = preload("res://resources/base_room.tscn")
+	const OUTLINE_SHADER := preload("res://resources/highlight_shader.tres")
 	
 	var room := BASE_ROOM.instantiate()
 	room.data = room_data
 	room.double_clicked.connect(set_start_node)
+	room.material = OUTLINE_SHADER.duplicate()
 	
 	return room
 
@@ -464,15 +466,16 @@ func resolve_map() -> void:
 		for j in visited_rooms[REGION_NAME[i]]:
 			var room_obj := get_room_obj(i, j)
 			room_obj.set_state(Room.State.DEFAULT)
-			for k in room_obj.node_markers:
-				if k.data in reached_nodes:
-					match k.data.node_type:
-						"pickup":
-							k.set_color(Color.WHITE.lightened(0.25))
-						"event":
-							k.set_color(Color.SEA_GREEN)
-						_:
-							k.set_color(k.target_color)
+	
+	for key in node_map.keys():
+		match key.node_type:
+			"pickup":
+				node_map[key].set_pickup_reachable(key in reached_nodes)
+				node_map[key].set_color(node_map[key].target_color)
+			"event":
+				node_map[key].set_color(Color.SEA_GREEN if key in reached_nodes else node_map[key].target_color)
+			_:
+				node_map[key].set_color(node_map[key].target_color)
 	
 	var starter_room := get_room_obj(start_node.region, start_node.room_name)
 	starter_room.set_state(Room.State.STARTER)
