@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=3 uid="uid://br45wp8jdj0tx"]
+[gd_scene load_steps=38 format=3 uid="uid://br45wp8jdj0tx"]
 
 [ext_resource type="Script" path="res://scripts/elevator_manager.gd" id="1_gb56k"]
 [ext_resource type="Script" path="res://scripts/world_manager.gd" id="1_rofpd"]
@@ -10,29 +10,17 @@
 [ext_resource type="Script" path="res://scripts/inventory_interface.gd" id="9_cfl7w"]
 [ext_resource type="Texture2D" uid="uid://bc6xsokxy6c4v" path="res://data/icons/Morph Ball.png" id="10_kut4r"]
 [ext_resource type="Texture2D" uid="uid://bcps050v5w31i" path="res://data/icons/Energy Tank.png" id="10_pry43"]
-[ext_resource type="Texture2D" uid="uid://dru606t8hdv5r" path="res://data/icons/Artifact of Truth.png" id="11_gg2hy"]
 [ext_resource type="Texture2D" uid="uid://dqjqg5123rjhy" path="res://data/icons/Morph Ball Bomb.png" id="11_k32ci"]
 [ext_resource type="Texture2D" uid="uid://bwig2yoyfso4g" path="res://data/icons/Boost Ball.png" id="12_d1sf4"]
-[ext_resource type="Texture2D" uid="uid://jrhb555rnrls" path="res://data/icons/Artifact of Strength.png" id="12_jt8qc"]
 [ext_resource type="Texture2D" uid="uid://dk8skvooliu7k" path="res://data/icons/Spider Ball.png" id="13_ss08w"]
-[ext_resource type="Texture2D" uid="uid://mcvvufcgjlyd" path="res://data/icons/Artifact of Elder.png" id="13_w3vbq"]
-[ext_resource type="Texture2D" uid="uid://8toni85jy7ou" path="res://data/icons/Artifact of Wild.png" id="14_c23cq"]
 [ext_resource type="Texture2D" uid="uid://c2gk5j6rhimb3" path="res://data/icons/Power Suit.png" id="14_h3m2s"]
-[ext_resource type="Texture2D" uid="uid://bggp45xw8r6jw" path="res://data/icons/Artifact of Lifegiver.png" id="15_abyi6"]
 [ext_resource type="Texture2D" uid="uid://c7lmh3e2lq15j" path="res://data/icons/Varia Suit.png" id="15_hij7d"]
 [ext_resource type="Texture2D" uid="uid://mx1keyhme5g4" path="res://data/icons/Gravity Suit.png" id="16_0jsk2"]
-[ext_resource type="Texture2D" uid="uid://dy15545k0cm1r" path="res://data/icons/Artifact of Warrior.png" id="16_rweuk"]
 [ext_resource type="Texture2D" uid="uid://d3tspph55g1qw" path="res://data/icons/Phazon Suit.png" id="17_3n2di"]
-[ext_resource type="Texture2D" uid="uid://sorsdkk0sfxs" path="res://data/icons/Artifact of Chozo.png" id="17_kf7j8"]
-[ext_resource type="Texture2D" uid="uid://dnpugerxuc4en" path="res://data/icons/Artifact of Nature.png" id="18_octgp"]
 [ext_resource type="Texture2D" uid="uid://ckufvb6qrcq32" path="res://data/icons/Combat Visor.png" id="18_t33sj"]
 [ext_resource type="Texture2D" uid="uid://dl75t1ndplrc" path="res://data/icons/Scan Visor.png" id="19_jvtm1"]
-[ext_resource type="Texture2D" uid="uid://b2e247dlpkj4r" path="res://data/icons/Artifact of Sun.png" id="19_xmxxi"]
 [ext_resource type="Texture2D" uid="uid://flde7u3if8ll" path="res://data/icons/Thermal Visor.png" id="20_gqktq"]
-[ext_resource type="Texture2D" uid="uid://kkedkw36sjwe" path="res://data/icons/Artifact of World.png" id="20_ykum6"]
-[ext_resource type="Texture2D" uid="uid://cg480wbpaybu2" path="res://data/icons/Artifact of Spirit.png" id="21_mr3cf"]
 [ext_resource type="Texture2D" uid="uid://cow6mm35qj7mf" path="res://data/icons/X-Ray Visor.png" id="21_polxb"]
-[ext_resource type="Texture2D" uid="uid://bnl1q5o74j2ne" path="res://data/icons/Artifact of Newborn.png" id="22_6oynj"]
 [ext_resource type="Texture2D" uid="uid://cwynq2ftb65ew" path="res://data/icons/Power Beam.png" id="22_7wnnf"]
 [ext_resource type="Texture2D" uid="uid://dmwxhjv583orb" path="res://data/icons/Wave Beam.png" id="23_d2hg3"]
 [ext_resource type="Texture2D" uid="uid://o0sb4a50d484" path="res://data/icons/Ice Beam.png" id="24_riedu"]
@@ -44,6 +32,7 @@
 [ext_resource type="Texture2D" uid="uid://cujjgfbq7qtl5" path="res://data/icons/Space Jump Boots.png" id="30_leyhf"]
 [ext_resource type="Texture2D" uid="uid://dc6fc27xpslgt" path="res://data/icons/Charge Beam.png" id="31_vulfn"]
 [ext_resource type="Texture2D" uid="uid://5gd5b6bdmfj0" path="res://data/icons/Grapple Beam.png" id="32_lukqw"]
+[ext_resource type="PackedScene" uid="uid://rf1tr2kber25" path="res://resources/artifact_container.tscn" id="33_34bhy"]
 [ext_resource type="Script" path="res://scripts/tricks_interface.gd" id="44_rbq56"]
 [ext_resource type="Script" path="res://scripts/randovania_interface.gd" id="45_px4t2"]
 [ext_resource type="Script" path="res://addons/html5_file_dialog/HTML5FileDialog.gd" id="46_tfmeg"]
@@ -128,14 +117,13 @@ mouse_filter = 2
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-current_tab = 2
+current_tab = 0
 all_tabs_in_front = true
 tab_focus_mode = 0
 deselect_enabled = true
 script = ExtResource("4_0yqv7")
 
 [node name="Inventory" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("missile_label", "missile_slider", "pb_label", "pb_slider", "require_launcher_button", "has_launcher_button", "require_main_pb_button", "has_main_pb_button", "etank_label", "etank_slider", "artifact_label", "artifact_slider", "artifact_container", "item_buttons", "all_button", "none_button")]
-visible = false
 layout_mode = 2
 mouse_filter = 1
 script = ExtResource("9_cfl7w")
@@ -564,105 +552,8 @@ ticks_on_borders = true
 layout_mode = 2
 size_flags_vertical = 6
 
-[node name="artifact_container" type="Control" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2"]
+[node name="artifact_container" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2" instance=ExtResource("33_34bhy")]
 layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="truth" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-texture = ExtResource("11_gg2hy")
-expand_mode = 2
-stretch_mode = 5
-
-[node name="strength" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-texture = ExtResource("12_jt8qc")
-expand_mode = 2
-stretch_mode = 5
-
-[node name="elder" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-texture = ExtResource("13_w3vbq")
-expand_mode = 2
-stretch_mode = 5
-
-[node name="wild" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-texture = ExtResource("14_c23cq")
-expand_mode = 2
-stretch_mode = 5
-
-[node name="lifegiver" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-texture = ExtResource("15_abyi6")
-expand_mode = 2
-stretch_mode = 5
-
-[node name="warrior" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-texture = ExtResource("16_rweuk")
-expand_mode = 2
-stretch_mode = 5
-
-[node name="chozo" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-texture = ExtResource("17_kf7j8")
-expand_mode = 2
-stretch_mode = 5
-
-[node name="nature" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-texture = ExtResource("18_octgp")
-expand_mode = 2
-stretch_mode = 5
-
-[node name="sun" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-texture = ExtResource("19_xmxxi")
-expand_mode = 2
-stretch_mode = 5
-
-[node name="world" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-texture = ExtResource("20_ykum6")
-expand_mode = 2
-stretch_mode = 5
-
-[node name="spirit" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-texture = ExtResource("21_mr3cf")
-expand_mode = 2
-stretch_mode = 5
-
-[node name="newborn" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-texture = ExtResource("22_6oynj")
-expand_mode = 2
-stretch_mode = 5
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2"]
 layout_mode = 2
@@ -715,6 +606,7 @@ size_flags_vertical = 3
 theme_override_constants/separation = 20
 
 [node name="Randovania" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("import_rdvgame_button", "file_dialog", "import_status_label")]
+visible = false
 custom_minimum_size = Vector2(400, 200)
 layout_mode = 2
 script = ExtResource("45_px4t2")

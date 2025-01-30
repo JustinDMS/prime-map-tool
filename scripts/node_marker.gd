@@ -23,9 +23,7 @@ const COLOR_MAP := {
 }
 
 const OUTLINE_SHADER := preload("res://resources/highlight_shader.tres")
-
-const ARTIFACT_BLUE := Color("#4CDAF5")
-const ARTIFACT_ORANGE := Color("#F1A34C")
+const ARTIFACT_CONTAINER := preload("res://resources/artifact_container.tscn")
 
 const DOOR_MARKER_OFFSET : float = 50.0
 const NORMAL_SCALE := Vector2(0.1, 0.1)
@@ -38,6 +36,7 @@ var marker_offset := Vector2.ZERO
 var marker_offset_tween : Tween
 var data : NodeData = null
 var target_color : Color
+var artifact_container : ArtifactContainer = null
 var _is_hovered : bool = false:
 	set(value):
 		if _is_hovered == value:
@@ -53,7 +52,10 @@ var _is_hovered : bool = false:
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
-		_is_hovered = Rect2(marker_offset - (texture.get_size() * 0.5), texture.get_size()).has_point(get_local_mouse_position())
+		if artifact_container:
+			_is_hovered = Rect2(marker_offset + (artifact_container.position * Vector2(1, -1)), abs(artifact_container.position * 2)).has_point(get_local_mouse_position())
+		else:
+			_is_hovered = Rect2(marker_offset - (texture.get_size() * 0.5), texture.get_size()).has_point(get_local_mouse_position())
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not data:
@@ -109,15 +111,23 @@ func init_node() -> void:
 					item_name = "Morph Ball Bomb"
 			if item_name.contains("Missile") and not item_name.contains("Super"):
 				item_name = "Missile Expansion"
-			if item_name.begins_with("Artifact"):
-				target_color = ARTIFACT_ORANGE
 			
-			var pickup_texture := load("res://data/icons/%s.png" % item_name)
-			if pickup_texture == null:
-				print(item_name)
-			texture = pickup_texture
-			flip_v = true
-			material = OUTLINE_SHADER.duplicate()
+			if item_name.begins_with("Artifact"):
+				texture = null
+				
+				var new_artifact_container := ARTIFACT_CONTAINER.instantiate()
+				artifact_container = new_artifact_container
+				add_child(artifact_container)
+				artifact_container.set_artifact_as_focused(PrimeInventory.new().get_artifact_from_name(item_name))
+				artifact_container.scale = Vector2(10.0, -10.0)
+				artifact_container.apply_offset()
+			else:
+				var pickup_texture := load("res://data/icons/%s.png" % item_name)
+				if pickup_texture == null:
+					push_error("Missing texture for %s" % item_name)
+				texture = pickup_texture
+				flip_v = true
+				material = OUTLINE_SHADER.duplicate()
 		"event":
 			target_color = COLOR_MAP[data.node_type]
 			texture = preload("res://data/icons/event_marker.png")
@@ -170,4 +180,12 @@ func toggle_visible(on : bool) -> void:
 
 func set_pickup_reachable(reached : bool) -> void:
 	assert(data.node_type == "pickup")
-	material.set_shader_parameter(&"color", Color.GREEN if reached else Color.RED)
+	var item_name : String = data.display_name.split("(")[1].split(")")[0]
+	if item_name.contains("Artifact"):
+		var a : PrimeInventory.Artifact = PrimeInventory.new().get_artifact_from_name(item_name)
+		if reached:
+			artifact_container.set_artifact_as_focused(a)
+			return
+		artifact_container.set_unreached(a)
+		return
+	material.set_shader_parameter(&"color", Color.GREEN if reached else Color.INDIAN_RED)

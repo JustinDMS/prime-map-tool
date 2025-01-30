@@ -23,13 +23,12 @@ const OFF_COLOR := Color("ffaaaa")
 @export var etank_slider : HSlider
 @export var artifact_label : Label
 @export var artifact_slider : HSlider
-@export var artifact_container : Control
+@export var artifact_container : ArtifactContainer
 @export var item_buttons : Array[Button]
 @export var all_button : Button
 @export var none_button : Button
 
 var inventory : PrimeInventory = null
-var artifact_buttons : Array = []
 
 func _ready() -> void:
 	missile_slider.value_changed.connect(missile_slider_changed)
@@ -70,8 +69,6 @@ func _ready() -> void:
 		artifact_slider.set_value_no_signal(0)
 		set_inventory(inventory)
 	)
-	
-	artifact_buttons = artifact_container.get_children()
 
 func set_inventory(new_inventory : PrimeInventory) -> void:
 	assert(new_inventory != null)
@@ -196,19 +193,7 @@ func dragged_artifact_slider(changed : bool) -> void:
 func update_artifact_colors() -> void:
 	var value := int(artifact_slider.get_value())
 	for i in range(PrimeInventory.Artifact.MAX):
-		set_artifact_color(artifact_buttons[i], i < value)
-
-func set_artifact_color(texture : TextureRect, on : bool) -> void:
-	const NORMAL_COLOR := Color("#4CDAF5") # Blue
-	const PRESSED_COLOR := Color("#F1A34C") # Orange
-	const COLOR_CHANGE_DURATION : float = 0.1
-	
-	var tween := create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
-	tween.tween_property(
-			texture, 
-			"self_modulate", PRESSED_COLOR if on else NORMAL_COLOR,
-			COLOR_CHANGE_DURATION
-			)
+		artifact_container.set_artifact_color(i, ArtifactContainer.ORANGE if i < value else ArtifactContainer.BLUE)
 
 func init_item_buttons() -> void:
 	var item_btn_pressed := func(_btn : Button, _name : String) -> void:

@@ -303,6 +303,36 @@ func has_artifact(a : Artifact) -> bool:
 	
 	return false
 
+func get_artifact_from_name(name : String) -> Artifact:
+	match name:
+		"Artifact of Truth":
+			return Artifact.TRUTH
+		"Artifact of Strength":
+			return Artifact.STRENGTH
+		"Artifact of Elder":
+			return Artifact.ELDER
+		"Artifact of Wild":
+			return Artifact.WILD
+		"Artifact of Lifegiver":
+			return Artifact.LIFEGIVER
+		"Artifact of Warrior":
+			return Artifact.WARRIOR
+		"Artifact of Chozo":
+			return Artifact.CHOZO
+		"Artifact of Nature":
+			return Artifact.NATURE
+		"Artifact of Sun":
+			return Artifact.SUN
+		"Artifact of World":
+			return Artifact.WORLD
+		"Artifact of Spirit":
+			return Artifact.SPIRIT
+		"Artifact of Newborn":
+			return Artifact.NEWBORN
+	
+	push_error("Couldn't find artifact from name: %s" % name)
+	return Artifact.TRUTH
+
 func set_artifact(a : Artifact, owned : bool) -> void:
 	match a:
 		Artifact.TRUTH:
