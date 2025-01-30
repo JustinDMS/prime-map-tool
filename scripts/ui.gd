@@ -4,26 +4,42 @@ extends Control
 @export var room_name_label : Label
 @export var node_name_label : Label
 
-var last_hovered_node : NodeMarker
+var hovered_nodes : Array[NodeMarker] = []
+var hovered_room : Room = null
 
 func room_hover(room : Room) -> void:
 	region_name_label.text = World.REGION_NAME[room.data.region]
 	room_name_label.text = room.name
+	
+	hovered_room = room
 
 func room_stop_hover(_room : Room) -> void:
-	region_name_label.text = ""
-	room_name_label.text = ""
+	hovered_room = null
+	
+	if hovered_nodes.is_empty():
+		region_name_label.text = ""
+		room_name_label.text = ""
+	else:
+		region_name_label.text = World.REGION_NAME[hovered_nodes[-1].data.region]
+		room_name_label.text = hovered_nodes[-1].data.room_name
 
 func node_hover(marker : NodeMarker) -> void:
-	region_name_label.text = World.REGION_NAME[marker.data.region]
-	room_name_label.text = marker.data.room_name
-	node_name_label.text = marker.data.display_name
+	hovered_nodes.append(marker)
 	
-	last_hovered_node = marker
+	node_name_label.text = marker.data.display_name
+	room_name_label.text = marker.data.room_name
+	region_name_label.text = World.REGION_NAME[marker.data.region]
 
 func node_stop_hover(marker : NodeMarker) -> void:
-	if marker != last_hovered_node:
+	hovered_nodes.erase(marker)
+	
+	if hovered_nodes.is_empty():
+		node_name_label.text = ""
+		if not hovered_room:
+			room_name_label.text = ""
+			region_name_label.text = ""
 		return
-	region_name_label.text = ""
-	room_name_label.text = ""
-	node_name_label.text = ""
+	
+	node_name_label.text = hovered_nodes[-1].data.display_name
+	room_name_label.text = hovered_nodes[-1].data.room_name
+	region_name_label.text = World.REGION_NAME[hovered_nodes[-1].data.region]
