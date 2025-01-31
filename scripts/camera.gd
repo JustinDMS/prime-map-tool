@@ -7,7 +7,11 @@ const START_ZOOM : float = MAX_ZOOM
 const ZOOM_WEIGHT : float = 0.15
 const DRAG_WEIGHT : float = 0.3
 
-const START_POS = Vector2(1750, 550)
+const START_POS = Vector2(1800, 645)
+const X_MAX_POS := 3200.0
+const X_MIN_POS := -50.0
+const Y_MAX_POS := 1600.0
+const Y_MIN_POS := -900.0
 
 var current_zoom : float = START_ZOOM:
 	set(value):
@@ -21,6 +25,15 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	zoom = zoom.slerp(Vector2(current_zoom, current_zoom), ZOOM_WEIGHT)
+	if target_pos.x > X_MAX_POS:
+		target_pos.x = lerpf(target_pos.x, X_MAX_POS, 0.5)
+	elif target_pos.x < X_MIN_POS:
+		target_pos.x = lerpf(target_pos.x, X_MIN_POS, 0.5)
+	if target_pos.y > Y_MAX_POS:
+		target_pos.y = lerpf(target_pos.y, Y_MAX_POS, 0.5)
+	elif target_pos.y < Y_MIN_POS:
+		target_pos.y = lerpf(target_pos.y, Y_MIN_POS, 0.5)
+	
 	position = position.lerp(target_pos, DRAG_WEIGHT)
 
 func _unhandled_input(event: InputEvent) -> void:
