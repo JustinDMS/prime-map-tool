@@ -24,7 +24,7 @@ const COLOR_MAP := {
 	"teleporter" : Color.PURPLE,
 	"morph_ball" : Color.ORCHID,
 	"pickup" : Color.WHITE,
-	"event" : Color.GREEN_YELLOW,
+	"event" : Color.LIME_GREEN,
 	"generic" : Color.WHEAT,
 }
 
@@ -204,4 +204,4 @@ func set_pickup_reachable(reached : bool) -> void:
 			return
 		artifact_container.set_unreached(a)
 		return
-	material.set_shader_parameter(&"color", Color.GREEN if reached else Color.INDIAN_RED)
+	material.set_shader_parameter(&"color", Color.LIME_GREEN if reached else Color.INDIAN_RED)
