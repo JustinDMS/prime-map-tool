@@ -468,14 +468,15 @@ func resolve_map() -> void:
 			room_obj.set_state(Room.State.DEFAULT)
 	
 	for key in node_map.keys():
+		var reached : bool = key in reached_nodes
 		match key.node_type:
 			"pickup":
-				node_map[key].set_pickup_reachable(key in reached_nodes)
-				node_map[key].set_color(node_map[key].target_color)
+				node_map[key].set_pickup_reachable(reached)
+				node_map[key].set_state(NodeMarker.State.DEFAULT if reached else NodeMarker.State.UNREACHABLE)
 			"event":
-				node_map[key].set_color(Color.SEA_GREEN if key in reached_nodes else node_map[key].target_color)
+				node_map[key].set_state(NodeMarker.State.DEFAULT if reached else NodeMarker.State.UNREACHABLE)
 			_:
-				node_map[key].set_color(node_map[key].target_color)
+				node_map[key].set_state(NodeMarker.State.DEFAULT if reached else NodeMarker.State.UNREACHABLE)
 	
 	var starter_room := get_room_obj(start_node.region, start_node.room_name)
 	starter_room.set_state(Room.State.STARTER)

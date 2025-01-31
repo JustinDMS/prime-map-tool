@@ -3,6 +3,12 @@ class_name NodeMarker extends Sprite2D
 signal started_hover
 signal stopped_hover
 
+enum State {
+	DEFAULT,
+	HOVERED,
+	UNREACHABLE,
+}
+
 const DOOR_COLOR_MAP := {
 	"Normal Door" : Color.DEEP_SKY_BLUE,
 	"Wave Door" : Color.MEDIUM_PURPLE,
@@ -18,7 +24,7 @@ const COLOR_MAP := {
 	"teleporter" : Color.PURPLE,
 	"morph_ball" : Color.ORCHID,
 	"pickup" : Color.WHITE,
-	"event" : Color.INDIAN_RED,
+	"event" : Color.GREEN_YELLOW,
 	"generic" : Color.WHEAT,
 }
 
@@ -37,6 +43,10 @@ var marker_offset_tween : Tween
 var data : NodeData = null
 var target_color : Color
 var artifact_container : ArtifactContainer = null
+
+var state := State.DEFAULT
+var prev_state := State.DEFAULT ## Used to return to after hovering
+
 var _is_hovered : bool = false:
 	set(value):
 		if _is_hovered == value:
@@ -44,11 +54,29 @@ var _is_hovered : bool = false:
 		
 		_is_hovered = value
 		if _is_hovered:
+			set_state(State.HOVERED)
 			node_hover()
 			started_hover.emit(self)
 		else:
+			set_state(prev_state)
 			node_stop_hover()
 			stopped_hover.emit(self)
+
+func set_state(new_state : State) -> void:
+	prev_state = state
+	state = new_state
+	
+	match state:
+		State.DEFAULT:
+			set_color(target_color)
+		State.HOVERED:
+			pass
+		State.UNREACHABLE:
+			match data.node_type:
+				"event":
+					set_color(Color.INDIAN_RED)
+				_:
+					set_color(Room.UNREACHABLE_COLOR)
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
@@ -83,7 +111,6 @@ func init_node() -> void:
 			scale = NORMAL_SCALE
 	
 	name = "n_%s" % data.display_name
-	toggle_visible(false)
 	
 	match data.node_type:
 		"dock":
@@ -137,7 +164,7 @@ func init_node() -> void:
 			flip_v = true
 	
 	offset = marker_offset
-	set_color(target_color)
+	set_state(State.DEFAULT)
 
 func set_color(color : Color) -> void:
 	self_modulate = color
@@ -166,17 +193,6 @@ func node_stop_hover() -> void:
 			marker_offset_tween.tween_property(self, "scale", PICKUP_SCALE, HOVER_DURATION)
 		_:
 			marker_offset_tween.tween_property(self, "scale", NORMAL_SCALE, HOVER_DURATION)
-
-func toggle_visible(on : bool) -> void:
-	const VISIBILITY_CHANGE_DURATION : float = 0.175
-	
-	var tween := create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
-	tween.tween_property(
-		self, 
-		"self_modulate", 
-		target_color if on else Room.UNREACHABLE_COLOR, 
-		VISIBILITY_CHANGE_DURATION
-		)
 
 func set_pickup_reachable(reached : bool) -> void:
 	assert(data.node_type == "pickup")
