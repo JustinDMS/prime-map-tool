@@ -63,7 +63,7 @@ offset_bottom = 40.0
 script = ExtResource("1_gb56k")
 world_manager = NodePath("../world_manager")
 
-[node name="world_manager" type="Control" parent="." node_paths=PackedStringArray("ui", "inventory_interface", "trick_interface", "randovania_interface")]
+[node name="world_manager" type="Control" parent="." node_paths=PackedStringArray("ui", "inventory_interface", "trick_interface", "randovania_interface", "camera")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -77,6 +77,7 @@ ui = NodePath("../UI/ui")
 inventory_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory")
 trick_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Tricks")
 randovania_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania")
+camera = NodePath("../Camera2D")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position_smoothing_enabled = true

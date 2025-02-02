@@ -161,3 +161,8 @@ func set_outline(color : Color, width : float) -> void:
 	material.set_shader_parameter(&"width", width)
 	material.set_shader_parameter(&"pattern", 1)
 	material.set_shader_parameter(&"inside", true) 
+
+func get_global_center() -> Vector2:
+	var tmp = size
+	tmp.y *= -1
+	return global_position + (tmp * 0.5)

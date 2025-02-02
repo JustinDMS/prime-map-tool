@@ -18,6 +18,7 @@ var current_zoom : float = START_ZOOM:
 		current_zoom = value
 		#print("Zoom = %.2f" % value)
 var target_pos : Vector2
+var move_to_tween : Tween = null
 
 func _ready() -> void:
 	target_pos = START_POS
@@ -34,6 +35,9 @@ func _physics_process(delta: float) -> void:
 	elif target_pos.y < Y_MIN_POS:
 		target_pos.y = lerpf(target_pos.y, Y_MIN_POS, 0.5)
 	
+	if move_to_tween and move_to_tween.is_running():
+		return
+	
 	position = position.lerp(target_pos, DRAG_WEIGHT)
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -45,15 +49,29 @@ func handle_input(event : InputEvent) -> void:
 	if event.is_action("zoom_out"):
 		update_zoom(current_zoom - (ZOOM_RATE * current_zoom))
 	
-	if event is InputEventMagnifyGesture:
-		current_zoom = lerpf(MAX_ZOOM, MIN_ZOOM, event.factor)
-		update_zoom(current_zoom)
-	
 	if Input.is_action_pressed("press") and event is InputEventMouseMotion:
+		if move_to_tween and move_to_tween.is_running():
+			target_pos = position
+			move_to_tween.kill()
+		
 		move_map(event)
 
 func update_zoom(amount : float) -> void:
 	current_zoom = clampf(amount, MAX_ZOOM, MIN_ZOOM)
 
+## Runs on Room double_clicked which passes node data
+func center_on_room(_node_data : NodeData, room : Room) -> void:
+	move_to(room.get_global_center())
+
 func move_map(event : InputEventMouseMotion) -> void:
 	target_pos -= (event.relative / current_zoom)
+
+func move_to(g_position : Vector2) -> void:
+	const DURATION : float = 0.45
+	
+	if move_to_tween:
+		move_to_tween.kill()
+	
+	move_to_tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+	move_to_tween.tween_property(self, "position", g_position, DURATION)
+	move_to_tween.tween_callback(func(): target_pos = g_position)

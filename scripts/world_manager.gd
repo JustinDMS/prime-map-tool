@@ -61,6 +61,7 @@ const PHENDRANA_OFFSET : Array[Vector2] = [
 @export var inventory_interface : Panel
 @export var trick_interface : Panel
 @export var randovania_interface : Panel
+@export var camera : Camera2D
 
 var region_data : Array[Dictionary] = []
 var world_data := {
@@ -289,6 +290,7 @@ func draw_room(room_data : RoomData) -> Room:
 	var room := BASE_ROOM.instantiate()
 	room.data = room_data
 	room.double_clicked.connect(set_start_node)
+	room.double_clicked.connect(camera.center_on_room.bind(room))
 	room.material = OUTLINE_SHADER.duplicate()
 	
 	return room
