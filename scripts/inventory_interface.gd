@@ -165,7 +165,7 @@ func has_main_pb_toggled() -> void:
 	inventory_changed.emit()
 
 func etank_slider_changed(new_value : float) -> void:
-	etank_label.set_text("%d/%d" % [int(etank_slider.get_value()), PrimeInventory.ETANK_MAX])
+	etank_label.set_text("%d/%d" % [int(new_value), PrimeInventory.ETANK_MAX])
 
 func dragged_etank_slider(changed : bool) -> void:
 	if not changed:

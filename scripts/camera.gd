@@ -24,7 +24,7 @@ func _ready() -> void:
 	target_pos = START_POS
 	update_zoom(START_ZOOM)
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	zoom = zoom.slerp(Vector2(current_zoom, current_zoom), ZOOM_WEIGHT)
 	if target_pos.x > X_MAX_POS:
 		target_pos.x = lerpf(target_pos.x, X_MAX_POS, 0.5)
