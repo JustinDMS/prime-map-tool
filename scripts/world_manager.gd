@@ -3,7 +3,7 @@ class_name World extends Control
 signal map_drawn(elevator_data : Dictionary)
 signal map_resolved(reached_nodes : Array[NodeData])
 signal inventory_initialized(inv : PrimeInventory)
-signal rdv_load_success(rdvgame : RDVGame)
+signal rdv_load_success(rdvgame : RDVGame, inv : PrimeInventory)
 signal rdv_load_failed(error_message : String)
 
 enum Region {
@@ -85,7 +85,8 @@ func _ready() -> void:
 	trick_interface.tricks_changed.connect(resolve_map)
 	rdv_load_failed.connect(randovania_interface.rdvgame_load_failed)
 	rdv_load_success.connect(randovania_interface.rdvgame_load_success)
-	randovania_interface.rdvgame_loaded.connect(load_rdv)
+	randovania_interface.rdvgame_loaded.connect(parse_rdv)
+	randovania_interface.rdvgame_config_changed.connect(resolve_map)
 	
 	draw_map()
 	
@@ -303,10 +304,11 @@ func draw_node(node_data : NodeData) -> NodeMarker:
 	
 	return node_marker
 
-func load_rdv(data : Dictionary) -> void:
+func parse_rdv(data : Dictionary) -> void:
 	const SUPPORTED_VERSIONS : Array[String] = [
 		"8.7.1",
 	]
+	
 	if not (data.has("info") and data["info"].has("randovania_version")):
 		rdv_load_failed.emit("Failed to read .rdvgame\nPlease report this along with the file")
 		return
@@ -321,11 +323,14 @@ func load_rdv(data : Dictionary) -> void:
 		rdv_load_failed.emit("Randovania version %s not supported!" % rdv_game._version)
 		return
 	
-	init_current_inventory(rdv_game._starting_pickups)
-	inventory.init_tricks(rdv_game._trick_levels)
-	inventory.init_misc_settings(rdv_game._config)
+	rdv_load_success.emit(rdv_game, inventory)
 	
-	inventory_initialized.emit(inventory)
+	#init_current_inventory(rdv_game._starting_pickups)
+	#inventory.init_tricks(rdv_game._trick_levels)
+	
+	inventory.init_from_rdvgame(rdv_game)
+	
+	#inventory_initialized.emit(inventory)
 	
 	start_node = get_node_data(
 		rdv_game._start_region_name, 
@@ -360,7 +365,8 @@ func set_all_unreachable() -> void:
 			node.self_modulate = Room.UNREACHABLE_COLOR
 
 func resolve_map() -> void:
-	print_debug("---\nResolving map\n---")
+	print("---\nResolving map\n---")
+	#print_stack()
 	
 	if not start_node:
 		start_node = get_node_data(REGION_NAME[Region.TALLON], "Landing Site", "Ship")

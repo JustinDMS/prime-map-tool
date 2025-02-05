@@ -112,21 +112,6 @@ const ENERGY_PER_TANK : int = 100
 	"UnderwaterMovement" : TrickLevel.HYPERMODE,
 	"WallBoost" : TrickLevel.HYPERMODE
 }
-@export var misc_settings := {
-	"NoGravity" : 0,
-	"main_plaza_door" : 0,
-	"backwards_frigate" : 0,
-	"backwards_labs" : 0,
-	"backwards_upper_mines" : 0,
-	"backwards_lower_mines" : 0,
-	"phazon_elite_without_dynamo" : 0,
-	"small" : 0,
-	"dock_rando" : 0,
-	"hard_mode" : 0,
-	"room_rando" : 0,
-	"remove_bars_great_tree_hall" : 0,
-	"vanilla_heat" : 0,
-}
 @export var events := {
 	"Event1" : 0,
 	"Event2" : 0,
@@ -187,6 +172,7 @@ const ENERGY_PER_TANK : int = 100
 	"Event57" : 0,
 }
 
+var rdv_config : Dictionary = {}
 var energy : int = ENERGY_PER_TANK
 var last_failed_event_id : String
 
@@ -408,13 +394,6 @@ func can_shoot_any_beam() -> bool:
 			)
 		)
 
-func is_misc_setting_enabled(setting_name : String) -> bool:
-	if not misc_settings.has(setting_name):
-		push_error("Unhandled misc settings: %s" % setting_name)
-		return false
-	#print("%s = %s" % [setting_name, misc_settings[setting_name] > 0])
-	return misc_settings[setting_name] > 0
-
 func set_event_status(event_name : String, occurred : bool) -> void:
 	events[event_name] = 1 if occurred else 0
 
@@ -424,6 +403,9 @@ func has_event_occured(event_name : String) -> bool:
 		push_error("Unhandled event name: %s" % event_name)
 	
 	return events[event_name] > 0
+
+func take_damage(amount : int) -> void:
+	energy -= amount
 
 func can_pass_dock(weakness : String) -> bool:
 	match weakness:
@@ -526,8 +508,29 @@ func parse_item_name(item_name : String) -> bool:
 	
 	return false
 
-func take_damage(amount : int) -> void:
-	energy -= amount
+func parse_config(setting_name : String) -> bool:
+	if not rdv_config:
+		if setting_name == "NoGravity":
+			return true
+		return false
+	
+	if setting_name in rdv_config.keys():
+		if typeof(rdv_config[setting_name]) == TYPE_BOOL:
+			return rdv_config[setting_name]
+	
+	match setting_name:
+		"hard_mode":
+			return rdv_config["ingame_difficulty"] == "Hard"
+		"dock_rando": # TODO
+			return false
+		"room_rando": # TODO
+			return false
+		"NoGravity":
+			return rdv_config["allow_underwater_movement_without_gravity"]
+		_:
+			push_error("Unhandled setting_name: %s" % setting_name)
+		
+	return false
 
 func can_reach(logic : Dictionary, _depth : int = 0) -> bool:
 	var starting_energy : int = energy
@@ -581,7 +584,7 @@ func can_reach(logic : Dictionary, _depth : int = 0) -> bool:
 				"damage": # TODO
 					return energy > logic["data"]["amount"]
 				"misc":
-					return is_misc_setting_enabled(logic["data"]["name"])
+					return parse_config(logic["data"]["name"])
 				_:
 					push_error("Unhandled resource type: %s" % logic["data"]["type"])
 		
@@ -629,41 +632,9 @@ func can_perform_trick(type : String, value : int) -> bool:
 		return true
 	return false
 
-func init_misc_settings(data : Dictionary) -> void:
-	for key in data.keys():
-		match key:
-			"allow_underwater_movement_without_gravity": # 2 different names
-				misc_settings["NoGravity"] = 1
-			"main_plaza_door":
-				misc_settings[key] = 1 if data[key] else 0
-			"backwards_frigate":
-				misc_settings[key] = 1 if data[key] else 0
-			"backwards_labs":
-				misc_settings[key] = 1 if data[key] else 0
-			"backwards_upper_mines":
-				misc_settings[key] = 1 if data[key] else 0
-			"backwards_lower_mines":
-				misc_settings[key] = 1 if data[key] else 0
-			"phazon_elite_without_dynamo":
-				misc_settings[key] = 1 if data[key] else 0
-			"small_samus": # 2 different names
-				misc_settings["small"] = 1 if data[key] else 0
-			"dock_rando":
-				misc_settings[key] = 0 if data[key]["mode"] == "Vanilla" else 1
-			"ingame_difficulty":
-				misc_settings[key] = 0 if data[key] == "Normal" else 1
-			"room_rando":
-				misc_settings[key] = 0 if data[key] == "None" else 1
-			"remove_bars_great_tree_hall":
-				misc_settings[key] = 1 if data[key] else 0
-			"heat_damage":
-				misc_settings["vanilla_heat"] = 1 if is_equal_approx(data[key], 10.0) else 0
-			"damage_strictness":
-				pass
-			_:
-				# This will push a lot of errors
-				#push_error("Unhandled Randovania configuration: %s" % key)
-				pass
+func init_from_rdvgame(_rdvgame : RDVGame) -> void:
+	rdv_config.clear()
+	rdv_config = _rdvgame.get_config()
 
 func clear_events() -> void:
 	for key in events.keys():

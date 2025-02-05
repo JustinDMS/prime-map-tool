@@ -1,4 +1,4 @@
-extends Panel
+extends UITab
 
 signal inventory_changed()
 
@@ -31,6 +31,8 @@ const OFF_COLOR := Color("ffaaaa")
 var inventory : PrimeInventory = null
 
 func _ready() -> void:
+	super()
+	
 	missile_slider.value_changed.connect(missile_slider_changed)
 	missile_slider.drag_ended.connect(dragged_missile_slider)
 	pb_slider.value_changed.connect(pb_slider_changed)
@@ -77,12 +79,12 @@ func set_inventory(new_inventory : PrimeInventory) -> void:
 	
 	var flag : bool = not is_instance_valid(inventory) # Only true when inventory is first set
 	inventory = new_inventory
-	dragged_missile_slider(true)
+	dragged_missile_slider(false)
 	update_missile_count()
-	dragged_pb_slider(true)
+	dragged_pb_slider(false)
 	update_pb_count()
 	update_missle_pb_settings()
-	dragged_etank_slider(true)
+	dragged_etank_slider(false)
 	dragged_artifact_slider(true)
 	update_artifact_colors()
 	

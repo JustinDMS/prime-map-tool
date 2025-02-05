@@ -10,7 +10,7 @@ const DRAG_WEIGHT : float = 0.3
 const START_POS = Vector2(1800, 645)
 const X_MAX_POS := 3200.0
 const X_MIN_POS := -50.0
-const Y_MAX_POS := 1600.0
+const Y_MAX_POS := 2100.0
 const Y_MIN_POS := -900.0
 
 var current_zoom : float = START_ZOOM:

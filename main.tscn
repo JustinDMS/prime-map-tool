@@ -118,13 +118,13 @@ mouse_filter = 2
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-current_tab = 0
-all_tabs_in_front = true
+current_tab = 2
 tab_focus_mode = 0
 deselect_enabled = true
 script = ExtResource("4_0yqv7")
 
 [node name="Inventory" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("missile_label", "missile_slider", "pb_label", "pb_slider", "require_launcher_button", "has_launcher_button", "require_main_pb_button", "has_main_pb_button", "etank_label", "etank_slider", "artifact_label", "artifact_slider", "artifact_container", "item_buttons", "all_button", "none_button")]
+visible = false
 layout_mode = 2
 mouse_filter = 1
 script = ExtResource("9_cfl7w")
@@ -144,6 +144,7 @@ artifact_container = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxC
 item_buttons = [NodePath("MarginContainer/VBoxContainer/HBoxContainer2/suits/Power Suit"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/suits/Varia Suit"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/suits/Gravity Suit"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/suits/Phazon Suit"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/visors/Combat Visor"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/visors/Scan Visor"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/visors/Thermal Visor"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/visors/X-Ray Visor"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/upgrades/Space Jump Boots"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/upgrades/Morph Ball"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/upgrades/Morph Ball Bomb"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/upgrades/Boost Ball"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/upgrades/Spider Ball"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/beams/Charge Beam"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/beams/Power Beam"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/beams/Wave Beam"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/beams/Ice Beam"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/beams/Plasma Beam"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/combos/Grapple Beam"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/combos/Super Missile"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/combos/Wavebuster"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/combos/Ice Spreader"), NodePath("MarginContainer/VBoxContainer/HBoxContainer2/combos/Flamethrower")]
 all_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer2/suits/all")
 none_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer2/visors/none")
+min_size = Vector2(650, 500)
 metadata/_tab_index = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory"]
@@ -582,6 +583,7 @@ visible = false
 layout_mode = 2
 script = ExtResource("44_rbq56")
 tricks_container = NodePath("MarginContainer/ScrollContainer/VBoxContainer")
+min_size = Vector2(450, 1000)
 metadata/_tab_index = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Tricks"]
@@ -606,14 +608,18 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 20
 
-[node name="Randovania" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("import_rdvgame_button", "file_dialog", "import_status_label")]
-visible = false
-custom_minimum_size = Vector2(400, 200)
+[node name="Randovania" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("import_rdvgame_button", "file_dialog", "import_status_label", "clear_rdvgame_button", "word_hash_label", "rdv_options_container", "bool_options_container", "numerical_options_container")]
+custom_minimum_size = Vector2(400, 150)
 layout_mode = 2
 script = ExtResource("45_px4t2")
 import_rdvgame_button = NodePath("MarginContainer/VBoxContainer/import_rdvgame")
 file_dialog = NodePath("HTML5FileDialog")
-import_status_label = NodePath("MarginContainer/VBoxContainer/import_status")
+import_status_label = NodePath("import_status")
+clear_rdvgame_button = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/clear_rdvgame")
+word_hash_label = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/word_hash")
+rdv_options_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer")
+bool_options_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/bool_options")
+numerical_options_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/num_options")
 metadata/_tab_index = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania"]
@@ -631,23 +637,73 @@ theme_override_constants/margin_bottom = 20
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "Import .rdvgame"
-horizontal_alignment = 1
-
 [node name="import_rdvgame" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Upload"
+size_flags_vertical = 3
+focus_mode = 0
+text = "Upload .rdvgame"
 
-[node name="import_status" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.3
+
+[node name="clear_rdvgame" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+text = "Clear .rdvgame"
+
+[node name="word_hash" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="HSeparator2" type="HSeparator" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.1
+
+[node name="bool_options" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="HSeparator" type="HSeparator" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.1
+
+[node name="num_options" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.75
 
 [node name="HTML5FileDialog" type="Node" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania"]
 script = ExtResource("46_tfmeg")
 filters = PackedStringArray()
+
+[node name="import_status" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania"]
+layout_mode = 2
+offset_left = 600.0
+offset_right = 960.0
+offset_bottom = 78.0
+size_flags_vertical = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer"]
 layout_mode = 2

@@ -51,3 +51,55 @@ func parse(rdvgame_data : Dictionary) -> void:
 	_dock_connections = rdvgame_data["game_modifications"][0]["dock_connections"]
 	_dock_weaknesses = rdvgame_data["game_modifications"][0]["dock_weakness"]
 	_pickup_locations = rdvgame_data["game_modifications"][0]["locations"]
+
+#region Accessor Functions
+
+func get_schema_version() -> int:
+	return _schema_version
+
+func get_version() -> String:
+	return _version
+
+func get_permalink() -> String:
+	return _permalink
+
+func get_seed() -> String:
+	return _seed
+
+func get_hash() -> String:
+	return _hash
+
+func get_word_hash() -> String:
+	return _word_hash
+
+func get_game() -> String:
+	return _game
+
+func get_trick_levels() -> Dictionary:
+	return _trick_levels.duplicate()
+
+func get_start_region_name() -> String:
+	return _start_region_name
+
+func get_start_room_name() -> String:
+	return _start_room_name
+
+func get_start_node_name() -> String:
+	return _start_node_name
+
+func get_starting_pickups() -> Array[String]:
+	return _starting_pickups.duplicate()
+
+func get_config() -> Dictionary:
+	return _config.duplicate()
+
+func get_dock_connections() -> Dictionary:
+	return _dock_connections.duplicate()
+
+func get_dock_weaknesses() -> Dictionary:
+	return _dock_weaknesses.duplicate()
+
+func get_pickup_locations() -> Dictionary:
+	return _pickup_locations.duplicate()
+
+#endregion

@@ -1,4 +1,4 @@
-extends Panel
+extends UITab
 
 signal tricks_changed()
 
@@ -45,6 +45,9 @@ func _gui_input(event: InputEvent) -> void:
 	# Capture the scroll event
 	if event is InputEventMouseButton:
 		get_viewport().set_input_as_handled()
+
+func _ready() -> void:
+	super()
 
 func set_inventory(new_inventory : PrimeInventory) -> void:
 	inventory = new_inventory
