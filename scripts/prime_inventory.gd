@@ -346,6 +346,12 @@ func set_artifact(a : Artifact, owned : bool) -> void:
 		Artifact.NEWBORN:
 			state["Artifact of Newborn"] = 1 if owned else 0
 
+func get_total_artifact_count() -> int:
+	var total : int = 0
+	for i in range(Artifact.MAX):
+		total += 1 if has_artifact(i) else 0
+	return total
+
 ########
 
 func all() -> void:
@@ -432,6 +438,11 @@ func can_pass_dock(weakness : String) -> bool:
 		_:
 			push_error("Unhandled door weakness: %s" % weakness)
 	
+	return false
+
+func can_perform_trick(type : String, value : int) -> bool:
+	if tricks[type] >= value:
+		return true
 	return false
 
 func parse_item_name(item_name : String) -> bool:
@@ -622,19 +633,24 @@ func can_reach(logic : Dictionary, _depth : int = 0) -> bool:
 	
 	return false
 
+func init_state(starting_pickups : Array[String]) -> void:
+	clear()
+	
+	for p in starting_pickups:
+		assert(p in state.keys())
+		state[p] += 1
+
 func init_tricks(data : Dictionary) -> void:
 	for key in data.keys():
 		var value : String = data[key]
 		tricks[key] = TRICK_VALUE_MAP[value]
 
-func can_perform_trick(type : String, value : int) -> bool:
-	if tricks[type] >= value:
-		return true
-	return false
-
 func init_from_rdvgame(_rdvgame : RDVGame) -> void:
 	rdv_config.clear()
 	rdv_config = _rdvgame.get_config()
+	
+	init_state(_rdvgame.get_starting_pickups())
+	init_tricks(_rdvgame.get_trick_levels())
 
 func clear_events() -> void:
 	for key in events.keys():

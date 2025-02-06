@@ -608,7 +608,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 20
 
-[node name="Randovania" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("import_rdvgame_button", "file_dialog", "import_status_label", "clear_rdvgame_button", "word_hash_label", "rdv_options_container", "bool_options_container", "numerical_options_container")]
+[node name="Randovania" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("import_rdvgame_button", "file_dialog", "import_status_label", "clear_rdvgame_button", "word_hash_label", "rdv_options_container", "bool_options_container", "numerical_options_container", "world_manager", "elevator_manager")]
 custom_minimum_size = Vector2(400, 150)
 layout_mode = 2
 script = ExtResource("45_px4t2")
@@ -620,6 +620,8 @@ word_hash_label = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxCo
 rdv_options_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer")
 bool_options_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/bool_options")
 numerical_options_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/num_options")
+world_manager = NodePath("../../../../../../world_manager")
+elevator_manager = NodePath("../../../../../../elevator_manager")
 metadata/_tab_index = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania"]

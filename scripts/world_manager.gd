@@ -82,16 +82,17 @@ func _ready() -> void:
 	inventory_initialized.connect(inventory_interface.set_inventory)
 	inventory_initialized.connect(trick_interface.set_inventory)
 	inventory_interface.inventory_changed.connect(resolve_map)
+	
 	trick_interface.tricks_changed.connect(resolve_map)
+	
 	rdv_load_failed.connect(randovania_interface.rdvgame_load_failed)
 	rdv_load_success.connect(randovania_interface.rdvgame_load_success)
+	
 	randovania_interface.rdvgame_loaded.connect(parse_rdv)
 	randovania_interface.rdvgame_config_changed.connect(resolve_map)
 	
 	draw_map()
-	
-	init_current_inventory()
-	inventory_initialized.emit(inventory)
+	init_inventory()
 
 func draw_map() -> void:
 	for i in range(Region.MAX):
@@ -306,6 +307,7 @@ func draw_node(node_data : NodeData) -> NodeMarker:
 
 func parse_rdv(data : Dictionary) -> void:
 	const SUPPORTED_VERSIONS : Array[String] = [
+		"8.9.0",
 		"8.7.1",
 	]
 	
@@ -316,43 +318,35 @@ func parse_rdv(data : Dictionary) -> void:
 	rdv_game = RDVGame.new()
 	rdv_game.parse(data)
 	
-	if rdv_game._game != "prime1":
-		rdv_load_failed.emit("Not a Prime .rdvgame")
+	if rdv_game.get_game() != "prime1":
+		rdv_load_failed.emit("Not a Prime .rdvgame: %s" % rdv_game.get_game())
 		return
-	if rdv_game._version not in SUPPORTED_VERSIONS:
-		rdv_load_failed.emit("Randovania version %s not supported!" % rdv_game._version)
+	if rdv_game.get_version() not in SUPPORTED_VERSIONS:
+		rdv_load_failed.emit("Randovania %s not supported!" % rdv_game.get_version())
 		return
+	
+	inventory.init_from_rdvgame(rdv_game)
+	inventory_initialized.emit(inventory)
 	
 	rdv_load_success.emit(rdv_game, inventory)
 	
-	#init_current_inventory(rdv_game._starting_pickups)
-	#inventory.init_tricks(rdv_game._trick_levels)
+	set_start_node(get_node_data(
+		rdv_game.get_start_region_name(), 
+		rdv_game.get_start_room_name(), 
+		rdv_game.get_start_node_name()
+		))
 	
-	inventory.init_from_rdvgame(rdv_game)
-	
-	#inventory_initialized.emit(inventory)
-	
-	start_node = get_node_data(
-		rdv_game._start_region_name, 
-		rdv_game._start_room_name, 
-		rdv_game._start_node_name
-		)
-	
-	var start_room_data : RoomData = world_data[rdv_game._start_region_name][rdv_game._start_room_name]
-	var _start_room : Room = room_map[start_room_data]
-	
-	map_drawn.emit(rdv_game._dock_connections)
-	
-	resolve_map()
+	map_drawn.emit(rdv_game.get_dock_connections())
 
-func init_current_inventory(data : Array = []) -> void:
+func init_inventory(pickups : Array[String] = []) -> void:
 	inventory = PrimeInventory.new()
 	
-	if not data.is_empty():
-		inventory.clear()
-		for i in data:
-			if inventory.state.has(i):
-				inventory.state[i] += 1
+	if pickups.is_empty():
+		inventory.all()
+	else:
+		inventory.init_state(pickups)
+	
+	inventory_initialized.emit(inventory)
 
 func get_room_obj(region : Region, room_name : String) -> Room:
 	var data : RoomData = world_data[REGION_NAME[region]][room_name]
@@ -477,14 +471,9 @@ func resolve_map() -> void:
 	
 	for key in node_map.keys():
 		var reached : bool = key in reached_nodes
-		match key.node_type:
-			"pickup":
-				node_map[key].set_pickup_reachable(reached)
-				node_map[key].set_state(NodeMarker.State.DEFAULT if reached else NodeMarker.State.UNREACHABLE)
-			"event":
-				node_map[key].set_state(NodeMarker.State.DEFAULT if reached else NodeMarker.State.UNREACHABLE)
-			_:
-				node_map[key].set_state(NodeMarker.State.DEFAULT if reached else NodeMarker.State.UNREACHABLE)
+		if key.node_type == "pickup":
+			node_map[key].set_pickup_reachable(reached)
+		node_map[key].set_state(NodeMarker.State.DEFAULT if reached else NodeMarker.State.UNREACHABLE)
 	
 	var starter_room := get_room_obj(start_node.region, start_node.room_name)
 	starter_room.set_state(Room.State.STARTER)

@@ -38,6 +38,9 @@ func set_artifact_as_focused(artifact : PrimeInventory.Artifact) -> void:
 func set_artifact_color(artifact : PrimeInventory.Artifact, color : Color) -> void:
 	const COLOR_CHANGE_DURATION : float = 0.1
 	
+	if not textures:
+		return
+	
 	var tween := create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 	tween.tween_property(
 			textures[artifact], 

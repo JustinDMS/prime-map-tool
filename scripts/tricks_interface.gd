@@ -50,6 +50,8 @@ func _ready() -> void:
 	super()
 
 func set_inventory(new_inventory : PrimeInventory) -> void:
+	if not is_instance_valid(new_inventory):
+		new_inventory = PrimeInventory.new()
 	inventory = new_inventory
 	
 	trick_slider_map.clear()
@@ -77,6 +79,7 @@ func set_inventory(new_inventory : PrimeInventory) -> void:
 		tricks_container.add_child(container)
 		
 		var slider : HSlider = trick_slider_map[key]
+		slider.set_value(inventory.tricks[key])
 		slider.drag_ended.connect(
 			func(changed : bool) -> void:
 				if not changed:

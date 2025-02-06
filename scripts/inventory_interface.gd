@@ -75,21 +75,27 @@ func _ready() -> void:
 func set_inventory(new_inventory : PrimeInventory) -> void:
 	assert(new_inventory != null)
 	
-	await get_tree().physics_frame
-	
 	var flag : bool = not is_instance_valid(inventory) # Only true when inventory is first set
 	inventory = new_inventory
-	dragged_missile_slider(false)
+	
+	missile_slider.set_value_no_signal(inventory.get_missile_expansions())
 	update_missile_count()
-	dragged_pb_slider(false)
+	pb_slider.set_value_no_signal(inventory.get_power_bomb_expansions())
 	update_pb_count()
 	update_missle_pb_settings()
-	dragged_etank_slider(false)
-	dragged_artifact_slider(true)
-	update_artifact_colors()
+	
+	etank_slider.set_value_no_signal(inventory.get_etanks())
+	etank_slider_changed(inventory.get_etanks())
 	
 	if flag:
 		init_item_buttons()
+		# Wait a frame so artifact buttons will be ready
+		await get_tree().physics_frame
+	
+	artifact_slider.set_value_no_signal(inventory.get_total_artifact_count())
+	dragged_artifact_slider(true)
+	update_artifact_colors()
+	
 	update_item_buttons()
 
 func missile_slider_changed(new_value : float) -> void:
@@ -205,7 +211,7 @@ func init_item_buttons() -> void:
 		inventory_changed.emit()
 	
 	# HACK
-	# I don't relying on node names, but it's what I could come up with at the time
+	# I don't like relying on node names, but it's what I could come up with at the time
 	for btn in item_buttons:
 		btn.pressed.connect(item_btn_pressed.bind(btn, btn.name))
 	update_item_buttons()

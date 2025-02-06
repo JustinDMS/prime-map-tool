@@ -2,6 +2,7 @@ extends UITab
 
 signal rdvgame_loaded(data : Dictionary)
 signal rdvgame_config_changed()
+signal rdvgame_cleared()
 
 @export var import_rdvgame_button : Button
 @export var file_dialog : HTML5FileDialog
@@ -13,6 +14,10 @@ signal rdvgame_config_changed()
 @export var rdv_options_container : ScrollContainer
 @export var bool_options_container : VBoxContainer
 @export var numerical_options_container : VBoxContainer
+
+@export_category("Signals")
+@export var world_manager : World
+@export var elevator_manager : Control
 
 var import_status_tween : Tween
 var starting_size := Vector2()
@@ -54,7 +59,12 @@ func _ready() -> void:
 			rdv_options_container.set_visible(false)
 			min_size = starting_size
 			size_changed.emit(min_size)
+			rdvgame_cleared.emit()
 	)
+	
+	rdvgame_cleared.connect(func(): world_manager.start_node = null)
+	rdvgame_cleared.connect(world_manager.init_inventory)
+	rdvgame_cleared.connect(elevator_manager.init_elevators)
 
 func _gui_input(event: InputEvent) -> void:
 	# Capture the scroll event
@@ -162,7 +172,7 @@ func rdvgame_load_success(rdvgame : RDVGame, inventory : PrimeInventory) -> void
 			var hbox := HBoxContainer.new()
 			hbox.alignment = BoxContainer.ALIGNMENT_CENTER
 			hbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
-			hbox.add_theme_constant_override("separation", 15.0)
+			hbox.add_theme_constant_override("separation", 15)
 			numerical_options_container.add_child(hbox)
 			
 			var line_edit := LineEdit.new()
