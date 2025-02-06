@@ -118,8 +118,13 @@ func init_node() -> void:
 				"door":
 					texture = preload("res://data/icons/door.png")
 					target_color = DOOR_COLOR_MAP[data.default_dock_weakness]
-					rotation_degrees = data.rotation.z
-					marker_offset.x = -DOOR_MARKER_OFFSET
+					
+					# Vertical door
+					if abs(data.rotation.x) > 20.0:
+						marker_offset.y = DOOR_MARKER_OFFSET
+					else:
+						rotation_degrees = data.rotation.z
+						marker_offset.x = -DOOR_MARKER_OFFSET
 				"teleporter":
 					texture = preload("res://data/icons/teleporter_marker.png")
 					target_color = COLOR_MAP[data.dock_type]
