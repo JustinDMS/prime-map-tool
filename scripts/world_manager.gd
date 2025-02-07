@@ -192,6 +192,20 @@ func draw_map() -> void:
 					)
 					node_data.default_connection = default_connection
 	
+	# Fix teleporter node connections if needed
+	if rdv_game:
+		var connections := rdv_game.get_dock_connections()
+		for key in connections.keys():
+			var from_split : PackedStringArray = key.split("/")
+			var to_split : PackedStringArray = connections[key].split("/")
+			if not from_split[0] in REGION_NAME or not to_split[0] in REGION_NAME:
+				continue
+			var from_node := get_node_data(from_split[0], from_split[1], from_split[2])
+			var to_node := get_node_data(to_split[0], to_split[1], to_split[2])
+			from_node.default_connection = to_node
+			to_node.default_connection = from_node
+		map_drawn.emit(rdv_game.get_dock_connections())
+		return
 	map_drawn.emit()
 
 func determine_mines_region(z : float) -> int:
@@ -351,8 +365,6 @@ func parse_rdv(data : Dictionary) -> void:
 		rdv_game.get_start_room_name(), 
 		rdv_game.get_start_node_name()
 		))
-	
-	map_drawn.emit(rdv_game.get_dock_connections())
 
 func init_inventory(pickups : Array[String] = []) -> void:
 	inventory = PrimeInventory.new()
