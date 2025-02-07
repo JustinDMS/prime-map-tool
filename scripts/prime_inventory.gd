@@ -415,7 +415,7 @@ func take_damage(amount : int) -> void:
 
 func can_pass_dock(weakness : String) -> bool:
 	match weakness:
-		"Normal Door", "Circular Door":
+		"Normal Door", "Circular Door", "Normal Door (Forced)":
 			return can_shoot_any_beam() or (has_morph() and (has_bombs() or has_pb()))
 		"Missile Blast Shield", "Missile Blast Shield (randomprime)":
 			return can_shoot_any_beam() and has_missile()

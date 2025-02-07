@@ -95,6 +95,13 @@ func _ready() -> void:
 	init_inventory()
 
 func draw_map() -> void:
+	for node in get_children():
+		node.queue_free()
+	region_data.clear()
+	region_map.clear()
+	room_map.clear()
+	node_map.clear()
+	
 	for i in range(Region.MAX):
 		region_data.append(get_region_data(i))
 		
@@ -145,6 +152,8 @@ func draw_map() -> void:
 				var node_marker := draw_node(n)
 				node_marker.started_hover.connect(ui.node_hover)
 				node_marker.stopped_hover.connect(ui.node_stop_hover)
+				if rdv_game:
+					node_marker.rdv_game = rdv_game
 				if i == Region.MINES:
 					var sub_region := determine_mines_region(room_data.aabb[2])
 					var sub_region_node : Control = region.get_child(sub_region)
@@ -247,6 +256,11 @@ func make_node_data(room_data : RoomData, data : Dictionary) -> void:
 		if node_data.node_type == "dock":
 			node_data.dock_type = data[node]["dock_type"]
 			node_data.default_dock_weakness = data[node]["default_dock_weakness"]
+			if rdv_game:
+				var format_string : String = "%s/%s/%s" % [World.REGION_NAME[node_data.region], node_data.room_name, node_data.display_name]
+				if format_string in rdv_game.get_dock_weaknesses():
+					node_data.default_dock_weakness = rdv_game.get_dock_weaknesses()[format_string]["name"]
+			
 		elif node_data.node_type == "event":
 			node_data.event_id = region_data[node_data.region]["areas"][node_data.room_name]["nodes"][node_data.display_name]["event_name"]
 		
@@ -327,6 +341,8 @@ func parse_rdv(data : Dictionary) -> void:
 	
 	inventory.init_from_rdvgame(rdv_game)
 	inventory_initialized.emit(inventory)
+	
+	draw_map()
 	
 	rdv_load_success.emit(rdv_game, inventory)
 	
@@ -494,4 +510,5 @@ func get_room_texture(region_name : String, room_name : String) -> Texture2D:
 
 func set_start_node(new_node : NodeData) -> void:
 	start_node = new_node
+	camera.center_on_room(start_node, get_room_obj(start_node.region, start_node.room_name))
 	resolve_map()

@@ -62,8 +62,13 @@ func _ready() -> void:
 			rdvgame_cleared.emit()
 	)
 	
-	rdvgame_cleared.connect(func(): world_manager.start_node = null)
-	rdvgame_cleared.connect(world_manager.init_inventory)
+	rdvgame_cleared.connect(
+		func(): 
+		world_manager.start_node = null
+		world_manager.rdv_game = null
+		world_manager.draw_map()
+		world_manager.init_inventory()
+		)
 	rdvgame_cleared.connect(elevator_manager.init_elevators)
 
 func _gui_input(event: InputEvent) -> void:

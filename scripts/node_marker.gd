@@ -11,6 +11,7 @@ enum State {
 
 const DOOR_COLOR_MAP := {
 	"Normal Door" : Color.DEEP_SKY_BLUE,
+	"Normal Door (Forced)" : Color.DEEP_SKY_BLUE,
 	"Wave Door" : Color.MEDIUM_PURPLE,
 	"Ice Door" : Color.ALICE_BLUE,
 	"Plasma Door" : Color.ORANGE_RED,
@@ -38,11 +39,13 @@ const PICKUP_SCALE := Vector2(0.05, 0.05)
 const PICKUP_HOVER_SCALE := Vector2(0.07, 0.07)
 const HOVER_DURATION : float = 0.15
 
+var item_name : String = "Default Name"
 var marker_offset := Vector2.ZERO
 var marker_offset_tween : Tween
 var data : NodeData = null
 var target_color : Color
 var artifact_container : ArtifactContainer = null
+var rdv_game : RDVGame = null
 
 var state := State.DEFAULT
 var prev_state := State.DEFAULT ## Used to return to after hovering
@@ -133,7 +136,9 @@ func init_node() -> void:
 		"pickup":
 			target_color = COLOR_MAP[data.node_type]
 			# HACK This is ugly
-			var item_name : String = data.display_name.split("(")[1].split(")")[0]
+			item_name = data.display_name.split("(")[1].split(")")[0]
+			if rdv_game:
+				item_name = rdv_game.get_pickup_locations()[World.REGION_NAME[data.region]]["%s/%s" % [data.room_name, data.display_name]]
 			match item_name:
 				"Power Bomb":
 					item_name = "Power Bomb Expansion"
@@ -141,10 +146,13 @@ func init_node() -> void:
 					item_name = "Power Bomb"
 				"Morph Ball Bombs":
 					item_name = "Morph Ball Bomb"
+				"Energy Transfer Module":
+					item_name = "Nothing"
+					return
 			if item_name.contains("Missile") and not item_name.contains("Super"):
 				item_name = "Missile Expansion"
 			
-			if item_name.begins_with("Artifact"):
+			if item_name.contains("Artifact"):
 				texture = null
 				
 				var new_artifact_container := ARTIFACT_CONTAINER.instantiate()
@@ -201,7 +209,10 @@ func node_stop_hover() -> void:
 
 func set_pickup_reachable(reached : bool) -> void:
 	assert(data.node_type == "pickup")
-	var item_name : String = data.display_name.split("(")[1].split(")")[0]
+	
+	if item_name == "Nothing":
+		return
+	
 	if item_name.contains("Artifact"):
 		var a : PrimeInventory.Artifact = PrimeInventory.new().get_artifact_from_name(item_name)
 		if reached:
