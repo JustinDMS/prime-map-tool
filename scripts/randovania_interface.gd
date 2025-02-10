@@ -194,7 +194,7 @@ func rdvgame_load_success(rdvgame : RDVGame, inventory : PrimeInventory) -> void
 			label.text = key
 			hbox.add_child(label)
 	
-	min_size = Vector2(500, 1000)
+	min_size = Vector2(600, 1000)
 	size_changed.emit(min_size)
 	
 	show_import_status_message("Import successful!")
