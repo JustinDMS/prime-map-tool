@@ -401,7 +401,8 @@ func resolve_map() -> void:
 	var queue : Array[NodeData] = []
 	queue.append(start_node)
 	for n in start_node.connections:
-		queue.append(n)
+		if can_reach_internal(start_node, n):
+			queue.append(n)
 	
 	var reached_nodes : Array[NodeData] = []
 	var unreached_nodes := {}
