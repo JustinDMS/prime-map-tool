@@ -2,9 +2,6 @@ class_name World extends Control
 
 signal map_drawn(elevator_data : Dictionary)
 signal map_resolved(reached_nodes : Array[NodeData])
-signal inventory_initialized(inv : PrimeInventory)
-signal rdv_load_success(rdvgame : RDVGame, inv : PrimeInventory)
-signal rdv_load_failed(error_message : String)
 
 enum Region {
 	CHOZO,
@@ -58,9 +55,9 @@ const PHENDRANA_OFFSET : Array[Vector2] = [
 ]
 
 @export var ui : Control
-@export var inventory_interface : Panel
-@export var trick_interface : Panel
-@export var randovania_interface : Panel
+@export var inventory_interface : UITab
+@export var trick_interface : UITab
+@export var randovania_interface : UITab
 @export var camera : Camera2D
 
 var region_data : Array[Dictionary] = []
@@ -74,25 +71,16 @@ var world_data := {
 var node_map := {}
 var room_map := {}
 var region_map := {}
-var inventory : PrimeInventory = null
 var start_node : NodeData = null
-var rdv_game : RDVGame = null
 
 func _ready() -> void:
-	inventory_initialized.connect(inventory_interface.set_inventory)
-	inventory_initialized.connect(trick_interface.set_inventory)
 	inventory_interface.inventory_changed.connect(resolve_map)
-	
 	trick_interface.tricks_changed.connect(resolve_map)
-	
-	rdv_load_failed.connect(randovania_interface.rdvgame_load_failed)
-	rdv_load_success.connect(randovania_interface.rdvgame_load_success)
-	
-	randovania_interface.rdvgame_loaded.connect(parse_rdv)
+	randovania_interface.rdvgame_loaded.connect(rdvgame_loaded)
 	randovania_interface.rdvgame_config_changed.connect(resolve_map)
+	randovania_interface.rdvgame_cleared.connect(rdvgame_cleared)
 	
 	draw_map()
-	init_inventory()
 
 func draw_map() -> void:
 	for node in get_children():
@@ -101,6 +89,8 @@ func draw_map() -> void:
 	region_map.clear()
 	room_map.clear()
 	node_map.clear()
+	
+	var rdvgame := RandovaniaInterface.get_rdvgame()
 	
 	for i in range(Region.MAX):
 		region_data.append(get_region_data(i))
@@ -152,8 +142,8 @@ func draw_map() -> void:
 				var node_marker := draw_node(n)
 				node_marker.started_hover.connect(ui.node_hover)
 				node_marker.stopped_hover.connect(ui.node_stop_hover)
-				if rdv_game:
-					node_marker.rdv_game = rdv_game
+				if rdvgame:
+					node_marker.rdv_game = rdvgame
 				if i == Region.MINES:
 					var sub_region := determine_mines_region(room_data.aabb[2])
 					var sub_region_node : Control = region.get_child(sub_region)
@@ -193,8 +183,8 @@ func draw_map() -> void:
 					node_data.default_connection = default_connection
 	
 	# Fix teleporter node connections if needed
-	if rdv_game:
-		var connections := rdv_game.get_dock_connections()
+	if rdvgame:
+		var connections := rdvgame.get_dock_connections()
 		for key in connections.keys():
 			var from_split : PackedStringArray = key.split("/")
 			var to_split : PackedStringArray = connections[key].split("/")
@@ -204,8 +194,9 @@ func draw_map() -> void:
 			var to_node := get_node_data(to_split[0], to_split[1], to_split[2])
 			from_node.default_connection = to_node
 			to_node.default_connection = from_node
-		map_drawn.emit(rdv_game.get_dock_connections())
+		map_drawn.emit(connections)
 		return
+	
 	map_drawn.emit()
 
 func determine_mines_region(z : float) -> int:
@@ -259,6 +250,8 @@ func make_room_data(region : Region, room_name : String, data : Dictionary) -> R
 func make_node_data(room_data : RoomData, data : Dictionary) -> void:
 	var nodes : Array[NodeData] = []
 	
+	var rdvgame := RandovaniaInterface.get_rdvgame()
+	
 	for node in data.keys():
 		var node_data := NodeData.new()
 		node_data.region = room_data.region
@@ -270,10 +263,10 @@ func make_node_data(room_data : RoomData, data : Dictionary) -> void:
 		if node_data.node_type == "dock":
 			node_data.dock_type = data[node]["dock_type"]
 			node_data.default_dock_weakness = data[node]["default_dock_weakness"]
-			if rdv_game:
+			if rdvgame:
 				var format_string : String = "%s/%s/%s" % [World.REGION_NAME[node_data.region], node_data.room_name, node_data.display_name]
-				if format_string in rdv_game.get_dock_weaknesses():
-					node_data.default_dock_weakness = rdv_game.get_dock_weaknesses()[format_string]["name"]
+				if format_string in rdvgame.get_dock_weaknesses():
+					node_data.default_dock_weakness = rdvgame.get_dock_weaknesses()[format_string]["name"]
 			
 		elif node_data.node_type == "event":
 			node_data.event_id = region_data[node_data.region]["areas"][node_data.room_name]["nodes"][node_data.display_name]["event_name"]
@@ -333,49 +326,6 @@ func draw_node(node_data : NodeData) -> NodeMarker:
 	
 	return node_marker
 
-func parse_rdv(data : Dictionary) -> void:
-	const SUPPORTED_VERSIONS : Array[String] = [
-		"8.9.0",
-		"8.7.1",
-	]
-	
-	if not (data.has("info") and data["info"].has("randovania_version")):
-		rdv_load_failed.emit("Failed to read .rdvgame\nPlease report this along with the file")
-		return
-	
-	rdv_game = RDVGame.new()
-	rdv_game.parse(data)
-	
-	if rdv_game.get_game() != "prime1":
-		rdv_load_failed.emit("Not a Prime .rdvgame: %s" % rdv_game.get_game())
-		return
-	if rdv_game.get_version() not in SUPPORTED_VERSIONS:
-		rdv_load_failed.emit("Randovania %s not supported!" % rdv_game.get_version())
-		return
-	
-	inventory.init_from_rdvgame(rdv_game)
-	inventory_initialized.emit(inventory)
-	
-	draw_map()
-	
-	rdv_load_success.emit(rdv_game, inventory)
-	
-	set_start_node(get_node_data(
-		rdv_game.get_start_region_name(), 
-		rdv_game.get_start_room_name(), 
-		rdv_game.get_start_node_name()
-		))
-
-func init_inventory(pickups : Array[String] = []) -> void:
-	inventory = PrimeInventory.new()
-	
-	if pickups.is_empty():
-		inventory.all()
-	else:
-		inventory.init_state(pickups)
-	
-	inventory_initialized.emit(inventory)
-
 func get_room_obj(region : Region, room_name : String) -> Room:
 	var data : RoomData = world_data[REGION_NAME[region]][room_name]
 	return room_map[data]
@@ -395,13 +345,14 @@ func resolve_map() -> void:
 	
 	set_all_unreachable()
 	
+	var inventory := PrimeInventoryInterface.get_inventory()
 	inventory.set_energy_full()
 	inventory.clear_events()
 	
 	var queue : Array[NodeData] = []
 	queue.append(start_node)
 	for n in start_node.connections:
-		if can_reach_internal(start_node, n):
+		if can_reach_internal(inventory, start_node, n):
 			queue.append(n)
 	
 	var reached_nodes : Array[NodeData] = []
@@ -423,7 +374,7 @@ func resolve_map() -> void:
 		
 		var default_connection : NodeData = node.default_connection
 		if default_connection:
-			if not default_connection in reached_nodes and can_reach_external(node, default_connection):
+			if not default_connection in reached_nodes and can_reach_external(inventory, node, default_connection):
 				reached_nodes.append(default_connection)
 				queue.insert(0, default_connection)
 		
@@ -433,7 +384,7 @@ func resolve_map() -> void:
 			
 			var event_queue : Array = []
 			
-			if can_reach_internal(node, n):
+			if can_reach_internal(inventory, node, n):
 				reached_nodes.append(n)
 				
 				if n.node_type == "event":
@@ -455,7 +406,7 @@ func resolve_map() -> void:
 					if to_node in reached_nodes:
 						continue
 					
-					if can_reach_internal(from_node, to_node):
+					if can_reach_internal(inventory, from_node, to_node):
 						reached_nodes.append(to_node)
 						queue.append(to_node)
 						
@@ -509,13 +460,13 @@ func resolve_map() -> void:
 	
 	map_resolved.emit(reached_nodes)
 
-func can_reach_internal(from_node : NodeData, to_node : NodeData) -> bool:
+func can_reach_internal(inventory : PrimeInventory, from_node : NodeData, to_node : NodeData) -> bool:
 	#print("Checking %s (%s) to %s (%s)" % [from_node.display_name, from_node.room_name, to_node.display_name, to_node.room_name])
 	inventory.last_failed_event_id = ""
 	var logic : Dictionary = region_data[from_node.region]["areas"][from_node.room_name]["nodes"][from_node.display_name]["connections"][to_node.display_name]
 	return inventory.can_reach(logic)
 
-func can_reach_external(from_node : NodeData, to_node : NodeData) -> bool:
+func can_reach_external(inventory : PrimeInventory, from_node : NodeData, to_node : NodeData) -> bool:
 	return inventory.can_pass_dock(from_node.default_dock_weakness) and inventory.can_pass_dock(to_node.default_dock_weakness)
 
 func get_room_texture(region_name : String, room_name : String) -> Texture2D:
@@ -524,4 +475,19 @@ func get_room_texture(region_name : String, room_name : String) -> Texture2D:
 func set_start_node(new_node : NodeData) -> void:
 	start_node = new_node
 	camera.center_on_room(start_node, get_room_obj(start_node.region, start_node.room_name))
+	resolve_map()
+
+func rdvgame_loaded() -> void:
+	draw_map()
+	
+	var rdvgame := RandovaniaInterface.get_rdvgame()
+	set_start_node(get_node_data(
+		rdvgame.get_start_region_name(), 
+		rdvgame.get_start_room_name(), 
+		rdvgame.get_start_node_name()
+		))
+
+func rdvgame_cleared() -> void:
+	start_node = null
+	draw_map()
 	resolve_map()

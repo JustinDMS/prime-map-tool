@@ -1,6 +1,6 @@
-extends UITab
+class_name RandovaniaInterface extends UITab
 
-signal rdvgame_loaded(data : Dictionary)
+signal rdvgame_loaded()
 signal rdvgame_config_changed()
 signal rdvgame_cleared()
 
@@ -15,9 +15,10 @@ signal rdvgame_cleared()
 @export var bool_options_container : VBoxContainer
 @export var numerical_options_container : VBoxContainer
 
-@export_category("Signals")
-@export var world_manager : World
-@export var elevator_manager : Control
+static var rdvgame : RDVGame = null
+
+static func get_rdvgame() -> RDVGame:
+	return rdvgame
 
 var import_status_tween : Tween
 var starting_size := Vector2()
@@ -28,6 +29,9 @@ func _ready() -> void:
 	
 	match OS.get_name():
 		"Web":
+			# Setting filters for HTML5FileDialog via the variable did not work
+			# I instead added the following into js_snippet in HTML5FileDialog.gd:
+			# input.setAttribute('accept', '.rdvgame');
 			import_rdvgame_button.pressed.connect(file_dialog.show)
 			file_dialog.file_selected.connect(web_file_uploaded)
 		"Windows":
@@ -49,6 +53,7 @@ func _ready() -> void:
 	
 	clear_rdvgame_button.pressed.connect(
 		func() -> void:
+			rdvgame = null
 			import_rdvgame_button.set_visible(true)
 			
 			for node in bool_options_container.get_children():
@@ -58,18 +63,10 @@ func _ready() -> void:
 			
 			rdv_options_container.set_visible(false)
 			min_size = starting_size
+			
 			size_changed.emit(min_size)
 			rdvgame_cleared.emit()
 	)
-	
-	rdvgame_cleared.connect(
-		func(): 
-		world_manager.start_node = null
-		world_manager.rdv_game = null
-		world_manager.draw_map()
-		world_manager.init_inventory()
-		)
-	rdvgame_cleared.connect(elevator_manager.init_elevators)
 
 func _gui_input(event: InputEvent) -> void:
 	# Capture the scroll event
@@ -94,7 +91,33 @@ func rdv_imported(raw_text : String) -> void:
 		show_import_status_message("Input is invalid!")
 		return
 	
-	rdvgame_loaded.emit(data)
+	parse_rdv(data)
+
+func parse_rdv(data : Dictionary) -> void:
+	const SUPPORTED_VERSIONS : Array[String] = [
+		"8.9.0",
+		"8.7.1",
+	]
+	
+	if not (data.has("info") and data["info"].has("randovania_version")):
+		rdvgame_load_failed("Failed to read .rdvgame\nPlease report this along with the file")
+		return
+	
+	rdvgame = RDVGame.new()
+	rdvgame.parse(data)
+	
+	if rdvgame.get_game() != "prime1":
+		rdvgame_load_failed("Not a Prime .rdvgame: %s" % rdvgame.get_game())
+		return
+	if rdvgame.get_version() not in SUPPORTED_VERSIONS:
+		rdvgame_load_failed("Randovania %s not supported!" % rdvgame.get_version())
+		return
+	
+	var inventory := PrimeInventoryInterface.get_inventory()
+	inventory.init_from_rdvgame(rdvgame)
+	rdvgame_load_success(inventory)
+	
+	rdvgame_loaded.emit()
 
 func show_import_status_message(text : String) -> void:
 	const DURATION : float = 0.5
@@ -117,7 +140,7 @@ func show_import_status_message(text : String) -> void:
 func rdvgame_load_failed(error_message : String) -> void:
 	show_import_status_message(error_message)
 
-func rdvgame_load_success(rdvgame : RDVGame, inventory : PrimeInventory) -> void:
+func rdvgame_load_success(inventory : PrimeInventory) -> void:
 	import_rdvgame_button.visible = false
 	word_hash_label.text = rdvgame.get_word_hash()
 	

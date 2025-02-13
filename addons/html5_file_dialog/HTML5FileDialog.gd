@@ -59,6 +59,7 @@ if (window.html5filedialoginterface == null) {
 			input.setAttribute('type','file');
 			input.setAttribute('style','display: none;');
 			input.setAttribute('data-id', ''+id);
+			input.setAttribute('accept', '.rdvgame');
 
 			if (FileMode == "OPEN_DIRECTORY" || FileMode == "OPEN_DIRECTORIES") {
 				input.setAttribute("directory", 'true');

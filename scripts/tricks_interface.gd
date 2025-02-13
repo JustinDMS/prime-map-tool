@@ -36,9 +36,10 @@ const TRICK_LEVEL_NAME : Array[String] = [
 	"Hypermode"
 ]
 
+@export var inventory_interface : PrimeInventoryInterface
+@export var randovania_interface : RandovaniaInterface
 @export var tricks_container : VBoxContainer
 
-var inventory : PrimeInventory = null
 var trick_slider_map : Dictionary = {}
 
 func _gui_input(event: InputEvent) -> void:
@@ -48,11 +49,11 @@ func _gui_input(event: InputEvent) -> void:
 
 func _ready() -> void:
 	super()
+	inventory_interface.inventory_changed.connect(inventory_set)
+	randovania_interface.rdvgame_loaded.connect(inventory_set)
 
-func set_inventory(new_inventory : PrimeInventory) -> void:
-	if not is_instance_valid(new_inventory):
-		new_inventory = PrimeInventory.new()
-	inventory = new_inventory
+func inventory_set() -> void:
+	var inventory := PrimeInventoryInterface.get_inventory()
 	
 	trick_slider_map.clear()
 	for node in tricks_container.get_children():

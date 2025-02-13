@@ -26,6 +26,7 @@ const LINE_CAPS := Line2D.LINE_CAP_ROUND
 const Z_IDX : int = -1
 
 @export var world_manager : World
+@export var randovania_interface : RandovaniaInterface
 
 var lines := {}
 var color_map := {}
@@ -33,6 +34,8 @@ var color_map := {}
 func _ready() -> void:
 	world_manager.map_drawn.connect(init_elevators)
 	world_manager.map_resolved.connect(update_lines_from_visited)
+	randovania_interface.rdvgame_loaded.connect(rdvgame_loaded)
+	randovania_interface.rdvgame_cleared.connect(rdvgame_cleared)
 
 func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> void:
 	const MINES_SUBREGIONS := {
@@ -149,3 +152,10 @@ func update_lines_from_visited(reached_nodes : Array[NodeData]) -> void:
 			if node in lines.keys():
 				var line : Line2D = lines[node]
 				line.modulate = color_map[line]
+
+func rdvgame_loaded() -> void:
+	var dock_connections := RandovaniaInterface.get_rdvgame().get_dock_connections()
+	init_elevators(dock_connections)
+
+func rdvgame_cleared() -> void:
+	init_elevators()

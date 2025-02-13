@@ -188,6 +188,8 @@ func has_spider() -> bool:
 func has_bombs() -> bool:
 	return state["Morph Ball Bomb"] > 0
 
+func set_main_pb(on : bool) -> void:
+	state["Power Bomb"] = 1 if on else 0
 func has_main_pb() -> bool:
 	return state["Power Bomb"]
 
@@ -248,15 +250,23 @@ func has_ice_spreader() -> bool:
 func has_flamethrower() -> bool:
 	return state["Flamethrower"] > 0
 
+func set_launcher(on : bool) -> void:
+	state["Missile Launcher"] = 1 if on else 0
 func has_launcher() -> bool:
 	return state["Missile Launcher"] > 0
 
+func set_etanks(amount : int) -> void:
+	state["Energy Tank"] = amount
 func get_etanks() -> int:
 	return state["Energy Tank"]
 
+func set_missile_expanions(amount : int) -> void:
+	state["Missile Expansion"] = amount
 func get_missile_expansions() -> int:
 	return state["Missile Expansion"]
 
+func set_power_bomb_expanions(amount : int) -> void:
+	state["Power Bomb Expansion"] = amount
 func get_power_bomb_expansions() -> int:
 	return state["Power Bomb Expansion"]
 
