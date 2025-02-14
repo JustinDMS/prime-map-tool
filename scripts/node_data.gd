@@ -12,3 +12,9 @@ class_name NodeData extends Resource
 @export var rotation : Vector3
 @export var connections : Array[NodeData]
 @export var default_connection : NodeData
+
+func is_event() -> bool:
+	return node_type == "event"
+
+func is_pickup() -> bool:
+	return node_type == "pickup"

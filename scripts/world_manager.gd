@@ -31,11 +31,11 @@ const ROOM_DATA : Array[String] = [
 	"res://data/Magmoor Caverns.json",
 ]
 const REGION_OFFSET : Array[Vector2] = [
-	Vector2(2250, -300),
-	Vector2(500, 0),
-	Vector2(2500, 700),
-	Vector2(1490, 1350),
-	Vector2(1000, -500),
+	Vector2(2250, -300),	# Chozo
+	Vector2(500, 0), 		# Phendrana
+	Vector2(2500, 700),		# Tallon
+	Vector2(1490, 1350),	# Mines
+	Vector2(1000, -500),	# Magmoor
 ]
 const REGION_NAME : Array[String] = [
 	"Chozo Ruins",
@@ -83,12 +83,7 @@ func _ready() -> void:
 	draw_map()
 
 func draw_map() -> void:
-	for node in get_children():
-		node.queue_free()
-	region_data.clear()
-	region_map.clear()
-	room_map.clear()
-	node_map.clear()
+	clear_map()
 	
 	var rdvgame := RandovaniaInterface.get_rdvgame()
 	
@@ -198,6 +193,17 @@ func draw_map() -> void:
 		return
 	
 	map_drawn.emit()
+
+func clear_map() -> void:
+	for node in get_children():
+		node.queue_free()
+	
+	region_data.clear()
+	region_map.clear()
+	room_map.clear()
+	node_map.clear()
+	
+	start_node = null
 
 func determine_mines_region(z : float) -> int:
 	const Z_LEVEL = [
@@ -337,7 +343,7 @@ func set_all_unreachable() -> void:
 			node.self_modulate = Room.UNREACHABLE_COLOR
 
 func resolve_map() -> void:
-	print("---\nResolving map\n---")
+	print("---Resolving map---")
 	#print_stack()
 	
 	if not start_node:
@@ -346,112 +352,65 @@ func resolve_map() -> void:
 	set_all_unreachable()
 	
 	var inventory := PrimeInventoryInterface.get_inventory()
-	inventory.set_energy_full()
 	inventory.clear_events()
 	
 	var queue : Array[NodeData] = []
-	queue.append(start_node)
-	for n in start_node.connections:
-		if can_reach_internal(inventory, start_node, n):
-			queue.append(n)
-	
 	var reached_nodes : Array[NodeData] = []
 	var unreached_nodes := {}
-	var visited_rooms := {
-		REGION_NAME[Region.CHOZO] : [],
-		REGION_NAME[Region.PHENDRANA] : [],
-		REGION_NAME[Region.TALLON] : [],
-		REGION_NAME[Region.MINES] : [],
-		REGION_NAME[Region.MAGMOOR] : [],
-	}
 	
+	var visited_rooms : Array[Array] = []
+	for i in range(Region.MAX):
+		visited_rooms.append([])
+	
+	queue.append(start_node)
 	reached_nodes.append(start_node)
+	
 	while len(queue) > 0:
 		var node : NodeData = queue.pop_front()
 		
-		if not node.room_name in visited_rooms[REGION_NAME[node.region]]:
-			visited_rooms[REGION_NAME[node.region]].append(node.room_name)
+		if not node.room_name in visited_rooms[node.region]:
+			visited_rooms[node.region].append(node.room_name)
 		
 		var default_connection : NodeData = node.default_connection
-		if default_connection:
-			if not default_connection in reached_nodes and can_reach_external(inventory, node, default_connection):
-				reached_nodes.append(default_connection)
-				queue.insert(0, default_connection)
+		if (
+			is_instance_valid(default_connection) and
+			not default_connection in reached_nodes and
+			can_reach_external(inventory, node, default_connection)
+		):
+			reached_nodes.append(default_connection)
+			queue.append(default_connection)
 		
 		for n in node.connections:
 			if n in reached_nodes:
 				continue
 			
-			var event_queue : Array = []
-			
 			if can_reach_internal(inventory, node, n):
 				reached_nodes.append(n)
 				
-				if n.node_type == "event":
+				if n.is_event():
 					inventory.set_event_status(n.event_id, true)
 					
 					if unreached_nodes.has(n.event_id):
-						while len(unreached_nodes[n.event_id]) > 0:
-							event_queue.append(unreached_nodes[n.event_id].pop_front())
+						queue.append_array(unreached_nodes[n.event_id])
 						unreached_nodes.erase(n.event_id)
-				
-				if n.heal:
-					inventory.set_energy_full()
-				
-				while len(event_queue) > 0:
-					var tmp = event_queue.pop_front()
-					var from_node : NodeData = tmp[0]
-					var to_node : NodeData = tmp[1]
-					
-					if to_node in reached_nodes:
-						continue
-					
-					if can_reach_internal(inventory, from_node, to_node):
-						reached_nodes.append(to_node)
-						queue.append(to_node)
-						
-						if to_node.node_type == "event":
-							var marker : NodeMarker = node_map[to_node]
-							marker.set_color(marker.target_color)
-							
-							inventory.set_event_status(to_node.event_id, true)
-							if unreached_nodes.has(to_node.event_id):
-								while len(unreached_nodes[to_node.event_id]) > 0:
-									event_queue.append(unreached_nodes[to_node.event_id].pop_front())
-								unreached_nodes.erase(to_node.event_id)
-						
-						if to_node.heal:
-							inventory.set_energy_full()
-					else:
-						if not unreached_nodes.has(inventory.last_failed_event_id):
-							unreached_nodes[inventory.last_failed_event_id] = []
-						unreached_nodes[inventory.last_failed_event_id].append([from_node, to_node])
 				
 				queue.append(n)
 				continue
 			
-			#
 			# Failed to reached
-			#
-			if n.node_type == "event":
-				var marker : NodeMarker = node_map[n]
-				marker.set_color(marker.target_color)
-			
-			if inventory.last_failed_event_id.is_empty():
-				continue
-			
-			if not unreached_nodes.has(inventory.last_failed_event_id):
-				unreached_nodes[inventory.last_failed_event_id] = []
-			unreached_nodes[inventory.last_failed_event_id].append([node, n])
+			if not inventory.last_failed_event_id.is_empty():
+				if not unreached_nodes.has(inventory.last_failed_event_id):
+					unreached_nodes[inventory.last_failed_event_id] = []
+				unreached_nodes[inventory.last_failed_event_id].append(node)
 	
 	for i in range(Region.MAX):
-		for j in visited_rooms[REGION_NAME[i]]:
+		for j in visited_rooms[i]:
 			var room_obj := get_room_obj(i, j)
 			room_obj.set_state(Room.State.DEFAULT)
 	
 	for key in node_map.keys():
 		var reached : bool = key in reached_nodes
-		if key.node_type == "pickup":
+		if key.is_pickup():
 			node_map[key].set_pickup_reachable(reached)
 		node_map[key].set_state(NodeMarker.State.DEFAULT if reached else NodeMarker.State.UNREACHABLE)
 	
@@ -488,6 +447,5 @@ func rdvgame_loaded() -> void:
 		))
 
 func rdvgame_cleared() -> void:
-	start_node = null
 	draw_map()
 	resolve_map()
