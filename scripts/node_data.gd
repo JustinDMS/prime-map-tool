@@ -18,3 +18,9 @@ func is_event() -> bool:
 
 func is_pickup() -> bool:
 	return node_type == "pickup"
+
+func is_generic() -> bool:
+	return node_type == "generic"
+
+func is_dock() -> bool:
+	return node_type == "dock"
