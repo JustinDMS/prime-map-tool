@@ -68,14 +68,14 @@ func inventory_set() -> void:
 				return
 			
 			var new_value := int(all_slider.get_value())
-			for key in inventory.tricks.keys():
+			for key in inventory.tricks:
 				inventory.tricks[key] = new_value
 				trick_slider_map[key].value = new_value
 			
 			tricks_changed.emit()
 	)
 	
-	for key in inventory.tricks.keys():
+	for key in inventory.tricks:
 		var container := new_trick(key, inventory.tricks[key])
 		tricks_container.add_child(container)
 		

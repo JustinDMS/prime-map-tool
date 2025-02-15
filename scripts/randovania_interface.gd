@@ -153,7 +153,7 @@ func rdvgame_load_success(inventory : PrimeInventory) -> void:
 	
 	rdv_options_container.set_visible(true)
 	
-	for key in config.keys():
+	for key in config:
 		var item = config[key]
 		
 		if item is bool:

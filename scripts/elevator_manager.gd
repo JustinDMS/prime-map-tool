@@ -59,7 +59,7 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
 	
 	var drawn : Array[String] = []
 	
-	for key in connections.keys():
+	for key in connections:
 		if key in drawn or connections[key] in drawn:
 			continue
 		
@@ -144,12 +144,12 @@ func new_connection_line(global_from : Vector2, global_to : Vector2, line_color 
 	return line2d
 
 func update_lines_from_visited(reached_nodes : Array[NodeData]) -> void:
-	for data in lines.keys():
+	for data in lines:
 		lines[data].modulate = Room.UNREACHABLE_COLOR
 	
 	for node in reached_nodes:
 		if node.node_type == "dock" and node.dock_type == "teleporter":
-			if node in lines.keys():
+			if node in lines:
 				var line : Line2D = lines[node]
 				line.modulate = color_map[line]
 

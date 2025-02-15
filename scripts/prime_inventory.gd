@@ -365,7 +365,7 @@ func get_total_artifact_count() -> int:
 ########
 
 func all() -> void:
-	for item in state.keys():
+	for item in state:
 		match item:
 			"Energy Tank":
 				state[item] = ETANK_MAX
@@ -377,7 +377,7 @@ func all() -> void:
 				state[item] = 1
 
 func clear() -> void:
-	for item in state.keys():
+	for item in state:
 		state[item] = 0
 
 func set_energy_full() -> void:
@@ -535,7 +535,7 @@ func parse_config(setting_name : String) -> bool:
 			return true
 		return false
 	
-	if setting_name in rdv_config.keys():
+	if setting_name in rdv_config:
 		if typeof(rdv_config[setting_name]) == TYPE_BOOL:
 			return rdv_config[setting_name]
 	
@@ -554,8 +554,6 @@ func parse_config(setting_name : String) -> bool:
 	return false
 
 func can_reach(logic : Dictionary, _depth : int = 0) -> bool:
-	var starting_energy : int = energy
-	
 	match logic["type"]:
 		"and":
 			if logic["data"]["items"].is_empty():
@@ -563,26 +561,14 @@ func can_reach(logic : Dictionary, _depth : int = 0) -> bool:
 			
 			for i in range(logic["data"]["items"].size()):
 				if not can_reach(logic["data"]["items"][i], _depth + 1):
-					energy = starting_energy
 					return false
 			return true
 		
 		"or":
-			var reached_energy : Array[int] = []
 			for i in range(logic["data"]["items"].size()):
 				if can_reach(logic["data"]["items"][i], _depth + 1):
-					reached_energy.append(energy)
-			
-			# No paths reached
-			if reached_energy.is_empty():
-				return false
-			
-			var highest_energy : int = reached_energy[0]
-			for e in reached_energy:
-				if e > highest_energy:
-					highest_energy = e
-			energy = highest_energy
-			return true
+					return true
+			return false
 		
 		"resource":
 			match logic["data"]["type"]:
@@ -646,12 +632,13 @@ func can_reach(logic : Dictionary, _depth : int = 0) -> bool:
 func init_state(starting_pickups : Array[String]) -> void:
 	clear()
 	
+	print(starting_pickups)
 	for p in starting_pickups:
-		assert(p in state.keys())
+		assert(p in state)
 		state[p] += 1
 
 func init_tricks(data : Dictionary) -> void:
-	for key in data.keys():
+	for key in data:
 		var value : String = data[key]
 		tricks[key] = TRICK_VALUE_MAP[value]
 
@@ -663,5 +650,5 @@ func init_from_rdvgame(_rdvgame : RDVGame) -> void:
 	init_tricks(_rdvgame.get_trick_levels())
 
 func clear_events() -> void:
-	for key in events.keys():
+	for key in events:
 		set_event_status(key, false)

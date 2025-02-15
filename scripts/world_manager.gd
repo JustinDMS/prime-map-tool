@@ -107,7 +107,7 @@ func draw_map() -> void:
 				region.add_child(sub_region)
 				sub_region.name = "Phendrana Level %d" % n
 		
-		for j in region_data[i]["areas"].keys():
+		for j in region_data[i]["areas"]:
 			var room_data := make_room_data(i, j, region_data[i]["areas"][j])
 			world_data[REGION_NAME[i]][j] = room_data
 			room_data.default_node = get_node_data(REGION_NAME[i], j, region_data[i]["areas"][j]["default_node"])
@@ -159,8 +159,8 @@ func draw_map() -> void:
 	# Now that every room and its nodes have been
 	# created, finish initializing node connections
 	for i in range(Region.MAX):
-		for j in region_data[i]["areas"].keys():
-			for k in region_data[i]["areas"][j]["nodes"].keys():
+		for j in region_data[i]["areas"]:
+			for k in region_data[i]["areas"][j]["nodes"]:
 				var node_data := get_node_data(REGION_NAME[i], j, k)
 				var connections : Array[NodeData] = []
 				for l in region_data[i]["areas"][j]["nodes"][k]["connections"]:
@@ -180,7 +180,7 @@ func draw_map() -> void:
 	# Fix teleporter node connections if needed
 	if rdvgame:
 		var connections := rdvgame.get_dock_connections()
-		for key in connections.keys():
+		for key in connections:
 			var from_split : PackedStringArray = key.split("/")
 			var to_split : PackedStringArray = connections[key].split("/")
 			if not from_split[0] in REGION_NAME or not to_split[0] in REGION_NAME:
@@ -258,15 +258,15 @@ func make_node_data(room_data : RoomData, data : Dictionary) -> void:
 	
 	var rdvgame := RandovaniaInterface.get_rdvgame()
 	
-	for node in data.keys():
+	for node in data:
 		var node_data := NodeData.new()
 		node_data.region = room_data.region
 		node_data.room_name = room_data.name
 		node_data.display_name = node
 		node_data.node_type = data[node]["node_type"]
-		node_data.heal = true if (node_data.node_type == "generic" and data[node]["heal"]) else false
+		node_data.heal = true if (node_data.is_generic() and data[node]["heal"]) else false
 		
-		if node_data.node_type == "dock":
+		if node_data.is_dock():
 			node_data.dock_type = data[node]["dock_type"]
 			node_data.default_dock_weakness = data[node]["default_dock_weakness"]
 			if rdvgame:
@@ -274,7 +274,7 @@ func make_node_data(room_data : RoomData, data : Dictionary) -> void:
 				if format_string in rdvgame.get_dock_weaknesses():
 					node_data.default_dock_weakness = rdvgame.get_dock_weaknesses()[format_string]["name"]
 			
-		elif node_data.node_type == "event":
+		elif node_data.is_event():
 			node_data.event_id = region_data[node_data.region]["areas"][node_data.room_name]["nodes"][node_data.display_name]["event_name"]
 		
 		if data[node]["extra"].has("world_position"):
@@ -337,7 +337,7 @@ func get_room_obj(region : Region, room_name : String) -> Room:
 	return room_map[data]
 
 func set_all_unreachable() -> void:
-	for key in room_map.keys():
+	for key in room_map:
 		room_map[key].set_state(Room.State.UNREACHABLE)
 		for node in room_map[key].node_markers:
 			node.self_modulate = Room.UNREACHABLE_COLOR
@@ -408,7 +408,7 @@ func resolve_map() -> void:
 			var room_obj := get_room_obj(i, j)
 			room_obj.set_state(Room.State.DEFAULT)
 	
-	for key in node_map.keys():
+	for key in node_map:
 		var reached : bool = key in reached_nodes
 		if key.is_pickup():
 			node_map[key].set_pickup_reachable(reached)
