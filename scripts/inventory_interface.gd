@@ -105,6 +105,11 @@ func set_inventory(new_inventory : PrimeInventory) -> void:
 	assert(new_inventory != null)
 	inventory = new_inventory
 	
+	missile_slider.set_value_no_signal(inventory.get_missile_expansions())
+	pb_slider.set_value_no_signal(inventory.get_power_bomb_expansions())
+	etank_slider.set_value_no_signal(inventory.get_etanks())
+	artifact_slider.set_value_no_signal(inventory.get_total_artifact_count())
+	
 	dragged_missile_slider(true, false)
 	dragged_pb_slider(true, false)
 	dragged_etank_slider(true, false)
