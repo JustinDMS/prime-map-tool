@@ -208,7 +208,7 @@ func node_stop_hover() -> void:
 			marker_offset_tween.tween_property(self, "scale", NORMAL_SCALE, HOVER_DURATION)
 
 func set_pickup_reachable(reached : bool) -> void:
-	assert(data.node_type == "pickup")
+	assert(data.is_pickup())
 	
 	if item_name == "Nothing":
 		return

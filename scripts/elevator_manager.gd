@@ -148,7 +148,7 @@ func update_lines_from_visited(reached_nodes : Array[NodeData]) -> void:
 		lines[data].modulate = Room.UNREACHABLE_COLOR
 	
 	for node in reached_nodes:
-		if node.node_type == "dock" and node.dock_type == "teleporter":
+		if node.is_teleporter():
 			if node in lines:
 				var line : Line2D = lines[node]
 				line.modulate = color_map[line]

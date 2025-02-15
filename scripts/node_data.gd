@@ -24,3 +24,6 @@ func is_generic() -> bool:
 
 func is_dock() -> bool:
 	return node_type == "dock"
+
+func is_teleporter() -> bool:
+	return dock_type == "teleporter"
