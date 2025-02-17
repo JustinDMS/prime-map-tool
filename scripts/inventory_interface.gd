@@ -2,12 +2,6 @@ class_name PrimeInventoryInterface extends UITab
 
 signal inventory_changed()
 
-const MISSILE_EXPANIONS_MAX : int = 49
-const MISSILE_VALUE : int = 5
-const PB_MAX : int = 8
-const MAIN_PB_VALUE : int = 4
-const PB_VALUE : int = 1
-
 const ON_COLOR := Color("aaffaa")
 const OFF_COLOR := Color("ffaaaa")
 
@@ -121,7 +115,7 @@ func set_inventory(new_inventory : PrimeInventory) -> void:
 	
 	inventory_changed.emit()
 
-func missile_slider_changed(new_value : float) -> void:
+func missile_slider_changed(_new_value : float) -> void:
 	update_missile_count()
 
 func dragged_missile_slider(changed : bool, _emit_signal : bool = true) -> void:
@@ -135,7 +129,7 @@ func dragged_missile_slider(changed : bool, _emit_signal : bool = true) -> void:
 	if _emit_signal:
 		inventory_changed.emit()
 
-func pb_slider_changed(new_value : float) -> void:
+func pb_slider_changed(_new_value : float) -> void:
 	update_pb_count()
 
 func dragged_pb_slider(changed : bool, _emit_signal : bool = true) -> void:
@@ -153,15 +147,15 @@ func update_missile_count() -> void:
 	var expansions : int = missile_slider.get_value()
 	var launcher : int = 1 if inventory.has_launcher() else 0
 	var total : int = expansions + launcher
-	var game_total : int = (expansions * MISSILE_VALUE) + (launcher * MISSILE_VALUE)
-	var text := "%d/%d (%d)" % [total, MISSILE_EXPANIONS_MAX + 1, game_total]
+	var game_total : int = (expansions * PrimeInventory.MISSILE_VALUE) + (launcher * PrimeInventory.MISSILE_VALUE)
+	var text := "%d/%d (%d)" % [total, PrimeInventory.MISSILE_EXPANSION_MAX + 1, game_total]
 	missile_label.set_text(text)
 
 func update_pb_count() -> void:
 	var expansions : int = pb_slider.get_value()
 	var main : int = 1 if inventory.has_main_pb() else 0
-	var current : int = expansions + (main * MAIN_PB_VALUE)
-	var text := "%d/%d" % [current, PB_MAX]
+	var current : int = expansions + (main * PrimeInventory.MAIN_PB_VALUE)
+	var text := "%d/%d" % [current, PrimeInventory.PB_MAX]
 	pb_label.set_text(text)
 
 func update_missle_pb_settings() -> void:

@@ -62,18 +62,7 @@ func inventory_set() -> void:
 	var all_container := new_trick("all", PrimeInventory.TrickLevel.HYPERMODE)
 	tricks_container.add_child(all_container)
 	var all_slider : HSlider = trick_slider_map["all"]
-	all_slider.drag_ended.connect(
-		func(changed : bool) -> void:
-			if not changed:
-				return
-			
-			var new_value := int(all_slider.get_value())
-			for key in inventory.tricks:
-				inventory.tricks[key] = new_value
-				trick_slider_map[key].value = new_value
-			
-			tricks_changed.emit()
-	)
+	all_slider.drag_ended.connect(all_slider_drag_ended.bind(inventory))
 	
 	for key in inventory.tricks:
 		var container := new_trick(key, inventory.tricks[key])
@@ -143,3 +132,14 @@ func new_trick(_name : String, _difficulty : int) -> Control:
 	vbox.add_child(separator)
 	
 	return vbox
+
+func all_slider_drag_ended(changed : bool, inventory : PrimeInventory) -> void:
+	if not changed:
+		return
+	
+	var new_value := int(trick_slider_map["all"].get_value())
+	for key in inventory.tricks:
+		inventory.tricks[key] = new_value
+		trick_slider_map[key].value = new_value
+	
+	tricks_changed.emit()

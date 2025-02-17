@@ -33,7 +33,11 @@ const TRICK_VALUE_MAP : Dictionary = {
 }
 const ETANK_MAX : int = 14
 const MISSILE_EXPANSION_MAX : int = 49
+const MISSILE_VALUE : int = 5
+const PB_MAX : int = 8
 const PB_EXPANSION_MAX : int = 4
+const PB_EXPANSION_VALUE : int = 1
+const MAIN_PB_VALUE : int = 4
 const ENERGY_PER_TANK : int = 100
 
 @export var requires_launcher := false
