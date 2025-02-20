@@ -102,18 +102,13 @@ func _ready() -> void:
 func init_node() -> void:
 	texture = preload("res://data/icons/node_marker.png")
 	
-	position = Vector2(
-		data.coordinates.x,
-		data.coordinates.y
-	)
-	
 	match data.node_type:
 		"pickup":
 			scale = PICKUP_SCALE
 		_:
 			scale = NORMAL_SCALE
 	
-	name = "n_%s" % data.display_name
+	name = data.name
 	
 	match data.node_type:
 		"dock":
@@ -136,7 +131,7 @@ func init_node() -> void:
 		"pickup":
 			target_color = COLOR_MAP[data.node_type]
 			# HACK This is ugly
-			item_name = data.display_name.split("(")[1].split(")")[0]
+			item_name = data.name.split("(")[1].split(")")[0]
 			if rdv_game:
 				item_name = rdv_game.get_pickup_locations()[World.REGION_NAME[data.region]]["%s/%s" % [data.room_name, data.display_name]]
 			match item_name:

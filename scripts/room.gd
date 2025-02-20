@@ -12,6 +12,7 @@ enum State {
 	STARTER,
 }
 
+const OUTLINE_SHADER := preload("res://resources/highlight_shader.tres")
 const COLOR_CHANGE_DURATION : float = 0.2
 
 const ROOM_COLOR : Array[Color] = [
@@ -77,7 +78,9 @@ func _ready() -> void:
 	mouse_entered.connect(room_hover)
 	mouse_exited.connect(room_stop_hover)
 	
+	material = OUTLINE_SHADER.duplicate()
 	set_outline(Color.TRANSPARENT, 0)
+	
 	if data and data.texture:
 		init_room()
 
@@ -93,6 +96,7 @@ func init_room():
 	texture_click_mask = bitmap
 	
 	region = data.region
+	set_name(data.name)
 	
 	var x1 : float = data.aabb[0]
 	var y1 : float = data.aabb[1]

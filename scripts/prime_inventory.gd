@@ -636,7 +636,6 @@ func can_reach(logic : Dictionary, _depth : int = 0) -> bool:
 func init_state(starting_pickups : Array[String]) -> void:
 	clear()
 	
-	print(starting_pickups)
 	for p in starting_pickups:
 		assert(p in state)
 		state[p] += 1

@@ -69,11 +69,11 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
 		if from[0] in IGNORE_REGIONS or to[0] in IGNORE_REGIONS:
 			continue
 		
-		var from_node_data := world_manager.get_node_data(from[0], from[1], from[2])
-		var to_node_data := world_manager.get_node_data(to[0], to[1], to[2])
+		var from_node_data := world_manager.get_node_data(World.get_region_from_name(from[0]), from[1], from[2])
+		var to_node_data := world_manager.get_node_data(World.get_region_from_name(to[0]), to[1], to[2])
 		
-		var from_region : Control = world_manager.region_map[World.REGION_NAME[from_node_data.region]]
-		var to_region : Control = world_manager.region_map[World.REGION_NAME[to_node_data.region]]
+		var from_region : Control = world_manager.region_nodes[from_node_data.region]
+		var to_region : Control = world_manager.region_nodes[to_node_data.region]
 		
 		var from_room : Room = world_manager.get_room_obj(from_node_data.region, from_node_data.room_name)
 		var to_room : Room = world_manager.get_room_obj(to_node_data.region, to_node_data.room_name)
