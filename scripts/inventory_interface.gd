@@ -144,7 +144,7 @@ func dragged_pb_slider(changed : bool, _emit_signal : bool = true) -> void:
 		inventory_changed.emit()
 
 func update_missile_count() -> void:
-	var expansions : int = missile_slider.get_value()
+	var expansions := int(missile_slider.get_value())
 	var launcher : int = 1 if inventory.has_launcher() else 0
 	var total : int = expansions + launcher
 	var game_total : int = (expansions * PrimeInventory.MISSILE_VALUE) + (launcher * PrimeInventory.MISSILE_VALUE)
@@ -152,7 +152,7 @@ func update_missile_count() -> void:
 	missile_label.set_text(text)
 
 func update_pb_count() -> void:
-	var expansions : int = pb_slider.get_value()
+	var expansions := int(pb_slider.get_value())
 	var main : int = 1 if inventory.has_main_pb() else 0
 	var current : int = expansions + (main * PrimeInventory.MAIN_PB_VALUE)
 	var text := "%d/%d" % [current, PrimeInventory.PB_MAX]

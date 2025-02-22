@@ -43,7 +43,7 @@ font_size = 32
 [node name="main" type="Node2D"]
 
 [node name="Background" type="CanvasLayer" parent="."]
-layer = -1
+layer = -2
 
 [node name="bg_color" type="ColorRect" parent="Background"]
 anchors_preset = 15

@@ -177,7 +177,6 @@ const ENERGY_PER_TANK : int = 100
 }
 
 var rdv_config : Dictionary = {}
-var energy : int = ENERGY_PER_TANK
 var last_failed_event_id : String
 
 func has_morph() -> bool:
@@ -303,7 +302,7 @@ func has_artifact(a : Artifact) -> bool:
 	
 	return false
 
-func get_artifact_from_name(name : String) -> Artifact:
+static func get_artifact_from_name(name : String) -> Artifact:
 	match name:
 		"Artifact of Truth":
 			return Artifact.TRUTH
@@ -384,9 +383,6 @@ func clear() -> void:
 	for item in state:
 		state[item] = 0
 
-func set_energy_full() -> void:
-	energy = ENERGY_PER_TANK + (get_etanks() * ENERGY_PER_TANK)
-
 func has_missile() -> bool:
 	if requires_launcher:
 		return has_launcher()
@@ -424,9 +420,6 @@ func has_event_occured(event_name : String) -> bool:
 	
 	return events[event_name] > 0
 
-func take_damage(amount : int) -> void:
-	energy -= amount
-
 func can_pass_dock(weakness : String) -> bool:
 	match weakness:
 		"Normal Door", "Circular Door", "Normal Door (Forced)":
@@ -439,7 +432,7 @@ func can_pass_dock(weakness : String) -> bool:
 			return can_use_arm_cannon() and has_ice_beam()
 		"Plasma Door":
 			return can_use_arm_cannon() and has_plasma()
-		"Teleporter", "Square Door":
+		"Teleporter", "Square Door", "Artifact Temple Teleporter":
 			return true
 		"Morph Ball Door":
 			return has_morph()
@@ -593,7 +586,8 @@ func can_reach(logic : Dictionary, _depth : int = 0) -> bool:
 				"tricks":
 					return can_perform_trick(logic["data"]["name"], logic["data"]["amount"])
 				"damage": # TODO
-					return energy > logic["data"]["amount"]
+					var amount : int = logic["data"]["amount"]
+					return max(get_etanks() * ENERGY_PER_TANK, ENERGY_PER_TANK) > amount
 				"misc":
 					return parse_config(logic["data"]["name"])
 				_:

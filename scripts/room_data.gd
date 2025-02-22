@@ -1,6 +1,6 @@
 class_name RoomData extends Resource
 
-@export var region : World.Region = 0
+@export var region := World.Region.NONE
 @export var name : String
 @export var texture : Texture2D
 @export var aabb : Array[float]

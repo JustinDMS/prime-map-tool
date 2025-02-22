@@ -4,6 +4,7 @@ signal map_drawn(elevator_data : Dictionary)
 signal map_resolved(reached_nodes : Array[NodeData])
 
 enum Region {
+	NONE = -1,
 	CHOZO,
 	PHENDRANA,
 	TALLON,
@@ -180,16 +181,15 @@ func determine_phendrana_region(room_name : String) -> int:
 		return PHEN_2
 	return PHEN_1
 
-## Clears existing node markers/data 
 func init_nodes() -> void:
-	var rdvgame := RandovaniaInterface.get_rdvgame()
-	var dock_weaknesses : Dictionary = {} if not rdvgame else rdvgame.get_dock_weaknesses()
-	var dock_connections : Dictionary = {} if not rdvgame else rdvgame.get_dock_connections()
-	
 	# Clear existing node markers and node data
 	for key in node_marker_map:
 		node_marker_map[key].queue_free()
 	node_marker_map.clear()
+	
+	var rdvgame := RandovaniaInterface.get_rdvgame()
+	var dock_weaknesses : Dictionary = {} if not rdvgame else rdvgame.get_dock_weaknesses()
+	var dock_connections : Dictionary = {} if not rdvgame else rdvgame.get_dock_connections()
 	
 	# Create new node data and add to respective room data
 	for i in range(Region.MAX):
@@ -203,7 +203,7 @@ func init_nodes() -> void:
 				if k == "Pickup (Items Every Room)":
 					continue
 				
-				var node_data := NodeData.new()
+				var node_data := NodeData.create_data_from_type(rdv_logic[i]["areas"][j]["nodes"][k]["node_type"])
 				nodes.append(node_data)
 				node_data.init(k, room_data, rdv_logic[i]["areas"][j]["nodes"][k])
 				
@@ -211,7 +211,7 @@ func init_nodes() -> void:
 				node_marker_map[node_data] = node_marker
 				add_marker_to_map(node_marker)
 				
-				if node_data.is_event():
+				if node_data is EventNodeData:
 					node_data.event_id = rdv_logic[i]["areas"][j]["nodes"][k]["event_name"]
 				
 				if rdvgame:
@@ -331,7 +331,7 @@ func resolve_map() -> void:
 		if not node.room_name in visited_rooms[node.region]:
 			visited_rooms[node.region].append(node.room_name)
 		
-		var default_connection : NodeData = node.default_connection
+		var default_connection : NodeData = null if not node is DockNodeData else node.default_connection
 		if (
 			is_instance_valid(default_connection) and
 			not default_connection in reached_nodes and
@@ -347,7 +347,7 @@ func resolve_map() -> void:
 			if can_reach_internal(inventory, node, n):
 				reached_nodes.append(n)
 				
-				if n.is_event():
+				if n is EventNodeData:
 					inventory.set_event_status(n.event_id, true)
 					
 					if unreached_nodes.has(n.event_id):
@@ -370,7 +370,7 @@ func resolve_map() -> void:
 	
 	for key in node_marker_map:
 		var reached : bool = key in reached_nodes
-		if key.is_pickup():
+		if key is PickupNodeData:
 			node_marker_map[key].set_pickup_reachable(reached)
 		node_marker_map[key].set_state(NodeMarker.State.DEFAULT if reached else NodeMarker.State.UNREACHABLE)
 	
@@ -411,5 +411,12 @@ func set_start_node(new_node : NodeData) -> void:
 	resolve_map()
 
 func rdvgame_cleared() -> void:
+	start_node = null
+	
+	var inventory := PrimeInventoryInterface.get_inventory()
+	inventory.all()
+	
 	init_nodes()
 	resolve_map()
+	
+	camera.center_on_room(start_node, get_room_obj(start_node.region, start_node.room_name))
