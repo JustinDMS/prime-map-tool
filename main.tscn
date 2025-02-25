@@ -43,7 +43,7 @@ font_size = 32
 [node name="main" type="Node2D"]
 
 [node name="Background" type="CanvasLayer" parent="."]
-layer = -1
+layer = -2
 
 [node name="bg_color" type="ColorRect" parent="Background"]
 anchors_preset = 15
@@ -55,13 +55,14 @@ mouse_filter = 1
 mouse_default_cursor_shape = 3
 color = Color(0.141176, 0.141176, 0.141176, 1)
 
-[node name="elevator_manager" type="Control" parent="." node_paths=PackedStringArray("world_manager")]
+[node name="elevator_manager" type="Control" parent="." node_paths=PackedStringArray("world_manager", "randovania_interface")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("1_gb56k")
 world_manager = NodePath("../world_manager")
+randovania_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania")
 
 [node name="world_manager" type="Control" parent="." node_paths=PackedStringArray("ui", "inventory_interface", "trick_interface", "randovania_interface", "camera")]
 layout_mode = 3
@@ -123,11 +124,12 @@ tab_focus_mode = 0
 deselect_enabled = true
 script = ExtResource("4_0yqv7")
 
-[node name="Inventory" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("missile_label", "missile_slider", "pb_label", "pb_slider", "require_launcher_button", "has_launcher_button", "require_main_pb_button", "has_main_pb_button", "etank_label", "etank_slider", "artifact_label", "artifact_slider", "artifact_container", "item_buttons", "all_button", "none_button")]
+[node name="Inventory" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("randovania_interface", "missile_label", "missile_slider", "pb_label", "pb_slider", "require_launcher_button", "has_launcher_button", "require_main_pb_button", "has_main_pb_button", "etank_label", "etank_slider", "artifact_label", "artifact_slider", "artifact_container", "item_buttons", "all_button", "none_button")]
 visible = false
 layout_mode = 2
 mouse_filter = 1
 script = ExtResource("9_cfl7w")
+randovania_interface = NodePath("../Randovania")
 missile_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/missile_count")
 missile_slider = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/missile_slider")
 pb_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/HBoxContainer/VBoxContainer/pb_count")
@@ -578,10 +580,12 @@ rounded = true
 tick_count = 3
 ticks_on_borders = true
 
-[node name="Tricks" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("tricks_container")]
+[node name="Tricks" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("inventory_interface", "randovania_interface", "tricks_container")]
 visible = false
 layout_mode = 2
 script = ExtResource("44_rbq56")
+inventory_interface = NodePath("../Inventory")
+randovania_interface = NodePath("../Randovania")
 tricks_container = NodePath("MarginContainer/ScrollContainer/VBoxContainer")
 min_size = Vector2(450, 1000)
 metadata/_tab_index = 1
@@ -608,7 +612,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 20
 
-[node name="Randovania" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("import_rdvgame_button", "file_dialog", "import_status_label", "clear_rdvgame_button", "word_hash_label", "rdv_options_container", "bool_options_container", "numerical_options_container", "world_manager", "elevator_manager")]
+[node name="Randovania" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("import_rdvgame_button", "file_dialog", "import_status_label", "clear_rdvgame_button", "word_hash_label", "rdv_options_container", "bool_options_container", "numerical_options_container")]
 custom_minimum_size = Vector2(400, 150)
 layout_mode = 2
 script = ExtResource("45_px4t2")
@@ -620,8 +624,6 @@ word_hash_label = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxCo
 rdv_options_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer")
 bool_options_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/bool_options")
 numerical_options_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/num_options")
-world_manager = NodePath("../../../../../../world_manager")
-elevator_manager = NodePath("../../../../../../elevator_manager")
 metadata/_tab_index = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania"]

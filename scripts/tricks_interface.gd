@@ -36,9 +36,10 @@ const TRICK_LEVEL_NAME : Array[String] = [
 	"Hypermode"
 ]
 
+@export var inventory_interface : PrimeInventoryInterface
+@export var randovania_interface : RandovaniaInterface
 @export var tricks_container : VBoxContainer
 
-var inventory : PrimeInventory = null
 var trick_slider_map : Dictionary = {}
 
 func _gui_input(event: InputEvent) -> void:
@@ -48,11 +49,11 @@ func _gui_input(event: InputEvent) -> void:
 
 func _ready() -> void:
 	super()
+	inventory_interface.inventory_changed.connect(inventory_set)
+	randovania_interface.rdvgame_loaded.connect(inventory_set)
 
-func set_inventory(new_inventory : PrimeInventory) -> void:
-	if not is_instance_valid(new_inventory):
-		new_inventory = PrimeInventory.new()
-	inventory = new_inventory
+func inventory_set() -> void:
+	var inventory := PrimeInventoryInterface.get_inventory()
 	
 	trick_slider_map.clear()
 	for node in tricks_container.get_children():
@@ -61,20 +62,9 @@ func set_inventory(new_inventory : PrimeInventory) -> void:
 	var all_container := new_trick("all", PrimeInventory.TrickLevel.HYPERMODE)
 	tricks_container.add_child(all_container)
 	var all_slider : HSlider = trick_slider_map["all"]
-	all_slider.drag_ended.connect(
-		func(changed : bool) -> void:
-			if not changed:
-				return
-			
-			var new_value := int(all_slider.get_value())
-			for key in inventory.tricks.keys():
-				inventory.tricks[key] = new_value
-				trick_slider_map[key].value = new_value
-			
-			tricks_changed.emit()
-	)
+	all_slider.drag_ended.connect(all_slider_drag_ended.bind(inventory))
 	
-	for key in inventory.tricks.keys():
+	for key in inventory.tricks:
 		var container := new_trick(key, inventory.tricks[key])
 		tricks_container.add_child(container)
 		
@@ -142,3 +132,14 @@ func new_trick(_name : String, _difficulty : int) -> Control:
 	vbox.add_child(separator)
 	
 	return vbox
+
+func all_slider_drag_ended(changed : bool, inventory : PrimeInventory) -> void:
+	if not changed:
+		return
+	
+	var new_value := int(trick_slider_map["all"].get_value())
+	for key in inventory.tricks:
+		inventory.tricks[key] = new_value
+		trick_slider_map[key].value = new_value
+	
+	tricks_changed.emit()

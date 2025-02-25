@@ -1,10 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://qw3bgt3468bw"]
+[gd_scene load_steps=2 format=3 uid="uid://qw3bgt3468bw"]
 
-[ext_resource type="Texture2D" uid="uid://g0pqr8detjpm" path="res://data/icons/node_marker.png" id="1_54dd8"]
-[ext_resource type="Script" path="res://scripts/node_marker.gd" id="2_bykt2"]
+[ext_resource type="Script" path="res://scripts/node marker/node_marker.gd" id="2_bykt2"]
 
 [node name="node_marker" type="Sprite2D"]
 z_index = 1
 scale = Vector2(0.1, 0.1)
-texture = ExtResource("1_54dd8")
 script = ExtResource("2_bykt2")

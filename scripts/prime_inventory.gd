@@ -33,7 +33,11 @@ const TRICK_VALUE_MAP : Dictionary = {
 }
 const ETANK_MAX : int = 14
 const MISSILE_EXPANSION_MAX : int = 49
+const MISSILE_VALUE : int = 5
+const PB_MAX : int = 8
 const PB_EXPANSION_MAX : int = 4
+const PB_EXPANSION_VALUE : int = 1
+const MAIN_PB_VALUE : int = 4
 const ENERGY_PER_TANK : int = 100
 
 @export var requires_launcher := false
@@ -173,7 +177,6 @@ const ENERGY_PER_TANK : int = 100
 }
 
 var rdv_config : Dictionary = {}
-var energy : int = ENERGY_PER_TANK
 var last_failed_event_id : String
 
 func has_morph() -> bool:
@@ -188,6 +191,8 @@ func has_spider() -> bool:
 func has_bombs() -> bool:
 	return state["Morph Ball Bomb"] > 0
 
+func set_main_pb(on : bool) -> void:
+	state["Power Bomb"] = 1 if on else 0
 func has_main_pb() -> bool:
 	return state["Power Bomb"]
 
@@ -248,15 +253,23 @@ func has_ice_spreader() -> bool:
 func has_flamethrower() -> bool:
 	return state["Flamethrower"] > 0
 
+func set_launcher(on : bool) -> void:
+	state["Missile Launcher"] = 1 if on else 0
 func has_launcher() -> bool:
 	return state["Missile Launcher"] > 0
 
+func set_etanks(amount : int) -> void:
+	state["Energy Tank"] = amount
 func get_etanks() -> int:
 	return state["Energy Tank"]
 
+func set_missile_expanions(amount : int) -> void:
+	state["Missile Expansion"] = amount
 func get_missile_expansions() -> int:
 	return state["Missile Expansion"]
 
+func set_power_bomb_expanions(amount : int) -> void:
+	state["Power Bomb Expansion"] = amount
 func get_power_bomb_expansions() -> int:
 	return state["Power Bomb Expansion"]
 
@@ -289,7 +302,7 @@ func has_artifact(a : Artifact) -> bool:
 	
 	return false
 
-func get_artifact_from_name(name : String) -> Artifact:
+static func get_artifact_from_name(name : String) -> Artifact:
 	match name:
 		"Artifact of Truth":
 			return Artifact.TRUTH
@@ -355,7 +368,7 @@ func get_total_artifact_count() -> int:
 ########
 
 func all() -> void:
-	for item in state.keys():
+	for item in state:
 		match item:
 			"Energy Tank":
 				state[item] = ETANK_MAX
@@ -367,11 +380,8 @@ func all() -> void:
 				state[item] = 1
 
 func clear() -> void:
-	for item in state.keys():
+	for item in state:
 		state[item] = 0
-
-func set_energy_full() -> void:
-	energy = ENERGY_PER_TANK + (get_etanks() * ENERGY_PER_TANK)
 
 func has_missile() -> bool:
 	if requires_launcher:
@@ -410,9 +420,6 @@ func has_event_occured(event_name : String) -> bool:
 	
 	return events[event_name] > 0
 
-func take_damage(amount : int) -> void:
-	energy -= amount
-
 func can_pass_dock(weakness : String) -> bool:
 	match weakness:
 		"Normal Door", "Circular Door", "Normal Door (Forced)":
@@ -425,7 +432,7 @@ func can_pass_dock(weakness : String) -> bool:
 			return can_use_arm_cannon() and has_ice_beam()
 		"Plasma Door":
 			return can_use_arm_cannon() and has_plasma()
-		"Teleporter", "Square Door":
+		"Teleporter", "Square Door", "Artifact Temple Teleporter":
 			return true
 		"Morph Ball Door":
 			return has_morph()
@@ -525,7 +532,7 @@ func parse_config(setting_name : String) -> bool:
 			return true
 		return false
 	
-	if setting_name in rdv_config.keys():
+	if setting_name in rdv_config:
 		if typeof(rdv_config[setting_name]) == TYPE_BOOL:
 			return rdv_config[setting_name]
 	
@@ -544,8 +551,6 @@ func parse_config(setting_name : String) -> bool:
 	return false
 
 func can_reach(logic : Dictionary, _depth : int = 0) -> bool:
-	var starting_energy : int = energy
-	
 	match logic["type"]:
 		"and":
 			if logic["data"]["items"].is_empty():
@@ -553,26 +558,14 @@ func can_reach(logic : Dictionary, _depth : int = 0) -> bool:
 			
 			for i in range(logic["data"]["items"].size()):
 				if not can_reach(logic["data"]["items"][i], _depth + 1):
-					energy = starting_energy
 					return false
 			return true
 		
 		"or":
-			var reached_energy : Array[int] = []
 			for i in range(logic["data"]["items"].size()):
 				if can_reach(logic["data"]["items"][i], _depth + 1):
-					reached_energy.append(energy)
-			
-			# No paths reached
-			if reached_energy.is_empty():
-				return false
-			
-			var highest_energy : int = reached_energy[0]
-			for e in reached_energy:
-				if e > highest_energy:
-					highest_energy = e
-			energy = highest_energy
-			return true
+					return true
+			return false
 		
 		"resource":
 			match logic["data"]["type"]:
@@ -593,7 +586,8 @@ func can_reach(logic : Dictionary, _depth : int = 0) -> bool:
 				"tricks":
 					return can_perform_trick(logic["data"]["name"], logic["data"]["amount"])
 				"damage": # TODO
-					return energy > logic["data"]["amount"]
+					var amount : int = logic["data"]["amount"]
+					return max(get_etanks() * ENERGY_PER_TANK, ENERGY_PER_TANK) > amount
 				"misc":
 					return parse_config(logic["data"]["name"])
 				_:
@@ -637,11 +631,11 @@ func init_state(starting_pickups : Array[String]) -> void:
 	clear()
 	
 	for p in starting_pickups:
-		assert(p in state.keys())
+		assert(p in state)
 		state[p] += 1
 
 func init_tricks(data : Dictionary) -> void:
-	for key in data.keys():
+	for key in data:
 		var value : String = data[key]
 		tricks[key] = TRICK_VALUE_MAP[value]
 
@@ -653,5 +647,5 @@ func init_from_rdvgame(_rdvgame : RDVGame) -> void:
 	init_tricks(_rdvgame.get_trick_levels())
 
 func clear_events() -> void:
-	for key in events.keys():
+	for key in events:
 		set_event_status(key, false)

@@ -27,7 +27,7 @@ func parse(rdvgame_data : Dictionary) -> void:
 	_game = rdvgame_data["info"]["presets"][0]["game"]
 	
 	var trick_levels : Dictionary = rdvgame_data["info"]["presets"][0]["configuration"]["trick_level"]["specific_levels"]
-	for trick in trick_levels.keys():
+	for trick in trick_levels:
 		_trick_levels[trick] = trick_levels[trick]
 	
 	var start_location : PackedStringArray = rdvgame_data["game_modifications"][0]["starting_location"].split("/")

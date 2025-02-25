@@ -26,6 +26,7 @@ const LINE_CAPS := Line2D.LINE_CAP_ROUND
 const Z_IDX : int = -1
 
 @export var world_manager : World
+@export var randovania_interface : RandovaniaInterface
 
 var lines := {}
 var color_map := {}
@@ -33,6 +34,8 @@ var color_map := {}
 func _ready() -> void:
 	world_manager.map_drawn.connect(init_elevators)
 	world_manager.map_resolved.connect(update_lines_from_visited)
+	randovania_interface.rdvgame_loaded.connect(rdvgame_loaded)
+	randovania_interface.rdvgame_cleared.connect(rdvgame_cleared)
 
 func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> void:
 	const MINES_SUBREGIONS := {
@@ -56,7 +59,7 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
 	
 	var drawn : Array[String] = []
 	
-	for key in connections.keys():
+	for key in connections:
 		if key in drawn or connections[key] in drawn:
 			continue
 		
@@ -66,11 +69,11 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
 		if from[0] in IGNORE_REGIONS or to[0] in IGNORE_REGIONS:
 			continue
 		
-		var from_node_data := world_manager.get_node_data(from[0], from[1], from[2])
-		var to_node_data := world_manager.get_node_data(to[0], to[1], to[2])
+		var from_node_data := world_manager.get_node_data(World.get_region_from_name(from[0]), from[1], from[2])
+		var to_node_data := world_manager.get_node_data(World.get_region_from_name(to[0]), to[1], to[2])
 		
-		var from_region : Control = world_manager.region_map[World.REGION_NAME[from_node_data.region]]
-		var to_region : Control = world_manager.region_map[World.REGION_NAME[to_node_data.region]]
+		var from_region : Control = world_manager.region_nodes[from_node_data.region]
+		var to_region : Control = world_manager.region_nodes[to_node_data.region]
 		
 		var from_room : Room = world_manager.get_room_obj(from_node_data.region, from_node_data.room_name)
 		var to_room : Room = world_manager.get_room_obj(to_node_data.region, to_node_data.room_name)
@@ -141,11 +144,18 @@ func new_connection_line(global_from : Vector2, global_to : Vector2, line_color 
 	return line2d
 
 func update_lines_from_visited(reached_nodes : Array[NodeData]) -> void:
-	for data in lines.keys():
+	for data in lines:
 		lines[data].modulate = Room.UNREACHABLE_COLOR
 	
 	for node in reached_nodes:
-		if node.node_type == "dock" and node.dock_type == "teleporter":
-			if node in lines.keys():
+		if node is DockNodeData and node.is_teleporter():
+			if node in lines:
 				var line : Line2D = lines[node]
 				line.modulate = color_map[line]
+
+func rdvgame_loaded() -> void:
+	var dock_connections := RandovaniaInterface.get_rdvgame().get_dock_connections()
+	init_elevators(dock_connections)
+
+func rdvgame_cleared() -> void:
+	init_elevators()
