@@ -11,7 +11,7 @@ func get_color() -> Color:
 	return Color.WHITE
 
 func get_texture() -> Texture2D:
-	if is_nothing():
+	if is_nothing() or is_artifact():
 		return null
 	
 	return load("res://data/icons/%s.png" % item_name)
