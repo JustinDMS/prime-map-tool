@@ -276,6 +276,15 @@ func draw_node_marker(node_data : NodeData) -> NodeMarker:
 	const BASE_NODE_MARKER : PackedScene = preload("res://resources/node_marker.tscn")
 	
 	var node_marker := BASE_NODE_MARKER.instantiate()
+	
+	if node_data is PickupNodeData:
+		if node_data.is_artifact():
+			node_marker.set_script(load("res://scripts/node marker/artifact_node_marker.gd"))
+		else:
+			node_marker.set_script(load("res://scripts/node marker/pickup_node_marker.gd"))
+	elif node_data is DockNodeData and node_data.is_door():
+		node_marker.set_script(load("res://scripts/node marker/door_node_marker.gd"))
+	
 	node_marker.data = node_data
 	node_marker.started_hover.connect(ui.node_hover)
 	node_marker.stopped_hover.connect(ui.node_stop_hover)
@@ -370,9 +379,10 @@ func resolve_map() -> void:
 	
 	for key in node_marker_map:
 		var reached : bool = key in reached_nodes
-		if key is PickupNodeData:
-			node_marker_map[key].set_pickup_reachable(reached)
-		node_marker_map[key].set_state(NodeMarker.State.DEFAULT if reached else NodeMarker.State.UNREACHABLE)
+		var marker : NodeMarker = node_marker_map[key]
+		if marker is PickupNodeMarker or marker is ArtifactNodeMarker:
+			marker.set_reachable(reached)
+		marker.set_state(NodeMarker.State.DEFAULT if reached else NodeMarker.State.UNREACHABLE)
 	
 	var starter_room := get_room_obj(start_node.region, start_node.room_name)
 	starter_room.set_state(Room.State.STARTER)
