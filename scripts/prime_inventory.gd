@@ -589,7 +589,11 @@ func can_reach(logic : Dictionary, _depth : int = 0) -> bool:
 					var amount : int = logic["data"]["amount"]
 					return max(get_etanks() * ENERGY_PER_TANK, ENERGY_PER_TANK) > amount
 				"misc":
-					return parse_config(logic["data"]["name"])
+					var enabled := parse_config(logic["data"]["name"])
+					var negate : bool = logic["data"]["negate"]
+					if negate:
+						enabled = not enabled
+					return enabled
 				_:
 					push_error("Unhandled resource type: %s" % logic["data"]["type"])
 		
