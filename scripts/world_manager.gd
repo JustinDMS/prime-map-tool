@@ -244,6 +244,8 @@ func init_nodes() -> void:
 						default_connection_data["area"],
 						default_connection_data["node"]
 					)
+				
+				add_node_connections.call_deferred(node_marker_map[node_data])
 	
 	if not rdvgame:
 		map_drawn.emit()
@@ -310,6 +312,15 @@ func add_marker_to_map(node_marker : NodeMarker) -> void:
 func get_room_obj(region : Region, room_name : String) -> Room:
 	var data : RoomData = get_room_data(region, room_name)
 	return room_map[data]
+
+func add_node_connections(marker : NodeMarker) -> void:
+	for c in marker.data.connections:
+		var connection_line := NodeConnection.new(
+			marker, 
+			node_marker_map[c] as NodeMarker
+			)
+		marker.add_child(connection_line)
+		connection_line.set_visible(false)
 
 func resolve_map() -> void:
 	print("---Resolving map---")

@@ -1,5 +1,6 @@
 class_name ArtifactContainer extends Control
 
+const MIDPOINT := Vector2(225, -190)
 const BLUE := Color("#4CDAF5")
 const ORANGE := Color("#F1A34C")
 
@@ -26,7 +27,7 @@ func set_unreached(artifact : PrimeInventory.Artifact) -> void:
 		set_artifact_color(i, Color.INDIAN_RED)
 
 func apply_offset() -> void:
-	position -= Vector2(225, -190)
+	position -= MIDPOINT
 
 func set_artifact_as_focused(artifact : PrimeInventory.Artifact) -> void:
 	for i in range(PrimeInventory.Artifact.MAX):

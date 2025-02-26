@@ -2,6 +2,7 @@ class_name NodeMarker extends Sprite2D
 
 signal started_hover
 signal stopped_hover
+signal node_clicked(marker : NodeMarker, data : NodeData)
 
 enum State {
 	DEFAULT,
@@ -39,13 +40,14 @@ func _ready() -> void:
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and is_instance_valid(texture):
 		_is_hovered = Rect2(marker_offset - (texture.get_size() * 0.5), texture.get_size()).has_point(get_local_mouse_position())
-
-func _unhandled_input(event: InputEvent) -> void:
-	if not data:
-		return
 	
-	if _is_hovered and event.is_action("press") and event.is_pressed():
-		node_clicked()
+	if (
+		_is_hovered and
+		event.is_action("press") and 
+		event.is_pressed() and
+		event.double_click
+	):
+		_node_clicked()
 
 func init_node() -> void:
 	name = data.name
@@ -71,19 +73,25 @@ func set_state(new_state : State) -> void:
 func set_color(color : Color) -> void:
 	self_modulate = color
 
-func node_clicked() -> void:
-	print(data.display_name)
+func _node_clicked() -> void:
+	node_clicked.emit(self, data)
 
 func node_hover() -> void:
 	if hover_tween and hover_tween.is_running():
 		hover_tween.kill()
 	
-	hover_tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+	hover_tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE).set_parallel(true)
 	hover_tween.tween_property(self, "scale", data.get_hover_scale(), HOVER_DURATION)
+	hover_tween.tween_callback(set_connection_visibility.bind(true))
 
 func node_stop_hover() -> void:
 	if hover_tween and hover_tween.is_running():
 		hover_tween.kill()
 	
-	hover_tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+	hover_tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE).set_parallel(true)
 	hover_tween.tween_property(self, "scale", data.get_scale(), HOVER_DURATION)
+	hover_tween.tween_callback(set_connection_visibility.bind(false))
+
+func set_connection_visibility(_visible : bool) -> void:
+	for c in get_children():
+		c.set_visible(_visible)
