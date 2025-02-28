@@ -52,15 +52,15 @@ void fragment() {
 
 		if (uv != clamp(uv, vec2(0.0), vec2(1.0))) {
 			COLOR.a = 0.0;
-		} else {
-			COLOR = texture(TEXTURE, uv) * modulate;
-		}
-	} else {
+		} //else {
+			//COLOR = texture(TEXTURE, uv) * modulate;
+		//}
+	} else { // Everything inside the outline?
 		COLOR = texture(TEXTURE, uv) * modulate;
 	}
 
 	if ((COLOR.a > 0.0) == inside && hasContraryNeighbour(uv, TEXTURE_PIXEL_SIZE, TEXTURE)) {
-		COLOR.rgb = inside ? mix(COLOR.rgb, color.rgb * modulate.rgb, color.a * modulate.a) : color.rgb * modulate.rgb;
+		COLOR.rgb = inside ? mix(COLOR.rgb, color.rgb, color.a * modulate.a) : color.rgb * modulate.rgb;
 		COLOR.a += (1.0 - COLOR.a) * color.a * modulate.a;
 	}
 }
