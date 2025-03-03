@@ -8,6 +8,7 @@ enum State {
 	DEFAULT,
 	HOVERED,
 	UNREACHABLE,
+	ACTIVE,
 }
 
 const HOVER_DURATION : float = 0.15
@@ -15,6 +16,7 @@ const HOVER_DURATION : float = 0.15
 var data : NodeData = null
 var state := State.DEFAULT
 var prev_state := State.DEFAULT ## Used to return to after hovering
+var node_connections : Array[NodeConnection] = []
 
 var marker_offset := Vector2.ZERO
 var hover_tween : Tween
@@ -29,6 +31,8 @@ var _is_hovered : bool = false:
 			node_hover()
 			started_hover.emit(self)
 		else:
+			if state == State.ACTIVE:
+				return
 			set_state(prev_state)
 			node_stop_hover()
 			stopped_hover.emit(self)
@@ -41,13 +45,15 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and is_instance_valid(texture):
 		_is_hovered = Rect2(marker_offset - (texture.get_size() * 0.5), texture.get_size()).has_point(get_local_mouse_position())
 	
-	if (
-		_is_hovered and
-		event.is_action("press") and 
-		event.is_pressed() and
-		event.double_click
-	):
+	if _is_hovered and event.is_action("press") and event.is_pressed():
 		_node_clicked()
+		match state:
+			State.HOVERED:
+				set_state(State.ACTIVE)
+				get_viewport().set_input_as_handled()
+			State.ACTIVE:
+				prev_state = State.DEFAULT
+				set_state(State.DEFAULT)
 
 func init_node() -> void:
 	name = data.name
@@ -69,11 +75,14 @@ func set_state(new_state : State) -> void:
 				set_color(Color.INDIAN_RED)
 			else:
 				set_color(Room.UNREACHABLE_COLOR)
+		State.ACTIVE:
+			var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE).tween_property(self, "scale", scale * 2, 0.2)
 
 func set_color(color : Color) -> void:
 	self_modulate = color
 
 func _node_clicked() -> void:
+	print_debug("%s clicked" % data.name)
 	node_clicked.emit(self, data)
 
 func node_hover() -> void:
@@ -93,5 +102,8 @@ func node_stop_hover() -> void:
 	hover_tween.tween_callback(set_connection_visibility.bind(false))
 
 func set_connection_visibility(_visible : bool) -> void:
-	for c in get_children():
-		c.set_visible(_visible)
+	for c in node_connections:
+		if _visible:
+			c.extend_line()
+			continue
+		c.retract_line()

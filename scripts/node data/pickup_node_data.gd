@@ -17,11 +17,11 @@ func get_texture() -> Texture2D:
 	return load("res://data/icons/%s.png" % item_name)
 
 func get_scale() -> Vector2:
-	const SCALE := Vector2(0.05, 0.05)
+	const SCALE := Vector2(0.04, 0.04)
 	return SCALE
 
 func get_hover_scale() -> Vector2:
-	const HOVER_SCALE := Vector2(0.07, 0.07)
+	const HOVER_SCALE := Vector2(0.06, 0.06)
 	return HOVER_SCALE
 
 func parse_item_name() -> void:

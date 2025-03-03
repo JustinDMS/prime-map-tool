@@ -314,13 +314,16 @@ func get_room_obj(region : Region, room_name : String) -> Room:
 	return room_map[data]
 
 func add_node_connections(marker : NodeMarker) -> void:
+	var room := get_room_obj(marker.data.region, marker.data.room_name)
 	for c in marker.data.connections:
-		var connection_line := NodeConnection.new(
-			marker, 
-			node_marker_map[c] as NodeMarker
+		var to_marker := node_marker_map[c] as NodeMarker
+		var node_connection := NodeConnection.new(
+			marker,
+			to_marker,
+			rdv_logic[marker.data.region]["areas"][marker.data.room_name]["nodes"][marker.data.name]["connections"][c.name]
 			)
-		marker.add_child(connection_line)
-		connection_line.set_visible(false)
+		room.add_child(node_connection)
+		marker.node_connections.append(node_connection)
 
 func resolve_map() -> void:
 	print("---Resolving map---")
@@ -394,6 +397,20 @@ func resolve_map() -> void:
 		if marker is PickupNodeMarker or marker is ArtifactNodeMarker:
 			marker.set_reachable(reached)
 		marker.set_state(NodeMarker.State.DEFAULT if reached else NodeMarker.State.UNREACHABLE)
+	
+	# Move me probably
+	for key in node_marker_map:
+		var marker : NodeMarker = node_marker_map[key]
+		for c in marker.node_connections:
+			if marker.state == NodeMarker.State.UNREACHABLE:
+				c.modulate = Color.INDIAN_RED
+				continue
+			
+			match c._to_marker.state:
+				NodeMarker.State.DEFAULT:
+					c.modulate = Color.LIME_GREEN
+				NodeMarker.State.UNREACHABLE:
+					c.modulate = Color.INDIAN_RED
 	
 	var starter_room := get_room_obj(start_node.region, start_node.room_name)
 	starter_room.set_state(Room.State.STARTER)
