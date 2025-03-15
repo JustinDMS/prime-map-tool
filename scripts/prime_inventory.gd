@@ -480,12 +480,16 @@ func parse_item_name(item_name : String) -> bool:
 			return has_charge()
 		"Grapple":
 			return has_grapple()
+		"VariaSuit":
+			return has_varia()
 		"GravitySuit":
 			return has_gravity()
 		"PhazonSuit":
 			return has_phazon()
 		"Power":
 			return has_power_beam()
+		"Supers":
+			return has_supers()
 		"Ice":
 			return has_ice_beam()
 		"Plasma":
@@ -550,6 +554,34 @@ func parse_config(setting_name : String) -> bool:
 		
 	return false
 
+func has_resource(logic_data : Dictionary) -> bool:
+	var type : String = logic_data.type
+	var name : String = logic_data.name
+	var amount : int = logic_data.amount
+	var negate : bool = logic_data.negate
+	var result := false
+	
+	match logic_data.type:
+		"items":
+			result = parse_item_name(name)
+		"events":
+			result = has_event_occured(name)
+			if not result and not negate:
+				last_failed_event_id = name
+		"tricks":
+			result = can_perform_trick(name, amount)
+		"damage": # TODO
+			result = max(get_etanks() * ENERGY_PER_TANK, ENERGY_PER_TANK) > amount
+		"misc":
+			result = parse_config(name)
+		_:
+			push_error("Unhandled resource type: %s" % type)
+	
+	if negate:
+		result = not result
+	
+	return result
+
 func can_reach(logic : Dictionary, _depth : int = 0) -> bool:
 	match logic["type"]:
 		"and":
@@ -568,34 +600,7 @@ func can_reach(logic : Dictionary, _depth : int = 0) -> bool:
 			return false
 		
 		"resource":
-			match logic["data"]["type"]:
-				"items":
-					var negate : bool = logic["data"]["negate"]
-					var has_item := parse_item_name(logic["data"]["name"])
-					if negate:
-						has_item = not has_item
-					return has_item
-				"events":
-					var negate : bool = logic["data"]["negate"]
-					var has_occured := has_event_occured(logic["data"]["name"])
-					if not has_occured and not negate:
-						last_failed_event_id = logic["data"]["name"]
-					if negate:
-						has_occured = not has_occured
-					return has_occured
-				"tricks":
-					return can_perform_trick(logic["data"]["name"], logic["data"]["amount"])
-				"damage": # TODO
-					var amount : int = logic["data"]["amount"]
-					return max(get_etanks() * ENERGY_PER_TANK, ENERGY_PER_TANK) > amount
-				"misc":
-					var enabled := parse_config(logic["data"]["name"])
-					var negate : bool = logic["data"]["negate"]
-					if negate:
-						enabled = not enabled
-					return enabled
-				_:
-					push_error("Unhandled resource type: %s" % logic["data"]["type"])
+			return has_resource(logic.data)
 		
 		"template":
 			# Manually entered data from Randovania's header.json

@@ -52,6 +52,7 @@ const PHENDRANA_OFFSET : Array[Vector2] = [
 @export var inventory_interface : UITab
 @export var trick_interface : UITab
 @export var randovania_interface : UITab
+@export var logic_interface : UITab
 @export var camera : Camera2D
 
 var rdv_logic : Array[Dictionary] = []
@@ -290,6 +291,7 @@ func draw_node_marker(node_data : NodeData) -> NodeMarker:
 	node_marker.data = node_data
 	node_marker.started_hover.connect(ui.node_hover)
 	node_marker.stopped_hover.connect(ui.node_stop_hover)
+	node_marker.node_clicked.connect(logic_interface.display_data)
 	
 	return node_marker
 
@@ -397,20 +399,12 @@ func resolve_map() -> void:
 		if marker is PickupNodeMarker or marker is ArtifactNodeMarker:
 			marker.set_reachable(reached)
 		marker.set_state(NodeMarker.State.DEFAULT if reached else NodeMarker.State.UNREACHABLE)
-	
-	# Move me probably
-	for key in node_marker_map:
-		var marker : NodeMarker = node_marker_map[key]
 		for c in marker.node_connections:
-			if marker.state == NodeMarker.State.UNREACHABLE:
-				c.modulate = Color.INDIAN_RED
-				continue
-			
 			match c._to_marker.state:
 				NodeMarker.State.DEFAULT:
-					c.modulate = Color.LIME_GREEN
+					c.modulate = Color.GREEN
 				NodeMarker.State.UNREACHABLE:
-					c.modulate = Color.INDIAN_RED
+					c.modulate = Color.RED
 	
 	var starter_room := get_room_obj(start_node.region, start_node.room_name)
 	starter_room.set_state(Room.State.STARTER)

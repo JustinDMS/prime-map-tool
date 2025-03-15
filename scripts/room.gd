@@ -128,7 +128,10 @@ func set_state(new_state : State) -> void:
 			change_to_color(ROOM_COLOR[region])
 			set_outline(ROOM_COLOR[region], 2)
 		State.HOVERED:
-			set_outline(Color.WHITE, 4)
+			if prev_state == State.STARTER:
+				set_outline(Color.GREEN, 3)
+			else:
+				set_outline(Color.WHITE, 3)
 		State.UNREACHABLE:
 			change_to_color(UNREACHABLE_COLOR)
 			set_outline(Color("#62a5d4"), 2)

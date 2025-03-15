@@ -1,4 +1,4 @@
-extends UITab
+class_name TricksInterface extends UITab
 
 signal tricks_changed()
 

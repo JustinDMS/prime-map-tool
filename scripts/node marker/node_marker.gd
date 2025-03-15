@@ -2,13 +2,12 @@ class_name NodeMarker extends Sprite2D
 
 signal started_hover
 signal stopped_hover
-signal node_clicked(marker : NodeMarker, data : NodeData)
+signal node_clicked(marker : NodeMarker)
 
 enum State {
 	DEFAULT,
 	HOVERED,
 	UNREACHABLE,
-	ACTIVE,
 }
 
 const HOVER_DURATION : float = 0.15
@@ -31,8 +30,6 @@ var _is_hovered : bool = false:
 			node_hover()
 			started_hover.emit(self)
 		else:
-			if state == State.ACTIVE:
-				return
 			set_state(prev_state)
 			node_stop_hover()
 			stopped_hover.emit(self)
@@ -47,13 +44,7 @@ func _input(event: InputEvent) -> void:
 	
 	if _is_hovered and event.is_action("press") and event.is_pressed():
 		_node_clicked()
-		match state:
-			State.HOVERED:
-				set_state(State.ACTIVE)
-				get_viewport().set_input_as_handled()
-			State.ACTIVE:
-				prev_state = State.DEFAULT
-				set_state(State.DEFAULT)
+		get_viewport().set_input_as_handled()
 
 func init_node() -> void:
 	name = data.name
@@ -75,15 +66,13 @@ func set_state(new_state : State) -> void:
 				set_color(Color.INDIAN_RED)
 			else:
 				set_color(Room.UNREACHABLE_COLOR)
-		State.ACTIVE:
-			var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE).tween_property(self, "scale", scale * 2, 0.2)
 
 func set_color(color : Color) -> void:
 	self_modulate = color
 
 func _node_clicked() -> void:
 	print_debug("%s clicked" % data.name)
-	node_clicked.emit(self, data)
+	node_clicked.emit(self)
 
 func node_hover() -> void:
 	if hover_tween and hover_tween.is_running():

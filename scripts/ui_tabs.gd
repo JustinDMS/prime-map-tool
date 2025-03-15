@@ -1,6 +1,6 @@
 extends TabContainer
 
-const MIN_SIZE := Vector2(400, 0)
+const MIN_SIZE := Vector2(500, 0)
 
 var size_tween : Tween
 
@@ -15,9 +15,7 @@ func _ready() -> void:
 
 func change_to_tab(tab : int) -> void:
 	if tab == -1:
-		if size_tween and size_tween.is_valid():
-			size_tween.kill()
-		custom_minimum_size = MIN_SIZE
+		change_to_size(MIN_SIZE)
 
 func change_to_size(_size : Vector2) -> void:
 	#print("Changing to size %s" % _size)
