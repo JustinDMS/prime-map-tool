@@ -3,30 +3,44 @@ class_name LogicInterface extends UITab
 const PRIME_HEADER : Dictionary = preload("res://data/header.json").data
 const FAIL_COLOR := Color.INDIAN_RED
 const PASS_COLOR := Color.LIME_GREEN
+const NO_DATA_SIZE := Vector2(550, 150)
+const DATA_SIZE := Vector2(550, 1000)
 
 @export var inventory_interface : PrimeInventoryInterface
 @export var tricks_interface : TricksInterface
+@export var container : VBoxContainer
+@export var tooltip_label : Label
 
 var tree : Tree = null
 var url_map : Dictionary = {}
 var displayed_node : NodeMarker = null
 
-func _gui_input(event: InputEvent) -> void:
-	# Capture the scroll event
-	if event is InputEventMouseButton:
-		get_viewport().set_input_as_handled()
-
 func _ready() -> void:
 	super()
-	inventory_interface.inventory_changed.connect(update_data)
-	tricks_interface.tricks_changed.connect(update_data)
+	inventory_interface.items_changed.connect(display_data)
+	tricks_interface.tricks_changed.connect(display_data)
+	
+	min_size = NO_DATA_SIZE
 
-func update_data() -> void:
-	if is_instance_valid(displayed_node):
-		display_data(displayed_node)
+func update_data(clicked_node : NodeMarker) -> void:
+	if not clicked_node:
+		push_error("Something went very wrong.")
+		return
+	
+	displayed_node = clicked_node
+	display_data()
+	
+	if tooltip_label.visible:
+		tooltip_label.set_visible(false)
+	if min_size != DATA_SIZE:
+		min_size = DATA_SIZE
+		if visible:
+			size_changed.emit(min_size)
 
-func display_data(node_marker : NodeMarker) -> void:
-	displayed_node = node_marker
+func display_data() -> void:
+	# No data to update
+	if not displayed_node:
+		return
 	
 	if tree:
 		tree.queue_free()
@@ -34,15 +48,17 @@ func display_data(node_marker : NodeMarker) -> void:
 	
 	tree = Tree.new()
 	tree.theme = preload("res://resources/theme.tres")
-	tree.set_anchors_preset(Control.PRESET_FULL_RECT)
+	tree.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	tree.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	tree.button_clicked.connect(open_url)
+	tree.mouse_filter = Control.MOUSE_FILTER_STOP
 	var root := tree.create_item()
-	root.set_text(0, "%s (%s)" % [node_marker.data.name, node_marker.data.room_name])
+	root.set_text(0, "%s (%s)" % [displayed_node.data.name, displayed_node.data.room_name])
 	root.set_text_alignment(0, HORIZONTAL_ALIGNMENT_CENTER)
-	root.set_custom_color(0, Room.ROOM_COLOR[node_marker.data.region])
+	root.set_custom_color(0, Room.ROOM_COLOR[displayed_node.data.region])
 	root.disable_folding = true
 	
-	for c in node_marker.node_connections:
+	for c in displayed_node.node_connections:
 		var room_root := tree.create_item(root, 0)
 		room_root.set_autowrap_mode(0, TextServer.AUTOWRAP_WORD)
 		
@@ -57,10 +73,11 @@ func display_data(node_marker : NodeMarker) -> void:
 		if reached:
 			room_root.set_collapsed_recursive(true)
 	
-	add_child(tree)
+	container.add_child(tree)
 
 # ALERT
 # Re-implementation of a function that already exists in PrimeInventory
+# Consider making a separate, generic "Solver" class
 func reach(_d : Dictionary, _t : TreeItem, _z : int) -> bool:
 	var tree_item := tree.create_item(_t)
 	tree_item.set_autowrap_mode(_z, TextServer.AUTOWRAP_WORD)
@@ -132,7 +149,7 @@ func reach(_d : Dictionary, _t : TreeItem, _z : int) -> bool:
 func get_url(from_string : String) -> String:
 	return from_string.rsplit(" ", false, 1)[0]
 
-func open_url(item : TreeItem, column : int, id : int, mouse_button_index : int) -> void:
+func open_url(item : TreeItem, _column : int, _id : int, _mouse_button_index : int) -> void:
 	var err := OS.shell_open(url_map[item])
 	if err != OK:
 		push_error("Failed to open url: %s" % url_map[item])

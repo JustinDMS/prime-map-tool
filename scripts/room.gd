@@ -63,9 +63,6 @@ var outline_tween : Tween = null
 var node_markers : Array[NodeMarker] = []
 
 func _gui_input(event: InputEvent) -> void:
-	if not data:
-		return
-	
 	if _is_hovered and event.is_action("press") and event.is_pressed():
 		if not event.double_click:
 			room_clicked()

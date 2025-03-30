@@ -1,13 +1,14 @@
-[gd_scene load_steps=39 format=3 uid="uid://br45wp8jdj0tx"]
+[gd_scene load_steps=40 format=3 uid="uid://br45wp8jdj0tx"]
 
 [ext_resource type="Script" path="res://scripts/elevator_manager.gd" id="1_gb56k"]
 [ext_resource type="Script" path="res://scripts/world_manager.gd" id="1_rofpd"]
 [ext_resource type="Script" path="res://scripts/camera.gd" id="3_et3qh"]
-[ext_resource type="Script" path="res://scripts/ui_tabs.gd" id="4_0yqv7"]
+[ext_resource type="Script" path="res://scripts/tab_manager.gd" id="4_0yqv7"]
 [ext_resource type="Script" path="res://scripts/ui.gd" id="4_kybu4"]
+[ext_resource type="Script" path="res://scripts/ui_layer.gd" id="4_pyxl1"]
 [ext_resource type="Texture2D" uid="uid://dabxqxfeyelsc" path="res://data/icons/Missile Expansion.png" id="6_6j0ik"]
 [ext_resource type="Texture2D" uid="uid://drpnoq1pm5q46" path="res://data/icons/Power Bomb Expansion.png" id="7_ntsns"]
-[ext_resource type="Script" path="res://scripts/inventory_interface.gd" id="9_cfl7w"]
+[ext_resource type="Script" path="res://scripts/ui_tab/inventory_interface.gd" id="9_cfl7w"]
 [ext_resource type="Texture2D" uid="uid://bc6xsokxy6c4v" path="res://data/icons/Morph Ball.png" id="10_kut4r"]
 [ext_resource type="Texture2D" uid="uid://bcps050v5w31i" path="res://data/icons/Energy Tank.png" id="10_pry43"]
 [ext_resource type="Texture2D" uid="uid://dqjqg5123rjhy" path="res://data/icons/Morph Ball Bomb.png" id="11_k32ci"]
@@ -34,8 +35,8 @@
 [ext_resource type="Texture2D" uid="uid://5gd5b6bdmfj0" path="res://data/icons/Grapple Beam.png" id="32_lukqw"]
 [ext_resource type="PackedScene" uid="uid://rf1tr2kber25" path="res://resources/artifact_container.tscn" id="33_34bhy"]
 [ext_resource type="Script" path="res://scripts/ui_tab/logic_interface.gd" id="37_ky3bh"]
-[ext_resource type="Script" path="res://scripts/tricks_interface.gd" id="44_rbq56"]
-[ext_resource type="Script" path="res://scripts/randovania_interface.gd" id="45_px4t2"]
+[ext_resource type="Script" path="res://scripts/ui_tab/tricks_interface.gd" id="44_rbq56"]
+[ext_resource type="Script" path="res://scripts/ui_tab/randovania_interface.gd" id="45_px4t2"]
 [ext_resource type="Script" path="res://addons/html5_file_dialog/HTML5FileDialog.gd" id="46_tfmeg"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_rr1j8"]
@@ -88,6 +89,7 @@ position_smoothing_speed = 20.0
 script = ExtResource("3_et3qh")
 
 [node name="UI" type="CanvasLayer" parent="."]
+script = ExtResource("4_pyxl1")
 
 [node name="ui" type="Control" parent="UI" node_paths=PackedStringArray("region_name_label", "room_name_label", "node_name_label")]
 layout_mode = 3
@@ -118,10 +120,11 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="TabContainer" type="TabContainer" parent="UI/ui/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-current_tab = 3
+current_tab = 2
 tab_focus_mode = 0
 deselect_enabled = true
 script = ExtResource("4_0yqv7")
@@ -129,7 +132,6 @@ script = ExtResource("4_0yqv7")
 [node name="Inventory" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("randovania_interface", "missile_label", "missile_slider", "pb_label", "pb_slider", "require_launcher_button", "has_launcher_button", "require_main_pb_button", "has_main_pb_button", "etank_label", "etank_slider", "artifact_label", "artifact_slider", "artifact_container", "item_buttons", "all_button", "none_button")]
 visible = false
 layout_mode = 2
-mouse_filter = 1
 script = ExtResource("9_cfl7w")
 randovania_interface = NodePath("../Randovania")
 missile_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/missile_count")
@@ -582,11 +584,11 @@ rounded = true
 tick_count = 3
 ticks_on_borders = true
 
-[node name="Tricks" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("inventory_interface", "randovania_interface", "tricks_container")]
+[node name="Tricks" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("world_manager", "randovania_interface", "tricks_container")]
 visible = false
 layout_mode = 2
 script = ExtResource("44_rbq56")
-inventory_interface = NodePath("../Inventory")
+world_manager = NodePath("../../../../../../world_manager")
 randovania_interface = NodePath("../Randovania")
 tricks_container = NodePath("MarginContainer/ScrollContainer/VBoxContainer")
 min_size = Vector2(500, 1000)
@@ -614,20 +616,18 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 20
 
-[node name="Randovania" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("import_rdvgame_button", "file_dialog", "import_status_label", "clear_rdvgame_button", "word_hash_label", "rdv_options_container", "bool_options_container", "numerical_options_container")]
-visible = false
-custom_minimum_size = Vector2(400, 150)
+[node name="Randovania" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("import_rdvgame_button", "file_dialog", "import_status_label", "clear_rdvgame_button", "word_hash_label", "rdv_options_container", "bool_options_container", "loaded_container")]
+custom_minimum_size = Vector2(400, 850)
 layout_mode = 2
 script = ExtResource("45_px4t2")
 import_rdvgame_button = NodePath("MarginContainer/VBoxContainer/import_rdvgame")
 file_dialog = NodePath("HTML5FileDialog")
 import_status_label = NodePath("import_status")
-clear_rdvgame_button = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/clear_rdvgame")
-word_hash_label = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer/word_hash")
+clear_rdvgame_button = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/loaded_container/clear_rdvgame")
+word_hash_label = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/loaded_container/word_hash")
 rdv_options_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer")
 bool_options_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/bool_options")
-numerical_options_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/num_options")
-min_size = Vector2(500, 0)
+loaded_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/loaded_container")
 metadata/_tab_index = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania"]
@@ -652,31 +652,32 @@ focus_mode = 0
 text = "Upload .rdvgame"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer"]
-visible = false
 layout_mode = 2
 size_flags_vertical = 3
+size_flags_stretch_ratio = 5.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="loaded_container" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.3
 
-[node name="clear_rdvgame" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-text = "Clear .rdvgame"
-
-[node name="word_hash" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer"]
+[node name="word_hash" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/loaded_container"]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_alignment = 1
 vertical_alignment = 2
+
+[node name="clear_rdvgame" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/loaded_container"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+text = "Clear .rdvgame"
 
 [node name="HSeparator2" type="HSeparator" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
@@ -689,19 +690,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
 
-[node name="HSeparator" type="HSeparator" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
-visible = false
-layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.1
-
-[node name="num_options" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.75
-
 [node name="HTML5FileDialog" type="Node" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania"]
 script = ExtResource("46_tfmeg")
 filters = PackedStringArray()
@@ -713,13 +701,30 @@ offset_right = 960.0
 offset_bottom = 78.0
 size_flags_vertical = 3
 
-[node name="Logic" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("inventory_interface", "tricks_interface")]
+[node name="Logic" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("inventory_interface", "tricks_interface", "container", "tooltip_label")]
+visible = false
 layout_mode = 2
 script = ExtResource("37_ky3bh")
 inventory_interface = NodePath("../Inventory")
 tricks_interface = NodePath("../Tricks")
+container = NodePath("VBoxContainer")
+tooltip_label = NodePath("VBoxContainer/Label")
 min_size = Vector2(550, 1000)
 metadata/_tab_index = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Logic"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Logic/VBoxContainer"]
+layout_mode = 2
+text = "Click a node to view its logic"
+horizontal_alignment = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer"]
 layout_mode = 2

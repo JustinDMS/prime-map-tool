@@ -17,7 +17,7 @@ class_name RDVGame extends Resource
 @export var _dock_weaknesses : Dictionary = {}
 @export var _pickup_locations : Dictionary = {}
 
-func parse(rdvgame_data : Dictionary) -> void:
+func _init(rdvgame_data : Dictionary) -> void:
 	_schema_version = rdvgame_data["schema_version"]
 	_version = rdvgame_data["info"]["randovania_version"]
 	_permalink = rdvgame_data["info"]["permalink"]
@@ -28,7 +28,7 @@ func parse(rdvgame_data : Dictionary) -> void:
 	
 	var trick_levels : Dictionary = rdvgame_data["info"]["presets"][0]["configuration"]["trick_level"]["specific_levels"]
 	for trick in trick_levels:
-		_trick_levels[trick] = trick_levels[trick]
+		_trick_levels[trick] = TricksInterface.TRICK_VALUE_MAP[trick_levels[trick]]
 	
 	var start_location : PackedStringArray = rdvgame_data["game_modifications"][0]["starting_location"].split("/")
 	_start_region_name = start_location[0]
@@ -51,6 +51,16 @@ func parse(rdvgame_data : Dictionary) -> void:
 	_dock_connections = rdvgame_data["game_modifications"][0]["dock_connections"]
 	_dock_weaknesses = rdvgame_data["game_modifications"][0]["dock_weakness"]
 	_pickup_locations = rdvgame_data["game_modifications"][0]["locations"]
+
+func is_supported_version() -> bool:
+	var split := get_version().split(".")
+	assert(split.size() == 3)
+	
+	var major := int(split[0])
+	var minor := int(split[1])
+	var _patch := int(split[2])
+	
+	return (major == 8 and minor >= 7)
 
 #region Accessor Functions
 

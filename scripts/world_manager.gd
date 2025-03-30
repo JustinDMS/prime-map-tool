@@ -66,10 +66,11 @@ static func get_region_from_name(_name : String) -> Region:
 	return REGION_NAME.find(_name) as Region
 
 func _ready() -> void:
-	inventory_interface.inventory_changed.connect(resolve_map)
+	inventory_interface.items_changed.connect(resolve_map)
 	trick_interface.tricks_changed.connect(resolve_map)
+	
+	randovania_interface.settings_changed.connect(resolve_map)
 	randovania_interface.rdvgame_loaded.connect(rdvgame_loaded)
-	randovania_interface.rdvgame_config_changed.connect(resolve_map)
 	randovania_interface.rdvgame_cleared.connect(rdvgame_cleared)
 	
 	load_rdv_logic()
@@ -291,7 +292,7 @@ func draw_node_marker(node_data : NodeData) -> NodeMarker:
 	node_marker.data = node_data
 	node_marker.started_hover.connect(ui.node_hover)
 	node_marker.stopped_hover.connect(ui.node_stop_hover)
-	node_marker.node_clicked.connect(logic_interface.display_data)
+	node_marker.node_clicked.connect(logic_interface.update_data)
 	
 	return node_marker
 
@@ -373,7 +374,7 @@ func resolve_map() -> void:
 				reached_nodes.append(n)
 				
 				if n is EventNodeData:
-					inventory.set_event_status(n.event_id, true)
+					inventory.set_event(n.event_id, true)
 					
 					if unreached_nodes.has(n.event_id):
 						queue.append_array(unreached_nodes[n.event_id])
@@ -417,8 +418,14 @@ func set_all_unreachable() -> void:
 		for node in room_map[key].node_markers:
 			node.self_modulate = Room.UNREACHABLE_COLOR
 
-func can_reach_external(inventory : PrimeInventory, from_node : NodeData, to_node : NodeData) -> bool:
-	return inventory.can_pass_dock(from_node.default_dock_weakness) and inventory.can_pass_dock(to_node.default_dock_weakness)
+func can_reach_external(inventory : PrimeInventory, from_node : DockNodeData, to_node : DockNodeData) -> bool:
+	return (
+		inventory.can_pass_dock(from_node.type, from_node.default_dock_weakness) and 
+		inventory.can_pass_lock(from_node.type, from_node.default_dock_weakness)
+		) and (
+			inventory.can_pass_dock(from_node.type, from_node.default_dock_weakness) and 
+			inventory.can_pass_lock(to_node.type, to_node.default_dock_weakness)
+			)
 
 func can_reach_internal(inventory : PrimeInventory, from_node : NodeData, to_node : NodeData) -> bool:
 	#print("Checking %s (%s) to %s (%s)" % [from_node.display_name, from_node.room_name, to_node.display_name, to_node.room_name])
