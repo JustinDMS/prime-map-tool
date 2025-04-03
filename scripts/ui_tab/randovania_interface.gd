@@ -125,8 +125,9 @@ func rdvgame_load_success() -> void:
 	show_import_status_message("Import successful!")
 	rdvgame_loaded.emit()
 
-func setting_changed(_setting : PrimeInventory.MiscSetting) -> void:
-	settings_changed.emit()
+func setting_changed(_setting : PrimeInventory.MiscSetting, emit : bool = false) -> void:
+	if emit:
+		settings_changed.emit()
 
 func clear_rdvgame() -> void:
 	rdvgame = null

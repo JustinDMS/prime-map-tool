@@ -8,7 +8,7 @@ enum TrickLevel {
 	INTERMEDIATE,
 	ADVANCED,
 	EXPERT,
-	HYPERMODE
+	LUDICROUS
 }
 
 const TRICK_VALUE_MAP : Dictionary = {
@@ -17,7 +17,7 @@ const TRICK_VALUE_MAP : Dictionary = {
 	"intermediate" : TrickLevel.INTERMEDIATE,
 	"advanced" : TrickLevel.ADVANCED,
 	"expert" : TrickLevel.EXPERT,
-	"hypermode": TrickLevel.HYPERMODE
+	"ludicrous": TrickLevel.LUDICROUS
 }
 const TRICK_LEVEL_NAME : Array[String] = [
 	"Disabled",
@@ -25,7 +25,7 @@ const TRICK_LEVEL_NAME : Array[String] = [
 	"Intermediate",
 	"Advanced",
 	"Expert",
-	"Hypermode"
+	"Ludicrous"
 ]
 
 @export var world_manager : World
@@ -95,9 +95,9 @@ func new_trick(_name : String, _difficulty : int) -> HSlider:
 	difficulty_label.size_flags_stretch_ratio = 0.7
 	
 	var slider := HSlider.new()
-	slider.tick_count = TricksInterface.TrickLevel.HYPERMODE + 1
+	slider.tick_count = TrickLevel.LUDICROUS + 1
 	slider.ticks_on_borders = true
-	slider.max_value = TricksInterface.TrickLevel.HYPERMODE
+	slider.max_value = TrickLevel.LUDICROUS
 	slider.value = _difficulty
 	slider.rounded = true
 	slider.focus_mode = Control.FOCUS_NONE

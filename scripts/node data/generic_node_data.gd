@@ -12,5 +12,5 @@ func get_color() -> Color:
 	return COLOR
 
 func get_texture() -> Texture2D:
-	const TEXTURE := preload("res://data/icons/generic_marker.png")
+	const TEXTURE := preload("res://data/icons/node marker/generic_marker.png")
 	return TEXTURE

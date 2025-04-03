@@ -58,9 +58,9 @@ func is_supported_version() -> bool:
 	
 	var major := int(split[0])
 	var minor := int(split[1])
-	var _patch := int(split[2])
+	var patch := int(split[2])
 	
-	return (major == 8 and minor >= 7)
+	return (major == 9 and minor >= 0 and patch >= 0)
 
 #region Accessor Functions
 

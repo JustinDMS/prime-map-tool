@@ -14,14 +14,14 @@ func get_texture() -> Texture2D:
 	if is_nothing() or is_artifact():
 		return null
 	
-	return load("res://data/icons/%s.png" % item_name)
+	return load("res://data/icons/items/%s.png" % item_name)
 
 func get_scale() -> Vector2:
-	const SCALE := Vector2(0.04, 0.04)
+	const SCALE := Vector2(0.0375, 0.0375)
 	return SCALE
 
 func get_hover_scale() -> Vector2:
-	const HOVER_SCALE := Vector2(0.06, 0.06)
+	const HOVER_SCALE := Vector2(0.05, 0.05)
 	return HOVER_SCALE
 
 func parse_item_name() -> void:

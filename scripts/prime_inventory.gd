@@ -66,7 +66,7 @@ func get_trick(trick_name : String) -> Trick:
 
 func set_tricks(tricks : Dictionary) -> void:
 	for t in tricks:
-		get_trick(t).set_level(tricks[t])
+		get_trick(t).set_level_no_signal(tricks[t])
 
 ## Returns a [member MiscSetting] given its name.
 func get_misc_setting(setting_name : String) -> MiscSetting:
@@ -269,6 +269,8 @@ class MiscSetting:
 	func set_enabled(on : bool) -> void:
 		enabled = on
 		changed.emit(self)
+	func set_enabled_no_signal(on : bool) -> void:
+		enabled = on
 	
 	## Is the setting not able to be turned on
 	func is_disabled() -> bool:
