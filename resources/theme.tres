@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=10 format=3 uid="uid://dbk0vd03ipng1"]
+[gd_resource type="Theme" load_steps=11 format=3 uid="uid://dbk0vd03ipng1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_14vwr"]
 bg_color = Color(0.14155, 0.14699, 0.331755, 1)
@@ -111,8 +111,14 @@ corner_radius_bottom_left = 3
 corner_detail = 1
 anti_aliasing_size = 5.0
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r883i"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+
 [sub_resource type="SystemFont" id="SystemFont_82onk"]
-font_names = PackedStringArray("Times New Roman")
+font_names = PackedStringArray("Roboto")
 multichannel_signed_distance_field = true
 oversampling = 2.0
 
@@ -131,3 +137,11 @@ GridContainer/constants/v_separation = 22
 HSeparator/constants/separation = 10
 LineEdit/styles/normal = SubResource("StyleBoxFlat_y1hoq")
 Panel/styles/panel = SubResource("StyleBoxFlat_sg47b")
+Tree/colors/guide_color = Color(0.7, 0.7, 0.7, 0)
+Tree/constants/draw_relationship_lines = 1
+Tree/constants/item_margin = 24
+Tree/constants/parent_hl_line_width = 6
+Tree/constants/relationship_line_width = 1
+Tree/constants/v_separation = 5
+Tree/font_sizes/font_size = 20
+Tree/styles/panel = SubResource("StyleBoxEmpty_r883i")

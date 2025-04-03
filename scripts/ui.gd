@@ -26,7 +26,7 @@ func room_stop_hover(_room : Room) -> void:
 func node_hover(marker : NodeMarker) -> void:
 	hovered_nodes.append(marker)
 	
-	node_name_label.text = marker.data.name
+	set_node_name(marker)
 	room_name_label.text = marker.data.room_name
 	region_name_label.text = World.REGION_NAME[marker.data.region]
 
@@ -40,6 +40,12 @@ func node_stop_hover(marker : NodeMarker) -> void:
 			region_name_label.text = ""
 		return
 	
-	node_name_label.text = hovered_nodes[-1].data.name
+	set_node_name(hovered_nodes[-1])
 	room_name_label.text = hovered_nodes[-1].data.room_name
 	region_name_label.text = World.REGION_NAME[hovered_nodes[-1].data.region]
+
+func set_node_name(marker : NodeMarker) -> void:
+	if marker is DoorNodeMarker:
+		node_name_label.text = "%s (%s)" % [marker.data.name, marker.data.default_dock_weakness.split(" (", 1)[0]]
+	else:
+		node_name_label.text = marker.data.name

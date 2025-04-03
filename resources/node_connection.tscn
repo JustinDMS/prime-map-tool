@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bjan8qyoaafex"]
+
+[ext_resource type="Script" path="res://scripts/node_connection.gd" id="1_cp2f6"]
+
+[node name="node_connection" type="Node2D"]
+scale = Vector2(1, -1)
+script = ExtResource("1_cp2f6")

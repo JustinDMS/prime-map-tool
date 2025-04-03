@@ -41,9 +41,8 @@ const MANUAL_Z_ROOMS : Array[String] = [
 	"Transport Tunnel C",
 	"Warrior Shrine",
 ]
-const HOVER_COLOR := Color.YELLOW
-const UNREACHABLE_COLOR := Color.WEB_GRAY
-const STARTER_COLOR := Color.WHITE
+const HOVER_COLOR := Color.WHITE
+const UNREACHABLE_COLOR := Color("#4b7ea3") # Map Blue from Game
 
 var region : int = 0
 var data : RoomData = null
@@ -60,26 +59,19 @@ var _is_hovered : bool = false:
 		else:
 			stopped_hover.emit(self)
 var room_color_tween : Tween = null
+var outline_tween : Tween = null
 var node_markers : Array[NodeMarker] = []
 
 func _gui_input(event: InputEvent) -> void:
-	if not data:
-		return
-	
 	if _is_hovered and event.is_action("press") and event.is_pressed():
 		if not event.double_click:
 			room_clicked()
 		else:
 			double_clicked.emit(data.default_node)
-	
-	#get_viewport().set_input_as_handled()
 
 func _ready() -> void:
 	mouse_entered.connect(room_hover)
 	mouse_exited.connect(room_stop_hover)
-	
-	material = OUTLINE_SHADER.duplicate()
-	set_outline(Color.TRANSPARENT, 0)
 	
 	if data and data.texture:
 		init_room()
@@ -111,6 +103,10 @@ func init_room():
 	custom_minimum_size.x = abs(x2 - x1)
 	custom_minimum_size.y = abs(y2 - y1)
 	
+	material = OUTLINE_SHADER.duplicate()
+	material.set_shader_parameter(&"pattern", 1)
+	material.set_shader_parameter(&"inside", true)
+	
 	set_state(State.DEFAULT)
 
 func change_to_color(new_color : Color, duration := COLOR_CHANGE_DURATION) -> void:
@@ -123,19 +119,23 @@ func change_to_color(new_color : Color, duration := COLOR_CHANGE_DURATION) -> vo
 func set_state(new_state : State) -> void:
 	prev_state = state
 	state = new_state
-	set_outline(Color.TRANSPARENT, 0)
 	
 	match state:
 		State.DEFAULT:
 			change_to_color(ROOM_COLOR[region])
+			set_outline(ROOM_COLOR[region], 2)
 		State.HOVERED:
-			change_to_color(HOVER_COLOR)
+			if prev_state == State.STARTER:
+				set_outline(Color.GREEN, 3)
+			else:
+				set_outline(Color.WHITE, 3)
 		State.UNREACHABLE:
 			change_to_color(UNREACHABLE_COLOR)
+			set_outline(Color("#62a5d4"), 2)
 		State.STARTER:
 			prev_state = State.STARTER
-			start_highlight_loop()
-			set_outline(Color.WHITE, 12)
+			change_to_color(ROOM_COLOR[region])
+			set_outline(Color.GREEN, 8)
 
 func room_hover() -> void:
 	set_state(State.HOVERED)
@@ -149,22 +149,25 @@ func room_clicked() -> void:
 	print_debug(data.name)
 	clicked.emit()
 
-func start_highlight_loop() -> void:
-	const HIGHLIGHT_DURATION : float = 1.0
-	
-	change_to_color(STARTER_COLOR, HIGHLIGHT_DURATION)
-	await room_color_tween.finished
-	change_to_color(HOVER_COLOR if state == State.HOVERED else ROOM_COLOR[region], HIGHLIGHT_DURATION)
-	await room_color_tween.finished
-	
-	if state == State.STARTER:
-		start_highlight_loop()
-
 func set_outline(color : Color, width : float) -> void:
-	material.set_shader_parameter(&"color", color)
-	material.set_shader_parameter(&"width", width)
-	material.set_shader_parameter(&"pattern", 1)
-	material.set_shader_parameter(&"inside", true) 
+	const DURATION : float = 0.2
+	
+	if outline_tween and outline_tween.is_running():
+		outline_tween.kill()
+	
+	outline_tween = create_tween().set_parallel(true).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+	outline_tween.tween_method(set_outline_color, get_outline_color(), color, DURATION)
+	outline_tween.tween_method(set_outline_width, get_outline_width(), width, DURATION)
+
+func set_outline_color(value : Color) -> void:
+	material.set_shader_parameter(&"color", value)
+func get_outline_color() -> Color:
+	return material.get_shader_parameter(&"color")
+
+func set_outline_width(value : float) -> void:
+	material.set_shader_parameter(&"width", value)
+func get_outline_width() -> float:
+	return material.get_shader_parameter(&"width")
 
 func get_global_center() -> Vector2:
 	var tmp = size

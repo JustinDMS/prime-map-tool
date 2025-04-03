@@ -22,13 +22,22 @@ func get_color() -> Color:
 	const DOOR_COLOR_MAP := {
 		"Normal Door" : Color.DEEP_SKY_BLUE,
 		"Normal Door (Forced)" : Color.DEEP_SKY_BLUE,
-		"Wave Door" : Color.MEDIUM_PURPLE,
 		"Ice Door" : Color.ALICE_BLUE,
+		"Wave Door" : Color.MEDIUM_PURPLE,
 		"Plasma Door" : Color.ORANGE_RED,
+		"Power Beam Only Door" : Color.GOLD,
+		"Missile Blast Shield" : Color.DARK_GRAY,
 		"Missile Blast Shield (randomprime)" : Color.DARK_GRAY,
-		"Permanently Locked" : Color.BLACK,
+		"Permanently Locked" : Color.DIM_GRAY,
 		"Circular Door" : Color.DEEP_SKY_BLUE,
 		"Square Door" : Color.DEEP_SKY_BLUE,
+		"Super Missile Blast Shield" : Color.LAWN_GREEN,
+		"Power Bomb Blast Shield" : Color.ORANGE,
+		"Wavebuster Blast Shield" : Color.WEB_PURPLE,
+		"Ice Spreader Blast Shield" : Color.DEEP_SKY_BLUE,
+		"Flamethrower Blast Shield" : Color.DARK_RED,
+		"Charge Beam Blast Shield" : Color.CADET_BLUE,
+		"Bomb Blast Shield" : Color.LIGHT_SALMON
 	}
 	const COLOR_MAP := {
 		"teleporter" : Color.PURPLE,
@@ -41,9 +50,9 @@ func get_color() -> Color:
 
 func get_texture() -> Texture2D:
 	const TEXTURE_MAP := {
-		"door" : preload("res://data/icons/door.png"),
-		"teleporter" : preload("res://data/icons/teleporter_marker.png"),
-		"morph_ball" : preload("res://data/icons/node_marker.png")
+		"door" : preload("res://data/icons/node marker/door.png"),
+		"teleporter" : preload("res://data/icons/node marker/teleporter_marker.png"),
+		"morph_ball" : preload("res://data/icons/node marker/node_marker.png")
 	}
 	return TEXTURE_MAP[type]
 
@@ -56,3 +65,6 @@ func is_vertical_door() -> bool:
 
 func is_teleporter() -> bool:
 	return type == "teleporter"
+
+func is_morph_ball_door() -> bool:
+	return type == "morph_ball"
