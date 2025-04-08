@@ -591,7 +591,7 @@ script = ExtResource("44_rbq56")
 world_manager = NodePath("../../../../../../world_manager")
 randovania_interface = NodePath("../Randovania")
 tricks_container = NodePath("MarginContainer/ScrollContainer/VBoxContainer")
-min_size = Vector2(500, 1000)
+min_size = Vector2(500, 900)
 metadata/_tab_index = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Tricks"]
@@ -709,7 +709,7 @@ inventory_interface = NodePath("../Inventory")
 tricks_interface = NodePath("../Tricks")
 container = NodePath("VBoxContainer")
 tooltip_label = NodePath("VBoxContainer/Label")
-min_size = Vector2(550, 1000)
+min_size = Vector2(550, 900)
 metadata/_tab_index = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Logic"]
