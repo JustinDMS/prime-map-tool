@@ -17,7 +17,8 @@ const TRICK_VALUE_MAP : Dictionary = {
 	"intermediate" : TrickLevel.INTERMEDIATE,
 	"advanced" : TrickLevel.ADVANCED,
 	"expert" : TrickLevel.EXPERT,
-	"ludicrous": TrickLevel.LUDICROUS
+	"ludicrous": TrickLevel.LUDICROUS,
+	"hypermode": TrickLevel.LUDICROUS
 }
 const TRICK_LEVEL_NAME : Array[String] = [
 	"Disabled",
