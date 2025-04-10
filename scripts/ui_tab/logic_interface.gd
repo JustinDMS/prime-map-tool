@@ -52,6 +52,7 @@ func display_data() -> void:
 	tree.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	tree.button_clicked.connect(open_url)
 	tree.mouse_filter = Control.MOUSE_FILTER_STOP
+	tree.set_default_cursor_shape(Control.CursorShape.CURSOR_POINTING_HAND)
 	var root := tree.create_item()
 	root.set_text(0, "%s (%s)" % [displayed_node.data.name, displayed_node.data.room_name])
 	root.set_text_alignment(0, HORIZONTAL_ALIGNMENT_CENTER)
