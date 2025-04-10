@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=11 format=3 uid="uid://dbk0vd03ipng1"]
+[gd_resource type="Theme" load_steps=17 format=3 uid="uid://dbk0vd03ipng1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_14vwr"]
 bg_color = Color(0.14155, 0.14699, 0.331755, 1)
@@ -111,11 +111,64 @@ corner_radius_bottom_left = 3
 corner_detail = 1
 anti_aliasing_size = 5.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tekt2"]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color(0.1, 0.1, 0.1, 0.784314)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_blend = true
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 3
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_d4nwg"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d4nwg"]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color(0.1, 0.1, 0.1, 0.784314)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_blend = true
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 3
+expand_margin_left = 5.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7ct1h"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_r883i"]
 content_margin_left = 10.0
 content_margin_top = 10.0
 content_margin_right = 10.0
 content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tekt2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7ct1h"]
+content_margin_left = 5.0
+content_margin_right = 5.0
+bg_color = Color(0.1, 0.1, 0.1, 0.784314)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_blend = true
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 3
+expand_margin_left = 5.0
 
 [sub_resource type="SystemFont" id="SystemFont_82onk"]
 font_names = PackedStringArray("Roboto")
@@ -144,4 +197,10 @@ Tree/constants/parent_hl_line_width = 6
 Tree/constants/relationship_line_width = 1
 Tree/constants/v_separation = 5
 Tree/font_sizes/font_size = 20
+Tree/styles/button_hover = SubResource("StyleBoxFlat_tekt2")
+Tree/styles/focus = SubResource("StyleBoxEmpty_d4nwg")
+Tree/styles/hovered = SubResource("StyleBoxFlat_d4nwg")
+Tree/styles/hovered_dimmed = SubResource("StyleBoxEmpty_7ct1h")
 Tree/styles/panel = SubResource("StyleBoxEmpty_r883i")
+Tree/styles/selected = SubResource("StyleBoxEmpty_tekt2")
+Tree/styles/selected_focus = SubResource("StyleBoxFlat_7ct1h")

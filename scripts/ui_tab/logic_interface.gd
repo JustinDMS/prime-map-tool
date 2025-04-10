@@ -53,6 +53,10 @@ func display_data() -> void:
 	tree.button_clicked.connect(open_url)
 	tree.mouse_filter = Control.MOUSE_FILTER_STOP
 	tree.set_default_cursor_shape(Control.CursorShape.CURSOR_POINTING_HAND)
+	tree.empty_clicked.connect(
+		func(_pos : Vector2, _button_idx : int):
+			tree.deselect_all()
+	)
 	var root := tree.create_item()
 	root.set_text(0, "%s (%s)" % [displayed_node.data.name, displayed_node.data.room_name])
 	root.set_text_alignment(0, HORIZONTAL_ALIGNMENT_CENTER)
