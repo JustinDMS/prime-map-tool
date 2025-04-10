@@ -152,7 +152,18 @@ func reach(_d : Dictionary, _t : TreeItem, _z : int) -> bool:
 	return true
 
 func get_url(from_string : String) -> String:
-	return from_string.rsplit(" ", false, 1)[0]
+	var split := from_string.rsplit(" ", false, 1)
+	
+	if split.size() == 1:
+		return split[0]
+	
+	if split[0].contains('http'):
+		return split[0]
+	elif split[-1].contains('http'):
+		return split[-1]
+	else:
+		push_error("Failed to find URL from string: %s" % from_string)
+		return 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
 
 func open_url(item : TreeItem, _column : int, _id : int, _mouse_button_index : int) -> void:
 	var err := OS.shell_open(url_map[item])
