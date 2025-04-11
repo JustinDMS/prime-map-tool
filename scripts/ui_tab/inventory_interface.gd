@@ -21,9 +21,7 @@ const MAIN_PB_VALUE : int = 4
 @export var missile_slider : HSlider
 @export var pb_label : Label
 @export var pb_slider : HSlider
-@export var require_launcher_button : Button
 @export var has_launcher_button : Button
-@export var require_main_pb_button : Button
 @export var has_main_pb_button : Button
 @export var etank_label : Label
 @export var etank_slider : HSlider
@@ -58,9 +56,7 @@ func connect_signals() -> void:
 	artifact_slider.value_changed.connect(artifact_slider_changed)
 	artifact_slider.drag_ended.connect(dragged_artifact_slider)
 	
-	require_launcher_button.pressed.connect(require_launcher_toggled)
 	has_launcher_button.pressed.connect(has_launcher_toggled)
-	require_main_pb_button.pressed.connect(require_main_pb_toggled)
 	has_main_pb_button.pressed.connect(has_main_pb_toggled)
 	
 	all_button.pressed.connect(all_pressed)
@@ -146,23 +142,11 @@ func update_pb_count() -> void:
 	pb_label.set_text(text)
 
 func update_missle_pb_settings() -> void:
-	set_button_color(require_launcher_button, inventory.requires_launcher)
 	set_button_color(has_launcher_button, inventory.get_item("MissileLauncher").has())
-	set_button_color(require_main_pb_button, inventory.requires_main_pb)
 	set_button_color(has_main_pb_button, inventory.get_item("MainPB").has())
 
 func set_button_color(button : Button, enabled : bool) -> void:
 	button.self_modulate = ON_COLOR if enabled else OFF_COLOR
-
-func require_launcher_toggled() -> void:
-	inventory.requires_launcher = !inventory.requires_launcher
-	set_button_color(require_launcher_button, inventory.requires_launcher)
-	items_changed.emit()
-
-func require_main_pb_toggled() -> void:
-	inventory.requires_main_pb = !inventory.requires_main_pb
-	set_button_color(require_main_pb_button, inventory.requires_main_pb)
-	items_changed.emit()
 
 func has_launcher_toggled() -> void:
 	var item := inventory.get_item("MissileLauncher")

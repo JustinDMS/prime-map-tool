@@ -124,13 +124,12 @@ custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-current_tab = 2
+current_tab = 0
 tab_focus_mode = 0
 deselect_enabled = true
 script = ExtResource("4_0yqv7")
 
-[node name="Inventory" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("randovania_interface", "missile_label", "missile_slider", "pb_label", "pb_slider", "require_launcher_button", "has_launcher_button", "require_main_pb_button", "has_main_pb_button", "etank_label", "etank_slider", "artifact_label", "artifact_slider", "artifact_container", "item_buttons", "all_button", "none_button")]
-visible = false
+[node name="Inventory" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("randovania_interface", "missile_label", "missile_slider", "pb_label", "pb_slider", "has_launcher_button", "has_main_pb_button", "etank_label", "etank_slider", "artifact_label", "artifact_slider", "artifact_container", "item_buttons", "all_button", "none_button")]
 layout_mode = 2
 script = ExtResource("9_cfl7w")
 randovania_interface = NodePath("../Randovania")
@@ -138,9 +137,7 @@ missile_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContai
 missile_slider = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/missile_slider")
 pb_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/HBoxContainer/VBoxContainer/pb_count")
 pb_slider = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/HBoxContainer/VBoxContainer/pb_slider")
-require_launcher_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer2/require_launcher")
 has_launcher_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer2/has_launcher")
-require_main_pb_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/VBoxContainer2/require_main")
 has_main_pb_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/VBoxContainer2/has_main")
 etank_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer/VBoxContainer/etank_count")
 etank_slider = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer/VBoxContainer/etank_slider")
@@ -412,6 +409,7 @@ alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 10
 theme_override_constants/separation = 30
 
 [node name="TextureRect" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
@@ -443,6 +441,7 @@ ticks_on_borders = true
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
 alignment = 1
 
 [node name="has_launcher" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer2"]
@@ -450,12 +449,6 @@ layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 16
 text = "Has Launcher?"
-
-[node name="require_launcher" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer2"]
-layout_mode = 2
-focus_mode = 0
-theme_override_font_sizes/font_size = 16
-text = "Require Launcher?"
 
 [node name="VSeparator" type="VSeparator" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -469,6 +462,7 @@ alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
+size_flags_vertical = 10
 theme_override_constants/separation = 30
 
 [node name="TextureRect" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/HBoxContainer"]
@@ -500,6 +494,7 @@ ticks_on_borders = true
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
+size_flags_vertical = 3
 alignment = 1
 
 [node name="has_main" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/VBoxContainer2"]
@@ -507,12 +502,6 @@ layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 16
 text = "Has Main PB?"
-
-[node name="require_main" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/VBoxContainer2"]
-layout_mode = 2
-focus_mode = 0
-theme_override_font_sizes/font_size = 16
-text = "Require Main PB?"
 
 [node name="VSeparator2" type="VSeparator" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -617,6 +606,7 @@ size_flags_vertical = 3
 theme_override_constants/separation = 20
 
 [node name="Randovania" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("import_rdvgame_button", "file_dialog", "import_status_label", "clear_rdvgame_button", "word_hash_label", "rdv_options_container", "bool_options_container", "loaded_container")]
+visible = false
 custom_minimum_size = Vector2(400, 850)
 layout_mode = 2
 script = ExtResource("45_px4t2")
