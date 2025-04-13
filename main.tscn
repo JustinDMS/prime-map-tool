@@ -91,7 +91,7 @@ script = ExtResource("3_et3qh")
 [node name="UI" type="CanvasLayer" parent="."]
 script = ExtResource("4_pyxl1")
 
-[node name="ui" type="Control" parent="UI" node_paths=PackedStringArray("region_name_label", "room_name_label", "node_name_label")]
+[node name="ui" type="Control" parent="UI" node_paths=PackedStringArray("region_name_label", "room_name_label", "node_name_label", "bg_color")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -103,6 +103,7 @@ script = ExtResource("4_kybu4")
 region_name_label = NodePath("MarginContainer/MarginContainer/VBoxContainer2/hovered_world_name")
 room_name_label = NodePath("MarginContainer/MarginContainer/VBoxContainer2/hovered_room_name")
 node_name_label = NodePath("MarginContainer/MarginContainer/VBoxContainer2/hovered_node_name")
+bg_color = NodePath("../../Background/bg_color")
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/ui"]
 layout_mode = 1
