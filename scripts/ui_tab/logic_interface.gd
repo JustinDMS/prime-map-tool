@@ -4,7 +4,7 @@ const PRIME_HEADER : Dictionary = preload("res://data/header.json").data
 const FAIL_COLOR := Color.INDIAN_RED
 const PASS_COLOR := Color.LIME_GREEN
 const NO_DATA_SIZE := Vector2(550, 150)
-const DATA_SIZE := Vector2(550, 1000)
+const DATA_SIZE := Vector2(550, 900)
 
 @export var inventory_interface : PrimeInventoryInterface
 @export var tricks_interface : TricksInterface
