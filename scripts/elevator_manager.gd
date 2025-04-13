@@ -24,6 +24,7 @@ const IGNORE_REGIONS : Array[String] = ["Frigate Orpheon", "Impact Crater", "End
 const LINE_WIDTH : float = 4.0
 const LINE_CAPS := Line2D.LINE_CAP_ROUND
 const Z_IDX : int = -1
+const SUBREGION_ALPHA := 0.5
 
 @export var world_manager : World
 @export var randovania_interface : RandovaniaInterface
@@ -60,6 +61,7 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
 	var drawn : Array[String] = []
 	
 	for key in connections:
+		# If a line has already been drawn
 		if key in drawn or connections[key] in drawn:
 			continue
 		
@@ -100,6 +102,9 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
 			point_1 += tmp
 		
 		var color := Room.ROOM_COLOR[from_node_data.region].lerp(Room.ROOM_COLOR[to_node_data.region], 0.5)
+		# Fade subregion lines a bit
+		if from_node_data.region == to_node_data.region:
+			color.a = SUBREGION_ALPHA
 		var line2d := new_connection_line(
 			point_1, 
 			point_2, 
@@ -148,10 +153,11 @@ func update_lines_from_visited(reached_nodes : Array[NodeData]) -> void:
 		lines[data].modulate = Room.UNREACHABLE_COLOR
 	
 	for node in reached_nodes:
-		if node is DockNodeData and node.is_teleporter():
-			if node in lines:
-				var line : Line2D = lines[node]
-				line.modulate = color_map[line]
+		if not node is DockNodeData:
+			continue
+		if node in lines:
+			var line : Line2D = lines[node]
+			line.modulate = color_map[line]
 
 func rdvgame_loaded() -> void:
 	var dock_connections := RandovaniaInterface.get_rdvgame().get_dock_connections()
