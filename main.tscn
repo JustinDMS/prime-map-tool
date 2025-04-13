@@ -184,6 +184,7 @@ focus_mode = 0
 text = "All"
 
 [node name="Power Suit" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/suits"]
+visible = false
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
@@ -214,6 +215,10 @@ focus_mode = 0
 icon = ExtResource("17_3n2di")
 icon_alignment = 1
 expand_icon = true
+
+[node name="spacer" type="Control" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/suits"]
+layout_mode = 2
+size_flags_vertical = 3
 
 [node name="visors" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2"]
 custom_minimum_size = Vector2(64, 0)
