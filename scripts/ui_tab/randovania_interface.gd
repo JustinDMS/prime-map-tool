@@ -106,7 +106,7 @@ func parse_rdv(data : Dictionary) -> void:
 	rdvgame = RDVGame.new(data)
 	
 	if rdvgame.get_game() != "prime1":
-		rdvgame_load_failed("Not a Prime .rdvgame: %s" % rdvgame.get_game())
+		rdvgame_load_failed("The .rdvgame must be for Prime, not %s" % rdvgame.get_game())
 		return
 	
 	if not rdvgame.is_supported_version():

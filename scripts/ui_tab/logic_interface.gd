@@ -4,7 +4,7 @@ const PRIME_HEADER : Dictionary = preload("res://data/header.json").data
 const FAIL_COLOR := Color.INDIAN_RED
 const PASS_COLOR := Color.LIME_GREEN
 const NO_DATA_SIZE := Vector2(550, 150)
-const DATA_SIZE := Vector2(550, 1000)
+const DATA_SIZE := Vector2(550, 900)
 
 @export var inventory_interface : PrimeInventoryInterface
 @export var tricks_interface : TricksInterface
@@ -52,6 +52,11 @@ func display_data() -> void:
 	tree.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	tree.button_clicked.connect(open_url)
 	tree.mouse_filter = Control.MOUSE_FILTER_STOP
+	tree.set_default_cursor_shape(Control.CursorShape.CURSOR_POINTING_HAND)
+	tree.empty_clicked.connect(
+		func(_pos : Vector2, _button_idx : int):
+			tree.deselect_all()
+	)
 	var root := tree.create_item()
 	root.set_text(0, "%s (%s)" % [displayed_node.data.name, displayed_node.data.room_name])
 	root.set_text_alignment(0, HORIZONTAL_ALIGNMENT_CENTER)
@@ -147,7 +152,18 @@ func reach(_d : Dictionary, _t : TreeItem, _z : int) -> bool:
 	return true
 
 func get_url(from_string : String) -> String:
-	return from_string.rsplit(" ", false, 1)[0]
+	var split := from_string.rsplit(" ", false, 1)
+	
+	if split.size() == 1:
+		return split[0]
+	
+	if split[0].contains('http'):
+		return split[0]
+	elif split[-1].contains('http'):
+		return split[-1]
+	else:
+		push_error("Failed to find URL from string: %s" % from_string)
+		return 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
 
 func open_url(item : TreeItem, _column : int, _id : int, _mouse_button_index : int) -> void:
 	var err := OS.shell_open(url_map[item])

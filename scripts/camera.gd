@@ -2,17 +2,17 @@ extends Camera2D
 
 const ZOOM_RATE : float = 0.07
 const MIN_ZOOM : float = 4.0
-const MAX_ZOOM : float = 0.35
+const MAX_ZOOM : float = 0.33
 const START_ZOOM : float = MAX_ZOOM
 const CENTER_ZOOM : float = 2.5
 const ZOOM_WEIGHT : float = 0.15
 const DRAG_WEIGHT : float = 0.3
 
-const START_POS = Vector2(1800, 645)
 const X_MAX_POS := 3200.0
 const X_MIN_POS := -50.0
 const Y_MAX_POS := 2100.0
 const Y_MIN_POS := -900.0
+const Y_START_OFFSET := 50.0
 
 var current_zoom : float = START_ZOOM:
 	set(value):
@@ -23,7 +23,11 @@ var move_to_tween : Tween = null
 var zoom_to_tween : Tween = null
 
 func _ready() -> void:
-	target_pos = START_POS
+	# Center of map based on bounds
+	target_pos = Vector2(
+		X_MIN_POS + X_MAX_POS,
+		Y_MIN_POS + Y_MAX_POS + Y_START_OFFSET
+	) * 0.5
 	update_zoom(START_ZOOM)
 
 func _physics_process(delta: float) -> void:

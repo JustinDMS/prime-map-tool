@@ -3,8 +3,6 @@ class_name PrimeInventory extends Resource
 const PRIME_HEADER := preload("res://data/header.json").data
 const ARTIFACT_NAMES : Array[String] = ["Truth", "Strength", "Elder", "Wild", "Lifegiver", "Warrior", "Chozo", "Nature", "Sun", "World", "Spirit", "Newborn"]
 
-var requires_launcher := false
-var requires_main_pb := false
 var last_failed_event_id : String
 
 var _items := {}
@@ -136,11 +134,11 @@ func has_resource(logic_data : Dictionary) -> bool:
 				"Missile":
 					var launcher := _get_item("MissileLauncher").has()
 					var missile := _get_item(name).has()
-					result = launcher if requires_launcher else (missile or launcher)
+					result = missile or launcher
 				"PowerBomb":
 					var main := _get_item("MainPB").has()
 					var pbs := _get_item(name).has()
-					result = main if requires_main_pb else (pbs or main)
+					result = pbs or main
 				_:
 					result = _get_item(name).has()
 		"events":
