@@ -370,6 +370,8 @@ func resolve_map() -> void:
 			if n in reached_nodes:
 				continue
 			
+			print(n.name,": ", can_reach_internal(inventory, node, n))
+			
 			if can_reach_internal(inventory, node, n):
 				reached_nodes.append(n)
 				
