@@ -1,6 +1,6 @@
 class_name NodeData extends Resource
 
-@export var region := World.Region.NONE
+@export var region : StringName
 @export var room_name : String
 @export var name : String
 @export var coordinates : Vector3

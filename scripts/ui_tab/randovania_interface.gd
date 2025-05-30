@@ -125,7 +125,7 @@ func rdvgame_load_success() -> void:
 	show_import_status_message("Import successful!")
 	rdvgame_loaded.emit()
 
-func setting_changed(_setting : PrimeInventory.MiscSetting, emit : bool = false) -> void:
+func setting_changed(_setting : Game.MiscSetting, emit : bool = false) -> void:
 	if emit:
 		settings_changed.emit()
 
@@ -153,5 +153,5 @@ func show_import_status_message(text : String) -> void:
 	import_status_tween.tween_property(import_status_label, "self_modulate", Color.WHITE, DURATION)
 	import_status_tween.tween_property(import_status_label, "self_modulate", Color.TRANSPARENT, DURATION).set_delay(DISPLAY_TIME)
 
-func set_button_color(setting : PrimeInventory.MiscSetting, button : Button) -> void:
+func set_button_color(setting : Game.MiscSetting, button : Button) -> void:
 	button.self_modulate = PrimeInventoryInterface.ON_COLOR if setting.is_enabled() else PrimeInventoryInterface.OFF_COLOR

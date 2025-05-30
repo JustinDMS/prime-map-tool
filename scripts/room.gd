@@ -15,13 +15,13 @@ enum State {
 const OUTLINE_SHADER := preload("res://resources/highlight_shader.tres")
 const COLOR_CHANGE_DURATION : float = 0.2
 
-const ROOM_COLOR : Array[Color] = [
-	"#EA8C55",
-	"#C9D6EA",
-	"#7FB685",
-	"#BC96E6",
-	"#A7333F",
-]
+const ROOM_COLOR : Dictionary[StringName, Color] = {
+	&"Chozo Ruins" : Color("#EA8C55"),
+	&"Phendrana Drifts" : Color("#C9D6EA"),
+	&"Tallon Overworld" : Color("#7FB685"),
+	&"Phazon Mines" : Color("#BC96E6"),
+	&"Magmoor Caverns" : Color("#A7333F"),
+}
 ## Rooms that need to have their z index increased to better match the game
 const MANUAL_Z_ROOMS : Array[String] = [
 	"Hall of the Elders",
@@ -44,7 +44,7 @@ const MANUAL_Z_ROOMS : Array[String] = [
 const HOVER_COLOR := Color.WHITE
 const UNREACHABLE_COLOR := Color("#4b7ea3") # Map Blue from Game
 
-var region : int = 0
+var region : StringName
 var data : RoomData = null
 var state := State.DEFAULT
 var prev_state := State.DEFAULT ## Used to return to after hovering

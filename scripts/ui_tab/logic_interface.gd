@@ -1,6 +1,5 @@
 class_name LogicInterface extends UITab
 
-const PRIME_HEADER : Dictionary = preload("res://data/header.json").data
 const FAIL_COLOR := Color.INDIAN_RED
 const PASS_COLOR := Color.LIME_GREEN
 const NO_DATA_SIZE := Vector2(550, 150)
@@ -46,6 +45,8 @@ func display_data() -> void:
 		tree.queue_free()
 		url_map.clear()
 	
+	var game_header : Dictionary = PrimeInventoryInterface.get_inventory()._header
+	
 	tree = Tree.new()
 	tree.theme = preload("res://resources/theme.tres")
 	tree.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -73,7 +74,7 @@ func display_data() -> void:
 			continue
 		
 		room_root.set_text(0, c._to_marker.data.name)
-		var reached := reach(c._logic, room_root, 0)
+		var reached := reach(game_header, c._logic, room_root, 0)
 		room_root.set_custom_color(0, PASS_COLOR if reached else FAIL_COLOR)
 		if reached:
 			room_root.set_collapsed_recursive(true)
@@ -81,9 +82,9 @@ func display_data() -> void:
 	container.add_child(tree)
 
 # ALERT
-# Re-implementation of a function that already exists in PrimeInventory
+# Re-implementation of a function that already exists in [Game]
 # Consider making a separate, generic "Solver" class
-func reach(_d : Dictionary, _t : TreeItem, _z : int) -> bool:
+func reach(_h : Dictionary, _d : Dictionary, _t : TreeItem, _z : int) -> bool:
 	var tree_item := tree.create_item(_t)
 	tree_item.set_autowrap_mode(_z, TextServer.AUTOWRAP_WORD)
 	
@@ -92,7 +93,7 @@ func reach(_d : Dictionary, _t : TreeItem, _z : int) -> bool:
 			tree_item.set_text(_z, "All of")
 			var flag := true
 			for i in range(_d.data.items.size()):
-				if not reach(_d.data.items[i], tree_item, _z):
+				if not reach(_h, _d.data.items[i], tree_item, _z):
 					flag = false
 			
 			if flag: tree_item.set_collapsed_recursive(true)
@@ -107,7 +108,7 @@ func reach(_d : Dictionary, _t : TreeItem, _z : int) -> bool:
 			tree_item.set_text(_z, "One of:")
 			var flag := false
 			for i in range(_d.data.items.size()):
-				if reach(_d.data.items[i], tree_item, _z):
+				if reach(_h, _d.data.items[i], tree_item, _z):
 					flag = true
 			
 			if flag: tree_item.set_collapsed_recursive(true)
@@ -127,24 +128,24 @@ func reach(_d : Dictionary, _t : TreeItem, _z : int) -> bool:
 			var text = "NOT " if negate else ""
 			match type:
 				"items":
-					text += PRIME_HEADER.resource_database.items[_name].long_name
+					text += _h.resource_database.items[_name].long_name
 				"events":
-					text += "%s (Event)" % PRIME_HEADER.resource_database.events[_name].long_name
+					text += "%s (Event)" % _h.resource_database.events[_name].long_name
 				"tricks":
-					text += "%s >= %s" % [PRIME_HEADER.resource_database.tricks[_name].long_name, TricksInterface.TRICK_LEVEL_NAME[amount]]
+					text += "%s >= %s" % [_h.resource_database.tricks[_name].long_name, TricksInterface.TRICK_LEVEL_NAME[amount]]
 				"damage":
-					text += "%s %s" % [amount, PRIME_HEADER.resource_database.damage[_name].long_name]
+					text += "%s %s" % [amount, _h.resource_database.damage[_name].long_name]
 				"misc":
-					text += "%s (Misc)" % PRIME_HEADER.resource_database.misc[_name].long_name
+					text += "%s (Misc)" % _h.resource_database.misc[_name].long_name
 			tree_item.set_text(_z, text)
 			var has : bool = PrimeInventoryInterface.get_inventory().has_resource(_d.data)
 			tree_item.set_custom_color(_z, PASS_COLOR if has else FAIL_COLOR)
 			return has
 		
 		"template":
-			var display_name : String = PRIME_HEADER.resource_database.requirement_template[_d.data].display_name
+			var display_name : String = _h.resource_database.requirement_template[_d.data].display_name
 			tree_item.set_text(_z, "%s (Template)" % display_name)
-			var has : bool = reach(PRIME_HEADER.resource_database.requirement_template[display_name].requirement, tree_item, _z)
+			var has : bool = reach(_h, _h.resource_database.requirement_template[display_name].requirement, tree_item, _z)
 			tree_item.set_custom_color(_z, PASS_COLOR if has else FAIL_COLOR)
 			tree_item.set_collapsed_recursive(true)
 			return has

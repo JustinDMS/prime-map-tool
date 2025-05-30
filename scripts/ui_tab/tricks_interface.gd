@@ -29,7 +29,7 @@ const TRICK_LEVEL_NAME : Array[String] = [
 	"Ludicrous"
 ]
 
-@export var world_manager : World
+@export var game_map : GameMap
 @export var randovania_interface : RandovaniaInterface
 @export var tricks_container : VBoxContainer
 
@@ -52,7 +52,7 @@ func init_sliders() -> void:
 		func(_changed : bool):
 			var value := int(all_slider.get_value()) as TrickLevel
 			for t in inventory._tricks:
-				var trick : PrimeInventory.Trick = inventory.get_trick(t)
+				var trick : Game.Trick = inventory.get_trick(t)
 				trick.set_level_no_signal(value)
 				(slider_map[trick] as HSlider).set_value(value)
 				
@@ -60,8 +60,8 @@ func init_sliders() -> void:
 	)
 	
 	for t in inventory._tricks:
-		var trick : PrimeInventory.Trick = inventory.get_trick(t)
-		trick.changed.connect(world_manager.resolve_map.unbind(1))
+		var trick : Game.Trick = inventory.get_trick(t)
+		trick.changed.connect(game_map.resolve_map.unbind(1))
 		var slider := new_trick(trick.long_name, trick.get_level())
 		slider.drag_ended.connect(func(_changed : bool): trick.set_level(int(slider.get_value()) as TrickLevel))
 		slider_map[trick] = slider
@@ -70,7 +70,7 @@ func update() -> void:
 	var inventory := PrimeInventoryInterface.get_inventory()
 	
 	for t in inventory._tricks:
-		var trick : PrimeInventory.Trick = inventory.get_trick(t)
+		var trick : Game.Trick = inventory.get_trick(t)
 		(slider_map[trick] as HSlider).set_value(trick.get_level())
 
 ## Adds a new trick to tricks_container

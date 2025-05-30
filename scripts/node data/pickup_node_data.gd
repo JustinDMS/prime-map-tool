@@ -14,7 +14,7 @@ func get_texture() -> Texture2D:
 	if is_nothing() or is_artifact():
 		return null
 	
-	return load("res://data/icons/items/%s.png" % item_name)
+	return load("res://data/games/prime1/item_images/%s.png" % item_name)
 
 func get_scale() -> Vector2:
 	const SCALE := Vector2(0.0375, 0.0375)
@@ -30,7 +30,7 @@ func parse_item_name() -> void:
 	# HACK This is ugly
 	item_name = name.split("(")[1].split(")")[0]
 	if rdvgame:
-		item_name = rdvgame.get_pickup_locations()[World.REGION_NAME[region]]["%s/%s" % [room_name, name]]
+		item_name = rdvgame.get_pickup_locations()[region]["%s/%s" % [room_name, name]]
 	
 	match item_name:
 		"Power Bomb":

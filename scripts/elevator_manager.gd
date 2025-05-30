@@ -26,15 +26,15 @@ const LINE_CAPS := Line2D.LINE_CAP_ROUND
 const Z_IDX : int = -1
 const SUBREGION_ALPHA := 0.5
 
-@export var world_manager : World
+@export var game_map : GameMap
 @export var randovania_interface : RandovaniaInterface
 
 var lines := {}
 var color_map := {}
 
 func _ready() -> void:
-	world_manager.map_drawn.connect(init_elevators)
-	world_manager.map_resolved.connect(update_lines_from_visited)
+	game_map.map_drawn.connect(init_elevators)
+	game_map.map_resolved.connect(update_lines_from_visited)
 	randovania_interface.rdvgame_loaded.connect(rdvgame_loaded)
 	randovania_interface.rdvgame_cleared.connect(rdvgame_cleared)
 
@@ -71,47 +71,26 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
 		if from[0] in IGNORE_REGIONS or to[0] in IGNORE_REGIONS:
 			continue
 		
-		var from_node_data := world_manager.get_node_data(World.get_region_from_name(from[0]), from[1], from[2])
-		var to_node_data := world_manager.get_node_data(World.get_region_from_name(to[0]), to[1], to[2])
+		var from_node_data := game_map.get_node_data(from[0], from[1], from[2])
+		var to_node_data := game_map.get_node_data(to[0], to[1], to[2])
 		
-		var from_region : Control = world_manager.region_nodes[from_node_data.region]
-		var to_region : Control = world_manager.region_nodes[to_node_data.region]
-		
-		var from_room : Room = world_manager.get_room_obj(from_node_data.region, from_node_data.room_name)
-		var to_room : Room = world_manager.get_room_obj(to_node_data.region, to_node_data.room_name)
+		var from_region : Control = game_map.region_nodes[from_node_data.region]
+		var to_region : Control = game_map.region_nodes[to_node_data.region]
 		
 		var point_1 : Vector2 = from_region.position + Vector2(from_node_data.coordinates.x, -from_node_data.coordinates.y)
 		var point_2 : Vector2 = to_region.position + Vector2(to_node_data.coordinates.x, -to_node_data.coordinates.y)
 		
-		if from_node_data.region == World.Region.MINES:
-			var tmp : Vector2 = from_region.get_child(world_manager.determine_mines_region(from_room.data.aabb[2])).position
-			tmp.y *= -1
-			point_1 += tmp
-		elif from_node_data.region == World.Region.PHENDRANA:
-			var tmp : Vector2 = from_region.get_child(world_manager.determine_phendrana_region(from_room.data.name)).position
-			tmp.y *= -1
-			point_1 += tmp
-		
-		if to_node_data.region == World.Region.MINES:
-			var tmp : Vector2 = to_region.get_child(world_manager.determine_mines_region(to_room.data.aabb[2])).position
-			tmp.y *= -1
-			point_2 += tmp
-		elif to_node_data.region == World.Region.PHENDRANA:
-			var tmp : Vector2 = from_region.get_child(world_manager.determine_phendrana_region(to_room.data.name)).position
-			tmp.y *= -1
-			point_1 += tmp
+		# Add additional offset if either room is part of a subregion
+		if game_map.game.has_region(from_node_data.region):
+			point_1 += from_region.get_child( game_map.game.get_room_idx(from_node_data.region, from_node_data.room_name) ).position * Vector2(1, -1)
+		if game_map.game.has_region(to_node_data.region):
+			point_2 += to_region.get_child( game_map.game.get_room_idx(to_node_data.region, to_node_data.room_name) ).position * Vector2(1, -1)
 		
 		var color := Room.ROOM_COLOR[from_node_data.region].lerp(Room.ROOM_COLOR[to_node_data.region], 0.5)
 		# Fade subregion lines a bit
 		if from_node_data.region == to_node_data.region:
 			color.a = SUBREGION_ALPHA
-		var line2d := new_connection_line(
-			point_1, 
-			point_2, 
-			color, 
-			to_node_data.region == World.Region.MINES and not from_node_data.region == World.Region.MAGMOOR,
-			100.0
-			)
+		var line2d := new_connection_line(point_1, point_2, color)
 		lines[from_node_data] = line2d
 		color_map[line2d] = color
 		
@@ -120,7 +99,7 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
 		drawn.append(key)
 		drawn.append(connections[key])
 
-func new_connection_line(global_from : Vector2, global_to : Vector2, line_color : Color, draw_midpoint : bool = false, midpoint_offset : float = 0.0) -> Line2D:
+func new_connection_line(global_from : Vector2, global_to : Vector2, line_color : Color) -> Line2D:
 	var line2d := Line2D.new()
 	line2d.width = LINE_WIDTH
 	line2d.begin_cap_mode = LINE_CAPS
@@ -134,17 +113,6 @@ func new_connection_line(global_from : Vector2, global_to : Vector2, line_color 
 	
 	line2d.add_point(local_from)
 	line2d.add_point(local_to)
-	
-	if not draw_midpoint:
-		return line2d
-	
-	var midpoint := Vector2(
-		(local_from.x + local_to.x) / 2,
-		(local_from.y + local_to.y) / 2
-	)
-	var direction : Vector2 = (local_to - local_from).normalized().rotated(PI/2)
-	midpoint += direction * midpoint_offset
-	line2d.add_point(midpoint, 1)
 	
 	return line2d
 

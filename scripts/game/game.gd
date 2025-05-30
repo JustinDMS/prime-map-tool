@@ -1,14 +1,18 @@
 class_name Game extends Resource
 ## Generic data container for Randovania games
 
-static var HEADERS : Dictionary[String, Dictionary] = {
-	"prime1" : preload("res://data/games/prime1/header.json").data,
-}
-
 static func create_from_game_name(name : String):
-	var header : Dictionary = HEADERS.get(name, {})
-	assert(not header.is_empty())
-	return Game.new(header)
+	var path : StringName = &"res://data/games/%s/header.json" % name
+	assert( ResourceLoader.exists(path, "JSON") )
+	var rdv_header : Dictionary = load(path).data
+	
+	match name:
+		"prime1":
+			return Prime.new(rdv_header)
+		_:
+			push_error("Failed to create game: %s" % name)
+	
+	return null
 
 var _header := {} ## Randovania data
 var _items : Dictionary[String, Item] = {}
@@ -18,6 +22,16 @@ var _misc : Dictionary[String, MiscSetting] = {}
 var _templates := {}
 
 var last_failed_event_id : String = "" ## Used when resolving
+
+# Virtual Members
+## Map of region names and their offsets in global space
+var region_offset : Dictionary[StringName, Vector2] = {} 
+## Map of region names that contain subregions and their offsets in local coordinates
+## Inner array expected type is Array[Vector2]
+var subregion_offset : Dictionary[StringName, Array] = {} 
+## Map of region names and room subregion indices
+## Inner dictionary expected type is Dictionary[StrinName, int] 
+var subregion_map : Dictionary[StringName, Dictionary] = {}
 
 func _init(rdv_header : Dictionary) -> void:
 	_header = rdv_header
@@ -43,6 +57,33 @@ func _init(rdv_header : Dictionary) -> void:
 			_:
 				continue
 
+func has_region(region : StringName) -> bool:
+	return region_offset.has(region)
+
+func has_subregions(region : StringName) -> bool:
+	return subregion_map.has(region)
+
+func get_region_offset(region : StringName) -> Vector2:
+	if not region in region_offset:
+		return Vector2.ZERO
+	return region_offset[region]
+
+func get_subregion_offsets(region : StringName) -> Array[Vector2]:
+	if not has_subregions(region):
+		return [Vector2.ZERO]
+	
+	# Workaround since casting doesn't work
+	var arr : Array[Vector2] = []
+	arr.assign(subregion_offset[region])
+	return arr
+
+func get_room_idx(region : StringName, room_name : StringName) -> int:
+	if not region in subregion_map:
+		return 0
+	if not room_name in subregion_map[region]:
+		return 0
+	return subregion_map[region][room_name]
+
 ## Returns logic database data if it exists
 func get_region_data() -> Dictionary[StringName, Dictionary]:
 	var data : Dictionary[StringName, Dictionary] = {}
@@ -51,7 +92,7 @@ func get_region_data() -> Dictionary[StringName, Dictionary]:
 		var path := StringName("res://data/games/%s/%s" % [_header.game, r])
 		if ResourceLoader.exists(path, "JSON"):
 			var json := load(path)
-			data[r.rstrip(".json")] = json.data
+			data[r.trim_suffix(".json")] = json.data
 			continue
 		
 		push_warning("Could not find region data at %s" % path)

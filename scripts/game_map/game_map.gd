@@ -34,7 +34,7 @@ func _ready() -> void:
 	init_nodes()
 
 func load_rdv_logic() -> void:
-	rdv_logic = game._get_region_data()
+	rdv_logic = game.get_region_data()
 
 ## Create region [Control] nodes and draw rooms
 func init_map() -> void:
@@ -44,10 +44,10 @@ func init_map() -> void:
 		region.set_scale(Vector2(1, -1)) # Flip vertically
 		region.set_name(r)
 		add_child(region)
-		region.set_position(game.OFFSET[r])
+		region.set_position( game.get_region_offset(r) )
 		
-		if r in game.SUB_OFFSET:
-			var offsets : Array[Vector2] = game.SUB_OFFSET[r]
+		if game.has_subregions(r):
+			var offsets : Array[Vector2] = game.get_subregion_offsets(r)
 			add_subregions(region, offsets.size(), offsets)
 		
 		world_data[r] = {}
@@ -86,12 +86,12 @@ func add_room_to_map(room : Room) -> void:
 	var data := room.data
 	var region_node := region_nodes[data.region]
 	
-	if not game.SUBREGION_MAP.has(data.region):
+	if not game.has_subregions(data.region):
 		region_node.add_child(room)
 		return
 	
 	# Add room as child of subregion node
-	region_node.get_child( game.SUBREGION_MAP[data.region][data.name] ).add_child(room)
+	region_node.get_child( game.get_room_idx(data.region, data.name) ).add_child(room)
 
 func init_nodes() -> void:
 	# Clear existing node markers and node data
@@ -150,7 +150,7 @@ func init_nodes() -> void:
 				node_data.connections.assign(connections)
 				
 				var default_connection_data = rdv_logic[r]["areas"][j]["nodes"][k].get("default_connection", null)
-				if default_connection_data and default_connection_data.region in game.OFFSET:
+				if default_connection_data and game.has_region(default_connection_data.region):
 					node_data.default_connection = get_node_data(
 						default_connection_data.region,
 						default_connection_data.area,
@@ -166,7 +166,7 @@ func init_nodes() -> void:
 	for key in dock_connections:
 		var from_split : PackedStringArray = key.split("/")
 		var to_split : PackedStringArray = dock_connections[key].split("/")
-		if not from_split[0] in game.OFFSET or not to_split[0] in game.OFFSET:
+		if not game.has_region(from_split[0]) or not game.has_region(to_split[0]):
 			continue
 		var from_node := get_node_data(from_split[0], from_split[1], from_split[2])
 		var to_node := get_node_data(to_split[0], to_split[1], to_split[2])
@@ -214,9 +214,9 @@ func add_marker_to_map(node_marker : NodeMarker) -> void:
 	var pos : Vector2 = region_nodes[data.region].global_position
 	pos += Vector2(data.coordinates.x, -data.coordinates.y)
 	
-	if game.SUBREGION_MAP.has(data.region):
-		var subregion : int = game.SUBREGION_MAP[data.region].get(data.name, 0)
-		pos += game.SUB_OFFSET[data.region][subregion] * Vector2(1, -1) # Regions are vertically flipped, flip again so math is right
+	if game.has_subregions(data.region):
+		var subregion : int = game.get_room_idx(data.region, data.name)
+		pos += game.get_subregion_offsets(data.region)[subregion] * Vector2(1, -1) # Regions are vertically flipped, flip again so math is right
 	
 	node_marker.global_position = pos
 

@@ -1,6 +1,6 @@
 class_name RoomData extends Resource
 
-@export var region := World.Region.NONE
+@export var region : StringName
 @export var name : String
 @export var texture : Texture2D
 @export var aabb : Array[float]
@@ -8,7 +8,7 @@ class_name RoomData extends Resource
 @export var nodes : Array[NodeData]
 @export var default_node : NodeData
 
-func init(_region : World.Region, _name : String, data : Dictionary) -> void:
+func init(_region : StringName, _name : String, data : Dictionary) -> void:
 	region = _region
 	name = _name
 	texture = get_room_texture()
@@ -22,7 +22,7 @@ func init(_region : World.Region, _name : String, data : Dictionary) -> void:
 	]
 
 func get_room_texture() -> Texture2D:
-	return load("res://data/room_images/%s/%s.png" % [World.REGION_NAME[region], name])
+	return load("res://data/games/prime1/room_images/%s/%s.png" % [region, name])
 
 func clear_nodes() -> void:
 	nodes.clear()

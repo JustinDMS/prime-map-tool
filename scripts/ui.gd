@@ -9,7 +9,7 @@ var hovered_nodes : Array[NodeMarker] = []
 var hovered_room : Room = null
 
 func room_hover(room : Room) -> void:
-	region_name_label.text = World.REGION_NAME[room.data.region]
+	region_name_label.text = room.data.region
 	room_name_label.text = room.name
 	
 	hovered_room = room
@@ -21,7 +21,7 @@ func room_stop_hover(_room : Room) -> void:
 		region_name_label.text = ""
 		room_name_label.text = ""
 	else:
-		region_name_label.text = World.REGION_NAME[hovered_nodes[-1].data.region]
+		region_name_label.text = hovered_nodes[-1].data.region
 		room_name_label.text = hovered_nodes[-1].data.room_name
 
 func node_hover(marker : NodeMarker) -> void:
@@ -29,7 +29,7 @@ func node_hover(marker : NodeMarker) -> void:
 	
 	set_node_name(marker)
 	room_name_label.text = marker.data.room_name
-	region_name_label.text = World.REGION_NAME[marker.data.region]
+	region_name_label.text = marker.data.region
 	bg_color.set_default_cursor_shape(Control.CURSOR_POINTING_HAND)
 
 func node_stop_hover(marker : NodeMarker) -> void:
@@ -45,7 +45,7 @@ func node_stop_hover(marker : NodeMarker) -> void:
 	
 	set_node_name(hovered_nodes[-1])
 	room_name_label.text = hovered_nodes[-1].data.room_name
-	region_name_label.text = World.REGION_NAME[hovered_nodes[-1].data.region]
+	region_name_label.text = hovered_nodes[-1].data.region
 
 func set_node_name(marker : NodeMarker) -> void:
 	if marker is DoorNodeMarker:

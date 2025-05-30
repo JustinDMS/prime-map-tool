@@ -16,6 +16,8 @@ const PB_EXPANSION_MAX : int = 4
 const PB_EXPANSION_VALUE : int = 1
 const MAIN_PB_VALUE : int = 4
 
+const ARTIFACT_NAMES : Array[String] = ["Truth", "Strength", "Elder", "Wild", "Lifegiver", "Warrior", "Chozo", "Nature", "Sun", "World", "Spirit", "Newborn"]
+
 @export var randovania_interface : RandovaniaInterface
 @export var missile_label : Label
 @export var missile_slider : HSlider
@@ -32,12 +34,12 @@ const MAIN_PB_VALUE : int = 4
 @export var all_button : Button
 @export var none_button : Button
 
-static var inventory : PrimeInventory = null
+static var inventory : Game = null
 
 static func _static_init() -> void:
-	inventory = PrimeInventory.new()
+	inventory = Game.create_from_game_name("prime1")
 	inventory.all()
-static func get_inventory() -> PrimeInventory:
+static func get_inventory() -> Game:
 	return inventory
 
 func _ready() -> void:
@@ -107,7 +109,7 @@ func update() -> void:
 	update_pb_count()
 	etank_slider.set_value_no_signal(inventory.get_item("EnergyTank").get_capacity())
 	update_etank_count()
-	artifact_slider.set_value_no_signal(inventory.get_total_artifact_count())
+	artifact_slider.set_value_no_signal(get_total_artifact_count())
 	update_artifact_info()
 	
 	items_changed.emit()
@@ -169,7 +171,7 @@ func update_etank_count() -> void:
 	var value := int(etank_slider.get_value())
 	etank_label.set_text("%d/%d" % [value, ETANK_MAX])
 
-func artifact_slider_changed(new_value : float) -> void:
+func artifact_slider_changed(_new_value : float) -> void:
 	update_artifact_info()
 
 func dragged_artifact_slider(changed : bool) -> void:
@@ -178,10 +180,16 @@ func dragged_artifact_slider(changed : bool) -> void:
 	
 	var value := int(artifact_slider.get_value())
 	for i in range(ArtifactContainer.Artifact.MAX):
-		var item := inventory.get_item(PrimeInventory.ARTIFACT_NAMES[i])
+		var item := inventory.get_item(ARTIFACT_NAMES[i])
 		item.set_capacity_no_signal(i < value)
 	
 	items_changed.emit()
+
+func get_total_artifact_count() -> int:
+	var total : int = 0
+	for n in ARTIFACT_NAMES:
+		total += inventory.get_item(n).get_capacity()
+	return total
 
 func update_artifact_info() -> void:
 	var value := int(artifact_slider.get_value())
@@ -189,7 +197,7 @@ func update_artifact_info() -> void:
 		artifact_container.set_artifact_color(i, ArtifactContainer.ORANGE if i < value else ArtifactContainer.BLUE)
 	artifact_label.set_text("%d/%d" % [value, ArtifactContainer.Artifact.MAX])
 
-func change_button_border_color(item : PrimeInventory.Item, button : Button) -> void:
+func change_button_border_color(item : Game.Item, button : Button) -> void:
 	var normal := button.get_theme_stylebox("normal").duplicate()
 	var hover := button.get_theme_stylebox("hover").duplicate()
 	var hover_pressed := button.get_theme_stylebox("hover_pressed").duplicate()
