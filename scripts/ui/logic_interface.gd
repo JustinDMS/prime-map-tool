@@ -45,7 +45,7 @@ func display_data() -> void:
 		tree.queue_free()
 		url_map.clear()
 	
-	var game_header : Dictionary = PrimeInventoryInterface.get_inventory()._header
+	var game := GameMap.get_game()
 	
 	tree = Tree.new()
 	tree.theme = preload("res://resources/theme.tres")
@@ -61,7 +61,7 @@ func display_data() -> void:
 	var root := tree.create_item()
 	root.set_text(0, "%s (%s)" % [displayed_node.data.name, displayed_node.data.room_name])
 	root.set_text_alignment(0, HORIZONTAL_ALIGNMENT_CENTER)
-	root.set_custom_color(0, Room.ROOM_COLOR[displayed_node.data.region])
+	root.set_custom_color( 0, game.get_region_color(displayed_node.data.region) )
 	root.disable_folding = true
 	
 	for c in displayed_node.node_connections:
@@ -74,7 +74,7 @@ func display_data() -> void:
 			continue
 		
 		room_root.set_text(0, c._to_marker.data.name)
-		var reached := reach(game_header, c._logic, room_root, 0)
+		var reached := reach(game, c._logic, room_root, 0)
 		room_root.set_custom_color(0, PASS_COLOR if reached else FAIL_COLOR)
 		if reached:
 			room_root.set_collapsed_recursive(true)
@@ -84,7 +84,7 @@ func display_data() -> void:
 # ALERT
 # Re-implementation of a function that already exists in [Game]
 # Consider making a separate, generic "Solver" class
-func reach(_h : Dictionary, _d : Dictionary, _t : TreeItem, _z : int) -> bool:
+func reach(game : Game, _d : Dictionary, _t : TreeItem, _z : int) -> bool:
 	var tree_item := tree.create_item(_t)
 	tree_item.set_autowrap_mode(_z, TextServer.AUTOWRAP_WORD)
 	
@@ -93,7 +93,7 @@ func reach(_h : Dictionary, _d : Dictionary, _t : TreeItem, _z : int) -> bool:
 			tree_item.set_text(_z, "All of")
 			var flag := true
 			for i in range(_d.data.items.size()):
-				if not reach(_h, _d.data.items[i], tree_item, _z):
+				if not reach(game, _d.data.items[i], tree_item, _z):
 					flag = false
 			
 			if flag: tree_item.set_collapsed_recursive(true)
@@ -108,7 +108,7 @@ func reach(_h : Dictionary, _d : Dictionary, _t : TreeItem, _z : int) -> bool:
 			tree_item.set_text(_z, "One of:")
 			var flag := false
 			for i in range(_d.data.items.size()):
-				if reach(_h, _d.data.items[i], tree_item, _z):
+				if reach(game, _d.data.items[i], tree_item, _z):
 					flag = true
 			
 			if flag: tree_item.set_collapsed_recursive(true)
@@ -121,31 +121,31 @@ func reach(_h : Dictionary, _d : Dictionary, _t : TreeItem, _z : int) -> bool:
 			return flag
 		"resource":
 			var type : String = _d.data.type
-			var _name : String = _d.data.name
+			var _name : String = _d.data.name # Needs an underscore to avoid shadowing Node.name
 			var amount : int = _d.data.amount
 			var negate : bool = _d.data.negate
 			
 			var text = "NOT " if negate else ""
 			match type:
 				"items":
-					text += _h.resource_database.items[_name].long_name
+					text += game.get_item(_name).long_name
 				"events":
-					text += "%s (Event)" % _h.resource_database.events[_name].long_name
+					text += "%s (Event)" % game.get_event(_name).long_name
 				"tricks":
-					text += "%s >= %s" % [_h.resource_database.tricks[_name].long_name, TricksInterface.TRICK_LEVEL_NAME[amount]]
+					text += "%s >= %s" % [game.get_trick(_name).long_name, TricksInterface.TRICK_LEVEL_NAME[amount]]
 				"damage":
-					text += "%s %s" % [amount, _h.resource_database.damage[_name].long_name]
+					text += "%s %s" % [amount, game._header.resource_database.damage[_name].long_name]
 				"misc":
-					text += "%s (Misc)" % _h.resource_database.misc[_name].long_name
+					text += "%s (Misc)" % game.get_misc_setting(_name).long_name
 			tree_item.set_text(_z, text)
-			var has : bool = PrimeInventoryInterface.get_inventory().has_resource(_d.data)
+			var has : bool = GameMap.get_game().has_resource(_d.data)
 			tree_item.set_custom_color(_z, PASS_COLOR if has else FAIL_COLOR)
 			return has
 		
 		"template":
-			var display_name : String = _h.resource_database.requirement_template[_d.data].display_name
+			var display_name : String = game._header.resource_database.requirement_template[_d.data].display_name
 			tree_item.set_text(_z, "%s (Template)" % display_name)
-			var has : bool = reach(_h, _h.resource_database.requirement_template[display_name].requirement, tree_item, _z)
+			var has : bool = reach(game, game._header.resource_database.requirement_template[display_name].requirement, tree_item, _z)
 			tree_item.set_custom_color(_z, PASS_COLOR if has else FAIL_COLOR)
 			tree_item.set_collapsed_recursive(true)
 			return has

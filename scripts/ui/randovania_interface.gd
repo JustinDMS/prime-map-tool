@@ -56,11 +56,11 @@ func _ready() -> void:
 	clear_rdvgame_button.pressed.connect(clear_rdvgame)
 
 func init_settings() -> void:
-	var inventory := PrimeInventoryInterface.get_inventory()
-	rdvgame_loaded.connect(inventory.rdvgame_loaded)
+	var game := GameMap.get_game()
+	rdvgame_loaded.connect(game.rdvgame_loaded)
 	
-	for s in inventory._misc:
-		var setting := inventory.get_misc_setting(s)
+	for s in game._misc:
+		var setting := game.get_misc_setting(s)
 		setting.changed.connect(setting_changed)
 		
 		var button := Button.new()

@@ -2,8 +2,8 @@ class_name PickupNodeData extends NodeData
 
 @export var item_name : String
 
-func init(_name : String, room_data : RoomData, data : Dictionary) -> void:
-	super(_name, room_data, data)
+func init(_game : Game, _name : String, room_data : RoomData, data : Dictionary) -> void:
+	super(_game, _name, room_data, data)
 	
 	parse_item_name()
 

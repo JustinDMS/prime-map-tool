@@ -45,32 +45,32 @@ func _ready() -> void:
 	)
 
 func init_sliders() -> void:
-	var inventory := PrimeInventoryInterface.get_inventory()
+	var game := GameMap.get_game()
 	
 	var all_slider := new_trick("Set All", TrickLevel.DISABLED)
 	all_slider.drag_ended.connect(
 		func(_changed : bool):
 			var value := int(all_slider.get_value()) as TrickLevel
-			for t in inventory._tricks:
-				var trick : Game.Trick = inventory.get_trick(t)
+			for t in game._tricks:
+				var trick := game.get_trick(t)
 				trick.set_level_no_signal(value)
 				(slider_map[trick] as HSlider).set_value(value)
 				
 			tricks_changed.emit()
 	)
 	
-	for t in inventory._tricks:
-		var trick : Game.Trick = inventory.get_trick(t)
+	for t in game._tricks:
+		var trick := game.get_trick(t)
 		trick.changed.connect(game_map.resolve_map.unbind(1))
 		var slider := new_trick(trick.long_name, trick.get_level())
 		slider.drag_ended.connect(func(_changed : bool): trick.set_level(int(slider.get_value()) as TrickLevel))
 		slider_map[trick] = slider
 
 func update() -> void:
-	var inventory := PrimeInventoryInterface.get_inventory()
+	var game := GameMap.get_game()
 	
-	for t in inventory._tricks:
-		var trick : Game.Trick = inventory.get_trick(t)
+	for t in game._tricks:
+		var trick : Game.Trick = game.get_trick(t)
 		(slider_map[trick] as HSlider).set_value(trick.get_level())
 
 ## Adds a new trick to tricks_container

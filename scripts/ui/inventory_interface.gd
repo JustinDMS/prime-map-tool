@@ -34,14 +34,6 @@ const ARTIFACT_NAMES : Array[String] = ["Truth", "Strength", "Elder", "Wild", "L
 @export var all_button : Button
 @export var none_button : Button
 
-static var inventory : Game = null
-
-static func _static_init() -> void:
-	inventory = Game.create_from_game_name("prime1")
-	inventory.all()
-static func get_inventory() -> Game:
-	return inventory
-
 func _ready() -> void:
 	super()
 	connect_signals()
@@ -71,25 +63,19 @@ func connect_signals() -> void:
 	)
 
 func all_pressed() -> void:
-	inventory.all()
+	GameMap.get_game().all()
 	update()
 
 func none_pressed() -> void:
-	const NONE_ITEMS : Array[String] = [
-		"Power Suit",
-		"Combat Visor",
-		"Scan Visor",
-		"Power Beam"
-	]
-	
-	inventory.set_items(NONE_ITEMS)
+	GameMap.get_game().set_items([])
 	update()
 
 func init_item_buttons() -> void:
+	var game := GameMap.get_game()
 	# HACK
 	# I don't like relying on node names, but it's what I could come up with at the time
 	for btn in item_buttons:
-		var item := inventory.get_item(btn.name)
+		var item := game.get_item(btn.name)
 		change_button_border_color(item, btn)
 		item.changed.connect(change_button_border_color.bind(btn))
 		btn.pressed.connect(
@@ -100,14 +86,16 @@ func init_item_buttons() -> void:
 		
 
 func update() -> void:
+	var game := GameMap.get_game()
+	
 	update_missle_pb_settings()
 	
 	# Sliders and Labels
-	missile_slider.set_value_no_signal(inventory.get_item("Missile").get_capacity())
+	missile_slider.set_value_no_signal(game.get_item("Missile").get_capacity())
 	update_missile_count()
-	pb_slider.set_value_no_signal(inventory.get_item("PowerBomb").get_capacity())
+	pb_slider.set_value_no_signal(game.get_item("PowerBomb").get_capacity())
 	update_pb_count()
-	etank_slider.set_value_no_signal(inventory.get_item("EnergyTank").get_capacity())
+	etank_slider.set_value_no_signal(game.get_item("EnergyTank").get_capacity())
 	update_etank_count()
 	artifact_slider.set_value_no_signal(get_total_artifact_count())
 	update_artifact_info()
@@ -119,7 +107,7 @@ func dragged_slider(changed : bool, slider : HSlider, item_name : String) -> voi
 		return
 	
 	var value := int(slider.get_value())
-	inventory.get_item(item_name).set_capacity(value)
+	GameMap.get_game().get_item(item_name).set_capacity(value)
 	items_changed.emit()
 
 func missile_slider_changed(_new_value : float) -> void:
@@ -130,7 +118,7 @@ func pb_slider_changed(_new_value : float) -> void:
 
 func update_missile_count() -> void:
 	var expansions := int(missile_slider.get_value())
-	var launcher : int = inventory.get_item("MissileLauncher").get_capacity()
+	var launcher : int = GameMap.get_game().get_item("MissileLauncher").get_capacity()
 	var total : int = expansions + launcher
 	var game_total : int = (expansions * MISSILE_VALUE) + (launcher * MISSILE_VALUE)
 	var text := "%d/%d (%d)" % [total, MISSILE_EXPANSION_MAX + 1, game_total]
@@ -138,27 +126,28 @@ func update_missile_count() -> void:
 
 func update_pb_count() -> void:
 	var expansions := int(pb_slider.get_value())
-	var main : int = 1 if inventory.get_item("MainPB").has() else 0
+	var main : int = 1 if GameMap.get_game().get_item("MainPB").has() else 0
 	var current : int = expansions + (main * MAIN_PB_VALUE)
 	var text := "%d/%d" % [current, PB_MAX]
 	pb_label.set_text(text)
 
 func update_missle_pb_settings() -> void:
-	set_button_color(has_launcher_button, inventory.get_item("MissileLauncher").has())
-	set_button_color(has_main_pb_button, inventory.get_item("MainPB").has())
+	var game := GameMap.get_game()
+	set_button_color(has_launcher_button, game.get_item("MissileLauncher").has())
+	set_button_color(has_main_pb_button, game.get_item("MainPB").has())
 
 func set_button_color(button : Button, enabled : bool) -> void:
 	button.self_modulate = ON_COLOR if enabled else OFF_COLOR
 
 func has_launcher_toggled() -> void:
-	var item := inventory.get_item("MissileLauncher")
+	var item := GameMap.get_game().get_item("MissileLauncher")
 	item.set_capacity(0 if item.has() else 1)
 	set_button_color(has_launcher_button, item.has())
 	update_missile_count()
 	items_changed.emit()
 
 func has_main_pb_toggled() -> void:
-	var item := inventory.get_item("MainPB")
+	var item := GameMap.get_game().get_item("MainPB")
 	item.set_capacity(0 if item.has() else 1)
 	set_button_color(has_main_pb_button, item.has())
 	update_pb_count()
@@ -178,17 +167,19 @@ func dragged_artifact_slider(changed : bool) -> void:
 	if not changed:
 		return
 	
+	var game := GameMap.get_game()
 	var value := int(artifact_slider.get_value())
 	for i in range(ArtifactContainer.Artifact.MAX):
-		var item := inventory.get_item(ARTIFACT_NAMES[i])
+		var item := game.get_item(ARTIFACT_NAMES[i])
 		item.set_capacity_no_signal(i < value)
 	
 	items_changed.emit()
 
 func get_total_artifact_count() -> int:
+	var game := GameMap.get_game()
 	var total : int = 0
 	for n in ARTIFACT_NAMES:
-		total += inventory.get_item(n).get_capacity()
+		total += game.get_item(n).get_capacity()
 	return total
 
 func update_artifact_info() -> void:

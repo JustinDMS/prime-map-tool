@@ -2,10 +2,10 @@ class_name GenericNodeData extends NodeData
 
 @export var heal : bool
 
-func init(_name : String, room_data : RoomData, data : Dictionary) -> void:
-	super(_name, room_data, data)
+func init(_game : Game, _name : String, room_data : RoomData, data : Dictionary) -> void:
+	super(_game, _name, room_data, data)
 	
-	heal = data["heal"]
+	heal = data.heal
 
 func get_color() -> Color:
 	const COLOR := Color.WHEAT

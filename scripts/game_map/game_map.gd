@@ -1,7 +1,14 @@
 class_name GameMap extends Control
 ## Displays a map given a [Game]
 
-signal map_drawn(elevator_data : Dictionary)
+static var game : Game = null
+static func get_game() -> Game:
+	return game
+static func _static_init() -> void:
+	game = GameFactory.create_from_game_name("prime1")
+	game.all()
+
+signal map_drawn(dock_connections : Dictionary[NodeMarker, NodeMarker])
 signal map_resolved(reached_nodes : Array[NodeData])
 
 @export var ui : Control
@@ -11,7 +18,6 @@ signal map_resolved(reached_nodes : Array[NodeData])
 @export var logic_interface : UITab
 @export var camera : Camera2D
 
-var game : Game = null
 var rdv_logic : Dictionary[StringName, Dictionary] = {}
 var region_nodes : Dictionary[StringName, Control]
 var world_data : Dictionary[StringName, Dictionary] = {}
@@ -20,8 +26,6 @@ var room_map : Dictionary[RoomData, Room] = {}
 var start_node : NodeData = null
 
 func _ready() -> void:
-	game = Game.create_from_game_name("prime1")
-	
 	inventory_interface.items_changed.connect(resolve_map)
 	trick_interface.tricks_changed.connect(resolve_map)
 	
@@ -54,7 +58,7 @@ func init_map() -> void:
 		
 		for j in rdv_logic[r]["areas"]:
 			var room_data := RoomData.new()
-			room_data.init(r, j, rdv_logic[r]["areas"][j])
+			room_data.init(game, r, j, rdv_logic[r]["areas"][j])
 			world_data[r][j] = room_data
 			
 			var room := draw_room(room_data)
@@ -91,7 +95,7 @@ func add_room_to_map(room : Room) -> void:
 		return
 	
 	# Add room as child of subregion node
-	region_node.get_child( game.get_room_idx(data.region, data.name) ).add_child(room)
+	region_node.get_child( game.get_room_subregion_index(data.region, data.name) ).add_child(room)
 
 func init_nodes() -> void:
 	# Clear existing node markers and node data
@@ -101,7 +105,6 @@ func init_nodes() -> void:
 	
 	var rdvgame := RandovaniaInterface.get_rdvgame()
 	var dock_weaknesses : Dictionary = {} if not rdvgame else rdvgame.get_dock_weaknesses()
-	var dock_connections : Dictionary = {} if not rdvgame else rdvgame.get_dock_connections()
 	
 	# Create new node data and add to respective room data
 	for r in rdv_logic:
@@ -117,7 +120,7 @@ func init_nodes() -> void:
 				
 				var node_data := NodeData.create_data_from_type(rdv_logic[r]["areas"][j]["nodes"][k]["node_type"])
 				nodes.append(node_data)
-				node_data.init(k, room_data, rdv_logic[r]["areas"][j]["nodes"][k])
+				node_data.init(game, k, room_data, rdv_logic[r]["areas"][j]["nodes"][k])
 				
 				var node_marker := draw_node_marker(node_data)
 				node_marker_map[node_data] = node_marker
@@ -159,21 +162,7 @@ func init_nodes() -> void:
 				
 				add_node_connections.call_deferred(node_marker_map[node_data])
 	
-	if not rdvgame:
-		map_drawn.emit()
-		return
-	
-	for key in dock_connections:
-		var from_split : PackedStringArray = key.split("/")
-		var to_split : PackedStringArray = dock_connections[key].split("/")
-		if not game.has_region(from_split[0]) or not game.has_region(to_split[0]):
-			continue
-		var from_node := get_node_data(from_split[0], from_split[1], from_split[2])
-		var to_node := get_node_data(to_split[0], to_split[1], to_split[2])
-		from_node.default_connection = to_node
-		to_node.default_connection = from_node
-	
-	map_drawn.emit(dock_connections)
+	map_drawn.emit( get_elevators(rdvgame) )
 
 func get_node_data(region : StringName, room_name : String, node_name : String) -> NodeData:
 	var room_data := get_room_data(region, room_name)
@@ -215,7 +204,7 @@ func add_marker_to_map(node_marker : NodeMarker) -> void:
 	pos += Vector2(data.coordinates.x, -data.coordinates.y)
 	
 	if game.has_subregions(data.region):
-		var subregion : int = game.get_room_idx(data.region, data.name)
+		var subregion : int = game.get_room_subregion_index(data.region, data.name)
 		pos += game.get_subregion_offsets(data.region)[subregion] * Vector2(1, -1) # Regions are vertically flipped, flip again so math is right
 	
 	node_marker.global_position = pos
@@ -223,6 +212,47 @@ func add_marker_to_map(node_marker : NodeMarker) -> void:
 func get_room_obj(region : StringName, room_name : String) -> Room:
 	var data : RoomData = get_room_data(region, room_name)
 	return room_map[data]
+
+func get_elevators(rdvgame : RDVGame) -> Dictionary[NodeMarker, NodeMarker]:
+	var elevators : Dictionary[NodeMarker, NodeMarker] = {}
+	
+	# If there's an RDVGame, get elevator connections from it instead
+	if rdvgame:
+		var dock_connections := rdvgame.get_dock_connections()
+		for key in dock_connections:
+			var from_split : PackedStringArray = key.split("/")
+			var to_split : PackedStringArray = dock_connections[key].split("/")
+			if not game.has_region(from_split[0]) or not game.has_region(to_split[0]):
+				continue
+				
+			var from_node := get_node_data(from_split[0], from_split[1], from_split[2])
+			var to_node := get_node_data(to_split[0], to_split[1], to_split[2])
+			
+			# ALERT - This is probably a bad place to put this
+			# Node data changes should be contained in init_nodes()
+			from_node.default_connection = to_node
+			to_node.default_connection = from_node
+			
+			var from_marker := node_marker_map[from_node]
+			var to_marker := node_marker_map[to_node]
+			elevators[from_marker] = to_marker
+		
+		return elevators
+	
+	for data in node_marker_map:
+		if (
+			data is DockNodeData and 
+			data.is_teleporter() and
+			data.default_connection
+			):
+			var from_marker := node_marker_map[data]
+			var to_marker := node_marker_map[data.default_connection]
+			
+			if from_marker in elevators or to_marker in elevators:
+				continue
+			elevators[from_marker] = to_marker
+	
+	return elevators
 
 func add_node_connections(marker : NodeMarker) -> void:
 	var room := get_room_obj(marker.data.region, marker.data.room_name)
@@ -245,8 +275,7 @@ func resolve_map() -> void:
 	
 	set_all_unreachable()
 	
-	var inventory := PrimeInventoryInterface.get_inventory()
-	inventory.clear_events()
+	game.clear_events()
 	
 	var queue : Array[NodeData] = []
 	var reached_nodes : Array[NodeData] = []
@@ -270,7 +299,7 @@ func resolve_map() -> void:
 		if (
 			is_instance_valid(default_connection) and
 			not default_connection in reached_nodes and
-			can_reach_external(inventory, node, default_connection)
+			can_reach_external(node, default_connection)
 		):
 			reached_nodes.append(default_connection)
 			queue.append(default_connection)
@@ -279,11 +308,11 @@ func resolve_map() -> void:
 			if n in reached_nodes:
 				continue
 			
-			if can_reach_internal(inventory, node, n):
+			if can_reach_internal(node, n):
 				reached_nodes.append(n)
 				
 				if n is EventNodeData:
-					inventory.set_event(n.event_id, true)
+					game.set_event(n.event_id, true)
 					
 					if unreached_nodes.has(n.event_id):
 						queue.append_array(unreached_nodes[n.event_id])
@@ -293,15 +322,15 @@ func resolve_map() -> void:
 				continue
 			
 			# Failed to reached
-			if not inventory.last_failed_event_id.is_empty():
-				if not unreached_nodes.has(inventory.last_failed_event_id):
-					unreached_nodes[inventory.last_failed_event_id] = []
-				unreached_nodes[inventory.last_failed_event_id].append(node)
+			if not game.last_failed_event_id.is_empty():
+				if not unreached_nodes.has(game.last_failed_event_id):
+					unreached_nodes[game.last_failed_event_id] = []
+				unreached_nodes[game.last_failed_event_id].append(node)
 	
 	for r in visited_rooms:
 		for n in visited_rooms[r]:
 			var room_obj := get_room_obj(r, n)
-			room_obj.set_state(Room.State.DEFAULT)
+			room_obj.set_state(game, Room.State.DEFAULT)
 	
 	for key in node_marker_map:
 		var reached : bool = key in reached_nodes
@@ -317,30 +346,30 @@ func resolve_map() -> void:
 					c.modulate = Color.RED
 	
 	var starter_room := get_room_obj(start_node.region, start_node.room_name)
-	starter_room.set_state(Room.State.STARTER)
+	starter_room.set_state(game, Room.State.STARTER)
 	
 	map_resolved.emit(reached_nodes)
 
 func set_all_unreachable() -> void:
 	for key in room_map:
-		room_map[key].set_state(Room.State.UNREACHABLE)
+		room_map[key].set_state(game, Room.State.UNREACHABLE)
 		for node in room_map[key].node_markers:
 			node.self_modulate = Room.UNREACHABLE_COLOR
 
-func can_reach_external(inventory : Game, from_node : DockNodeData, to_node : DockNodeData) -> bool:
+func can_reach_external(from_node : DockNodeData, to_node : DockNodeData) -> bool:
 	return (
-		inventory.can_pass_dock(from_node.type, from_node.default_dock_weakness) and 
-		inventory.can_pass_lock(from_node.type, from_node.default_dock_weakness)
+		game.can_pass_dock(from_node.type, from_node.default_dock_weakness) and 
+		game.can_pass_lock(from_node.type, from_node.default_dock_weakness)
 		) and (
-			inventory.can_pass_dock(from_node.type, from_node.default_dock_weakness) and 
-			inventory.can_pass_lock(to_node.type, to_node.default_dock_weakness)
+			game.can_pass_dock(from_node.type, from_node.default_dock_weakness) and 
+			game.can_pass_lock(to_node.type, to_node.default_dock_weakness)
 			)
 
-func can_reach_internal(inventory : Game, from_node : NodeData, to_node : NodeData) -> bool:
+func can_reach_internal(from_node : NodeData, to_node : NodeData) -> bool:
 	#print("Checking %s (%s) to %s (%s)" % [from_node.display_name, from_node.room_name, to_node.display_name, to_node.room_name])
-	inventory.last_failed_event_id = ""
+	game.last_failed_event_id = ""
 	var logic : Dictionary = rdv_logic[from_node.region]["areas"][from_node.room_name]["nodes"][from_node.name]["connections"][to_node.name]
-	return inventory.can_reach(logic)
+	return game.can_reach(logic)
 
 func rdvgame_loaded() -> void:
 	init_nodes()
@@ -360,8 +389,7 @@ func set_start_node(new_node : NodeData) -> void:
 func rdvgame_cleared() -> void:
 	start_node = null
 	
-	var inventory := PrimeInventoryInterface.get_inventory()
-	inventory.all()
+	game.all()
 	
 	init_nodes()
 	resolve_map()

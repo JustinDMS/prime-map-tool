@@ -5,18 +5,19 @@ class_name DockNodeData extends NodeData
 @export var rotation : Vector3
 @export var default_connection : NodeData
 
-func init(_name : String, room_data : RoomData, data : Dictionary) -> void:
-	super(_name, room_data, data)
+func init(_game : Game, _name : String, _room_data : RoomData, _data : Dictionary) -> void:
+	super(_game, _name, _room_data, _data)
 	
-	type = data["dock_type"]
-	default_dock_weakness = data["default_dock_weakness"]
+	type = _data.dock_type
+	default_dock_weakness = _data.default_dock_weakness
 	
-	if is_door():
-		rotation = Vector3(
-			data["extra"]["world_rotation"][0],
-			data["extra"]["world_rotation"][1],
-			data["extra"]["world_rotation"][2]
-		)
+	if _game is Prime:
+		if is_door():
+			rotation = Vector3(
+				_data.extra.world_rotation[0],
+				_data.extra.world_rotation[1],
+				_data.extra.world_rotation[2]
+			)
 
 func get_color() -> Color:
 	const DOOR_COLOR_MAP := {

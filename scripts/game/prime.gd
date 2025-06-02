@@ -25,3 +25,28 @@ func _init(rdv_header : Dictionary) -> void:
 		},
 		&"Phazon Mines" : {}
 	}
+	z_index_override = {
+		&"Hall of the Elders" : 1,
+		
+		&"Upper Edge Tunnel" : 1,
+		&"Frost Cave Access" : 1,
+		
+		&"Life Grove Tunnel" : 1,
+		&"Frigate Crash Site" : 1,
+	
+		&"Main Quarry" : 1,
+		&"Security Access B" : 1,
+		&"Omega Research" : 1,
+		&"Elite Control" : 1,
+		&"Elite Research" : 1,
+		
+		&"Transport Tunnel C" : 1,
+		&"Warrior Shrine" : 1,
+		}
+	region_color = {
+		&"Chozo Ruins" : Color("#EA8C55"),
+		&"Phendrana Drifts" : Color("#C9D6EA"),
+		&"Tallon Overworld" : Color("#7FB685"),
+		&"Phazon Mines" : Color("#BC96E6"),
+		&"Magmoor Caverns" : Color("#A7333F"),
+		}

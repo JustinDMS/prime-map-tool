@@ -1,22 +1,9 @@
 class_name Game extends Resource
 ## Generic data container for Randovania games
 
-static func create_from_game_name(name : String):
-	var path : StringName = &"res://data/games/%s/header.json" % name
-	assert( ResourceLoader.exists(path, "JSON") )
-	var rdv_header : Dictionary = load(path).data
-	
-	match name:
-		"prime1":
-			return Prime.new(rdv_header)
-		_:
-			push_error("Failed to create game: %s" % name)
-	
-	return null
-
 var _header := {} ## Randovania data
 var _items : Dictionary[String, Item] = {}
-var _events : Dictionary[String, bool] = {}
+var _events : Dictionary[String, Event] = {}
 var _tricks : Dictionary[String, Trick] = {}
 var _misc : Dictionary[String, MiscSetting] = {}
 var _templates := {}
@@ -32,6 +19,10 @@ var subregion_offset : Dictionary[StringName, Array] = {}
 ## Map of region names and room subregion indices
 ## Inner dictionary expected type is Dictionary[StrinName, int] 
 var subregion_map : Dictionary[StringName, Dictionary] = {}
+## Map of room names and their z-indices
+var  z_index_override : Dictionary[StringName, int] = {}
+## Map of region names and their color
+var region_color : Dictionary[StringName, Color] = {}
 
 func _init(rdv_header : Dictionary) -> void:
 	_header = rdv_header
@@ -44,7 +35,7 @@ func _init(rdv_header : Dictionary) -> void:
 					_items[res] = Item.new(res, resource_db.items[res])
 			"events":
 				for res in resource_db.events:
-					_events[res] = false
+					_events[res] = Event.new(res, resource_db.events[res])
 			"tricks":
 				for res in resource_db.tricks:
 					_tricks[res] = Trick.new(res, resource_db.tricks[res])
@@ -57,34 +48,7 @@ func _init(rdv_header : Dictionary) -> void:
 			_:
 				continue
 
-func has_region(region : StringName) -> bool:
-	return region_offset.has(region)
-
-func has_subregions(region : StringName) -> bool:
-	return subregion_map.has(region)
-
-func get_region_offset(region : StringName) -> Vector2:
-	if not region in region_offset:
-		return Vector2.ZERO
-	return region_offset[region]
-
-func get_subregion_offsets(region : StringName) -> Array[Vector2]:
-	if not has_subregions(region):
-		return [Vector2.ZERO]
-	
-	# Workaround since casting doesn't work
-	var arr : Array[Vector2] = []
-	arr.assign(subregion_offset[region])
-	return arr
-
-func get_room_idx(region : StringName, room_name : StringName) -> int:
-	if not region in subregion_map:
-		return 0
-	if not room_name in subregion_map[region]:
-		return 0
-	return subregion_map[region][room_name]
-
-## Returns logic database data if it exists
+## Creates and returns logic database data if it exists
 func get_region_data() -> Dictionary[StringName, Dictionary]:
 	var data : Dictionary[StringName, Dictionary] = {}
 	
@@ -98,6 +62,40 @@ func get_region_data() -> Dictionary[StringName, Dictionary]:
 		push_warning("Could not find region data at %s" % path)
 	
 	return data
+
+func has_region(region : StringName) -> bool:
+	return region_offset.has(region)
+
+func has_subregions(region : StringName) -> bool:
+	return subregion_map.has(region)
+
+func get_region_offset(region : StringName) -> Vector2:
+	if not region in region_offset:
+		push_warning("Failed to find region offset: %s" % region)
+		return Vector2.ZERO
+	return region_offset[region]
+
+func get_subregion_offsets(region : StringName) -> Array[Vector2]:
+	if not has_subregions(region):
+		return [Vector2.ZERO]
+	
+	# Workaround since casting to
+	# a nested type doesn't work
+	var arr : Array[Vector2] = []
+	arr.assign(subregion_offset[region])
+	return arr
+
+## Returns subregion index of a room, default 0
+func get_room_subregion_index(region : StringName, room_name : StringName) -> int:
+	if not has_subregions(region):
+		return 0
+	return subregion_map[region].get(room_name, 0)
+
+func get_room_z_index(room_name : StringName) -> int:
+	return z_index_override.get(room_name, 0)
+
+func get_region_color(region : StringName) -> Color:
+	return region_color.get(region, Color.WHITE)
 
 ## Returns an [member Item] given its name. 
 ## Supports both short/long names for lookup.
@@ -147,12 +145,12 @@ func set_misc_settings(settings : Dictionary) -> void:
 		
 		get_misc_setting(s).set_enabled(settings[s])
 
-func get_event(event_name : String) -> bool:
+func get_event(event_name : String) -> Event:
 	assert(event_name in _events)
 	return _events[event_name]
-func set_event(event_name : String, occurred : bool) -> void:
+func set_event(event_name : String, b : bool) -> void:
 	assert(event_name in _events)
-	_events[event_name] = occurred
+	get_event(event_name).set_reached(b)
 func clear_events() -> void:
 	for key in _events:
 		set_event(key, false)
@@ -193,7 +191,7 @@ func has_resource(logic_data : Dictionary) -> bool:
 		"items":
 			result = _get_item(name).has()
 		"events":
-			result = get_event(name)
+			result = get_event(name).reached
 			if not result and not negate:
 				last_failed_event_id = name
 		"tricks":
@@ -268,6 +266,18 @@ class Item:
 	
 	func get_capacity() -> int:
 		return current_capacity
+
+class Event:
+	var name : String = ""
+	var long_name : String = ""
+	var reached : bool = false
+	
+	func _init(_name : String, data : Dictionary) -> void:
+		name = _name
+		long_name = data.long_name
+	
+	func set_reached(b : bool) -> void:
+		reached = b
 
 class Trick:
 	signal changed(trick : Trick)

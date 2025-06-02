@@ -23,15 +23,17 @@ static func create_data_from_type(type : String) -> NodeData:
 	
 	return data
 
-func init(_name : String, room_data : RoomData, data : Dictionary) -> void:
-	region = room_data.region
-	room_name = room_data.name
+func init(_game : Game, _name : String, _room_data : RoomData, _data : Dictionary) -> void:
+	region = _room_data.region
+	room_name = _room_data.name
 	name = _name
-	coordinates = Vector3(
-		data["extra"]["world_position"][0],
-		data["extra"]["world_position"][1],
-		data["extra"]["world_position"][2]
-	)
+	
+	if _game is Prime:
+		coordinates = Vector3(
+			_data.extra.world_position[0],
+			_data.extra.world_position[1],
+			_data.extra.world_position[2]
+		)
 
 func get_color() -> Color:
 	return Color.WHITE
