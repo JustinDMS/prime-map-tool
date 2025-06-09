@@ -12,7 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://dlwtuc01be6cw" path="res://data/icons/node marker/teleporter_marker.png" id="6_gngh3"]
 [ext_resource type="Texture2D" uid="uid://dvo2x4ywtxhdk" path="res://data/icons/node marker/event_marker.png" id="7_0n3wm"]
 [ext_resource type="Texture2D" uid="uid://drpnoq1pm5q46" path="res://data/games/prime1/item_images/Power Bomb Expansion.png" id="7_ntsns"]
-[ext_resource type="Script" uid="uid://8infr84w4o0b" path="res://scripts/ui/inventory_interface.gd" id="9_cfl7w"]
+[ext_resource type="Script" uid="uid://8infr84w4o0b" path="res://scripts/ui/prime_inventory_interface.gd" id="9_cfl7w"]
 [ext_resource type="Texture2D" uid="uid://bc6xsokxy6c4v" path="res://data/games/prime1/item_images/Morph Ball.png" id="10_kut4r"]
 [ext_resource type="Texture2D" uid="uid://bcps050v5w31i" path="res://data/games/prime1/item_images/Energy Tank.png" id="10_pry43"]
 [ext_resource type="Texture2D" uid="uid://dqjqg5123rjhy" path="res://data/games/prime1/item_images/Morph Ball Bomb.png" id="11_k32ci"]

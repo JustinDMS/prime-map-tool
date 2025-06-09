@@ -1,207 +1,107 @@
-class_name PrimeInventoryInterface extends UITab
-
-signal items_changed()
+class_name InventoryInterface extends UITab
 
 const ON_COLOR := Color("aaffaa")
 const OFF_COLOR := Color("ffaaaa")
 
-const ETANK_MAX : int = 14
-const ENERGY_PER_TANK : int = 100
+## Inner Array expected type is Array[Control]
+var layout : Array[Array]
 
-const MISSILE_EXPANSION_MAX : int = 49
-const MISSILE_VALUE : int = 5
-
-const PB_MAX : int = 8
-const PB_EXPANSION_MAX : int = 4
-const PB_EXPANSION_VALUE : int = 1
-const MAIN_PB_VALUE : int = 4
-
-const ARTIFACT_NAMES : Array[String] = ["Truth", "Strength", "Elder", "Wild", "Lifegiver", "Warrior", "Chozo", "Nature", "Sun", "World", "Spirit", "Newborn"]
-
-@export var randovania_interface : RandovaniaInterface
-@export var missile_label : Label
-@export var missile_slider : HSlider
-@export var pb_label : Label
-@export var pb_slider : HSlider
-@export var has_launcher_button : Button
-@export var has_main_pb_button : Button
-@export var etank_label : Label
-@export var etank_slider : HSlider
-@export var artifact_label : Label
-@export var artifact_slider : HSlider
-@export var artifact_container : ArtifactContainer
-@export var item_buttons : Array[Button]
-@export var all_button : Button
-@export var none_button : Button
-
-func _ready() -> void:
-	super()
-	connect_signals()
-	init_item_buttons()
-	update()
-
-func connect_signals() -> void:
-	missile_slider.value_changed.connect(missile_slider_changed)
-	missile_slider.drag_ended.connect(dragged_slider.bind(missile_slider, "Missile"))
-	pb_slider.value_changed.connect(pb_slider_changed)
-	pb_slider.drag_ended.connect(dragged_slider.bind(pb_slider, "PowerBomb"))
-	etank_slider.value_changed.connect(etank_slider_changed)
-	etank_slider.drag_ended.connect(dragged_slider.bind(etank_slider, "EnergyTank"))
-	artifact_slider.value_changed.connect(artifact_slider_changed)
-	artifact_slider.drag_ended.connect(dragged_artifact_slider)
+## Button for toggling items with 1 capacity
+class PickupButton extends Button:
+	signal item_changed()
 	
-	has_launcher_button.pressed.connect(has_launcher_toggled)
-	has_main_pb_button.pressed.connect(has_main_pb_toggled)
+	var item : Game.Item = null
 	
-	all_button.pressed.connect(all_pressed)
-	none_button.pressed.connect(none_pressed)
-	
-	randovania_interface.rdvgame_loaded.connect(
-		func():
-			await get_tree().process_frame
-			update()
-	)
-
-func all_pressed() -> void:
-	GameMap.get_game().all()
-	update()
-
-func none_pressed() -> void:
-	GameMap.get_game().set_items([])
-	update()
-
-func init_item_buttons() -> void:
-	var game := GameMap.get_game()
-	# HACK
-	# I don't like relying on node names, but it's what I could come up with at the time
-	for btn in item_buttons:
-		var item := game.get_item(btn.name)
-		change_button_border_color(item, btn)
-		item.changed.connect(change_button_border_color.bind(btn))
-		btn.pressed.connect(
-			func(): 
-				item.set_capacity(0 if item.has() else 1)
-				items_changed.emit()
-		)
+	func _init(_game : Game, _item_name : StringName, _icon_path : StringName) -> void:
+		item = _game.get_item(_item_name)
 		
-
-func update() -> void:
-	var game := GameMap.get_game()
+		init_button_border_color()
+		set_button_icon( load(_icon_path) )
+		self.set_focus_mode(Control.FOCUS_NONE) # Prevents outline around button on press
+		self.set_name(_item_name) # Set button name in SceneTree
+		
+		item.changed.connect(update_border_color)
+		pressed.connect(on_press)
 	
-	update_missle_pb_settings()
+	## Create new styleboxes
+	func init_button_border_color() -> void:
+		self.add_theme_stylebox_override("normal", self.get_theme_stylebox("normal").duplicate() )
+		self.add_theme_stylebox_override("hover", self.get_theme_stylebox("hover").duplicate() )
+		self.add_theme_stylebox_override("hover_pressed", self.get_theme_stylebox("hover_pressed").duplicate() )
+		self.add_theme_stylebox_override("pressed", self.get_theme_stylebox("pressed").duplicate() )
+		
+		update_border_color()
 	
-	# Sliders and Labels
-	missile_slider.set_value_no_signal(game.get_item("Missile").get_capacity())
-	update_missile_count()
-	pb_slider.set_value_no_signal(game.get_item("PowerBomb").get_capacity())
-	update_pb_count()
-	etank_slider.set_value_no_signal(game.get_item("EnergyTank").get_capacity())
-	update_etank_count()
-	artifact_slider.set_value_no_signal(get_total_artifact_count())
-	update_artifact_info()
+	func update_border_color() -> void:
+		var color := ON_COLOR if item.has() else OFF_COLOR
+		self.get_theme_stylebox("normal").border_color = color
+		self.get_theme_stylebox("hover").border_color = color
+		self.get_theme_stylebox("hover_pressed").border_color = color
+		self.get_theme_stylebox("pressed").border_color = color
 	
-	items_changed.emit()
+	func on_press() -> void:
+		item.set_capacity( 0 if item.has() else 1 )
+		item_changed.emit()
 
-func dragged_slider(changed : bool, slider : HSlider, item_name : String) -> void:
-	if not changed:
-		return
+## Container for an icon, label, and slider
+## Used for items with > 1 capacity
+class PickupSlider extends HBoxContainer:
+	signal item_changed()
 	
-	var value := int(slider.get_value())
-	GameMap.get_game().get_item(item_name).set_capacity(value)
-	items_changed.emit()
-
-func missile_slider_changed(_new_value : float) -> void:
-	update_missile_count()
-
-func pb_slider_changed(_new_value : float) -> void:
-	update_pb_count()
-
-func update_missile_count() -> void:
-	var expansions := int(missile_slider.get_value())
-	var launcher : int = GameMap.get_game().get_item("MissileLauncher").get_capacity()
-	var total : int = expansions + launcher
-	var game_total : int = (expansions * MISSILE_VALUE) + (launcher * MISSILE_VALUE)
-	var text := "%d/%d (%d)" % [total, MISSILE_EXPANSION_MAX + 1, game_total]
-	missile_label.set_text(text)
-
-func update_pb_count() -> void:
-	var expansions := int(pb_slider.get_value())
-	var main : int = 1 if GameMap.get_game().get_item("MainPB").has() else 0
-	var current : int = expansions + (main * MAIN_PB_VALUE)
-	var text := "%d/%d" % [current, PB_MAX]
-	pb_label.set_text(text)
-
-func update_missle_pb_settings() -> void:
-	var game := GameMap.get_game()
-	set_button_color(has_launcher_button, game.get_item("MissileLauncher").has())
-	set_button_color(has_main_pb_button, game.get_item("MainPB").has())
-
-func set_button_color(button : Button, enabled : bool) -> void:
-	button.self_modulate = ON_COLOR if enabled else OFF_COLOR
-
-func has_launcher_toggled() -> void:
-	var item := GameMap.get_game().get_item("MissileLauncher")
-	item.set_capacity(0 if item.has() else 1)
-	set_button_color(has_launcher_button, item.has())
-	update_missile_count()
-	items_changed.emit()
-
-func has_main_pb_toggled() -> void:
-	var item := GameMap.get_game().get_item("MainPB")
-	item.set_capacity(0 if item.has() else 1)
-	set_button_color(has_main_pb_button, item.has())
-	update_pb_count()
-	items_changed.emit()
-
-func etank_slider_changed(_new_value : float) -> void:
-	update_etank_count()
-
-func update_etank_count() -> void:
-	var value := int(etank_slider.get_value())
-	etank_label.set_text("%d/%d" % [value, ETANK_MAX])
-
-func artifact_slider_changed(_new_value : float) -> void:
-	update_artifact_info()
-
-func dragged_artifact_slider(changed : bool) -> void:
-	if not changed:
-		return
+	var item : Game.Item = null
+	var item_value : int = 1
+	var _label : Label = null
+	var _slider : HSlider = null
 	
-	var game := GameMap.get_game()
-	var value := int(artifact_slider.get_value())
-	for i in range(ArtifactContainer.Artifact.MAX):
-		var item := game.get_item(ARTIFACT_NAMES[i])
-		item.set_capacity_no_signal(i < value)
+	func _init(
+		_game : Game, _item_name : StringName, _icon_path : StringName, 
+		_item_value : int = 1, _slider_ticks : int = 3, _ticks_on_borders : bool = true
+		) -> void:
+		item = _game.get_item(_item_name)
+		item_value = _item_value
+		
+		self.set_v_size_flags(Control.SIZE_SHRINK_CENTER)
+		
+		var texture_rect := TextureRect.new()
+		texture_rect.set_texture( load(_icon_path) )
+		texture_rect.set_expand_mode(TextureRect.EXPAND_FIT_WIDTH)
+		texture_rect.set_stretch_mode(TextureRect.STRETCH_KEEP_ASPECT_CENTERED)
+		self.add_child(texture_rect)
+		
+		# Inner container for label and slider
+		var vbox := VBoxContainer.new()
+		vbox.set_alignment(BoxContainer.ALIGNMENT_CENTER)
+		vbox.set_h_size_flags(Control.SIZE_EXPAND_FILL)
+		self.add_child(vbox)
+		
+		_label = Label.new()
+		_label.set_text( "%d/%d" % [item.get_capacity(), item.max_capacity] )
+		vbox.add_child(_label)
+		
+		_slider = HSlider.new()
+		_slider.set_ticks(_slider_ticks) # Number of vertical ticks shown on the slider
+		_slider.set_ticks_on_border(_ticks_on_borders)
+		_slider.set_rounded(true) # Value is rounded to nearest int
+		_slider.set_min(0)
+		_slider.set_max( item.max_capacity )
+		_slider.set_value( item.get_capacity() )
+		
+		_slider.drag_ended.connect(slider_drag_ended)
+		_slider.value_changed.connect(slider_value_changed)
 	
-	items_changed.emit()
-
-func get_total_artifact_count() -> int:
-	var game := GameMap.get_game()
-	var total : int = 0
-	for n in ARTIFACT_NAMES:
-		total += game.get_item(n).get_capacity()
-	return total
-
-func update_artifact_info() -> void:
-	var value := int(artifact_slider.get_value())
-	for i in range(ArtifactContainer.Artifact.MAX):
-		artifact_container.set_artifact_color(i, ArtifactContainer.ORANGE if i < value else ArtifactContainer.BLUE)
-	artifact_label.set_text("%d/%d" % [value, ArtifactContainer.Artifact.MAX])
-
-func change_button_border_color(item : Game.Item, button : Button) -> void:
-	var normal := button.get_theme_stylebox("normal").duplicate()
-	var hover := button.get_theme_stylebox("hover").duplicate()
-	var hover_pressed := button.get_theme_stylebox("hover_pressed").duplicate()
-	var pressed := button.get_theme_stylebox("pressed").duplicate()
+	## Called after the slider grabber is released
+	func slider_drag_ended(value_changed : bool) -> void:
+		if not value_changed:
+			return
+		
+		item.set_capacity( int(_slider.get_value()) )
+		item_changed.emit()
 	
-	var on : bool = item.has()
-	var color := ON_COLOR if on else OFF_COLOR
-	normal.border_color = color
-	hover.border_color = color
-	hover_pressed.border_color = color
-	pressed.border_color = color
-	
-	button.add_theme_stylebox_override("normal", normal)
-	button.add_theme_stylebox_override("hover", hover)
-	button.add_theme_stylebox_override("hover", hover_pressed)
-	button.add_theme_stylebox_override("pressed", pressed)
+	## Called continuously while dragging
+	func slider_value_changed(value : float) -> void:
+		var text : String = "%d/%d" % [item.get_capacity(), item.max_capacity]
+		# Show in-game item value
+		if item_value > 1:
+			text += " (%d)" % [item.get_capacity() * item_value]
+		
+		_label.set_text(text)
