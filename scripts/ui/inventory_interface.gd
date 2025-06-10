@@ -6,6 +6,39 @@ const OFF_COLOR := Color("ffaaaa")
 ## Inner Array expected type is Array[Control]
 var layout : Array[Array]
 
+func draw_inventory() -> void:
+	var vbox := VBoxContainer.new()
+	add_child(vbox)
+	
+	for row in layout:
+		var hbox := HBoxContainer.new()
+		for pickup in row:
+			hbox.add_child(pickup)
+		
+		vbox.add_child(hbox)
+
+class AllButton extends Button:
+	func _init(_game : Game) -> void:
+		self.set_text("All")
+		pressed.connect(
+			func():
+				_game.all()
+		)
+		
+		self.set_focus_mode(Control.FOCUS_NONE) # Prevents outline around button on press
+		self.set_name("All") # Set button name in SceneTree
+
+class NoneButton extends Button:
+	func _init(_game : Game) -> void:
+		self.set_text("None")
+		pressed.connect(
+			func():
+				_game.clear()
+		)
+		
+		self.set_focus_mode(Control.FOCUS_NONE) # Prevents outline around button on press
+		self.set_name("None") # Set button name in SceneTree
+
 ## Button for toggling items with 1 capacity
 class PickupButton extends Button:
 	signal item_changed()
