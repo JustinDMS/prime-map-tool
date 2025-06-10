@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://br45wp8jdj0tx"]
+[gd_scene load_steps=17 format=3 uid="uid://br45wp8jdj0tx"]
 
 [ext_resource type="Script" uid="uid://c3u7c3gsctgar" path="res://scripts/game_map/elevator_manager.gd" id="1_gb56k"]
 [ext_resource type="Script" uid="uid://cs002s81robiq" path="res://scripts/game_map/game_map.gd" id="2_0cp0l"]
@@ -11,35 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://dabxqxfeyelsc" path="res://data/games/prime1/item_images/Missile Expansion.png" id="6_6j0ik"]
 [ext_resource type="Texture2D" uid="uid://dlwtuc01be6cw" path="res://data/icons/node marker/teleporter_marker.png" id="6_gngh3"]
 [ext_resource type="Texture2D" uid="uid://dvo2x4ywtxhdk" path="res://data/icons/node marker/event_marker.png" id="7_0n3wm"]
-[ext_resource type="Texture2D" uid="uid://drpnoq1pm5q46" path="res://data/games/prime1/item_images/Power Bomb Expansion.png" id="7_ntsns"]
-[ext_resource type="Script" uid="uid://8infr84w4o0b" path="res://scripts/ui/prime_inventory_interface.gd" id="9_cfl7w"]
-[ext_resource type="Texture2D" uid="uid://bc6xsokxy6c4v" path="res://data/games/prime1/item_images/Morph Ball.png" id="10_kut4r"]
-[ext_resource type="Texture2D" uid="uid://bcps050v5w31i" path="res://data/games/prime1/item_images/Energy Tank.png" id="10_pry43"]
-[ext_resource type="Texture2D" uid="uid://dqjqg5123rjhy" path="res://data/games/prime1/item_images/Morph Ball Bomb.png" id="11_k32ci"]
-[ext_resource type="Texture2D" uid="uid://bwig2yoyfso4g" path="res://data/games/prime1/item_images/Boost Ball.png" id="12_d1sf4"]
-[ext_resource type="Texture2D" uid="uid://dk8skvooliu7k" path="res://data/games/prime1/item_images/Spider Ball.png" id="13_ss08w"]
-[ext_resource type="Texture2D" uid="uid://c2gk5j6rhimb3" path="res://data/games/prime1/item_images/Power Suit.png" id="14_h3m2s"]
-[ext_resource type="Texture2D" uid="uid://c7lmh3e2lq15j" path="res://data/games/prime1/item_images/Varia Suit.png" id="15_hij7d"]
-[ext_resource type="Texture2D" uid="uid://mx1keyhme5g4" path="res://data/games/prime1/item_images/Gravity Suit.png" id="16_0jsk2"]
-[ext_resource type="Texture2D" uid="uid://d3tspph55g1qw" path="res://data/games/prime1/item_images/Phazon Suit.png" id="17_3n2di"]
-[ext_resource type="Texture2D" uid="uid://ckufvb6qrcq32" path="res://data/games/prime1/item_images/Combat Visor.png" id="18_t33sj"]
-[ext_resource type="Texture2D" uid="uid://dl75t1ndplrc" path="res://data/games/prime1/item_images/Scan Visor.png" id="19_jvtm1"]
-[ext_resource type="Texture2D" uid="uid://flde7u3if8ll" path="res://data/games/prime1/item_images/Thermal Visor.png" id="20_gqktq"]
-[ext_resource type="Texture2D" uid="uid://cow6mm35qj7mf" path="res://data/games/prime1/item_images/X-Ray Visor.png" id="21_polxb"]
-[ext_resource type="Texture2D" uid="uid://cwynq2ftb65ew" path="res://data/games/prime1/item_images/Power Beam.png" id="22_7wnnf"]
-[ext_resource type="Texture2D" uid="uid://dmwxhjv583orb" path="res://data/games/prime1/item_images/Wave Beam.png" id="23_d2hg3"]
-[ext_resource type="Texture2D" uid="uid://o0sb4a50d484" path="res://data/games/prime1/item_images/Ice Beam.png" id="24_riedu"]
-[ext_resource type="Texture2D" uid="uid://dndbo17kgekxp" path="res://data/games/prime1/item_images/Plasma Beam.png" id="25_e2b3b"]
-[ext_resource type="Texture2D" uid="uid://b0uu71n5lhak5" path="res://data/games/prime1/item_images/Super Missile.png" id="26_f6yiy"]
-[ext_resource type="Texture2D" uid="uid://10esic23audb" path="res://data/games/prime1/item_images/Wavebuster.png" id="27_xip3y"]
-[ext_resource type="Texture2D" uid="uid://j12lsyyyrr2" path="res://data/games/prime1/item_images/Ice Spreader.png" id="28_mtvc2"]
-[ext_resource type="Texture2D" uid="uid://bbavbhexs6vg7" path="res://data/games/prime1/item_images/Flamethrower.png" id="29_tdoby"]
-[ext_resource type="Texture2D" uid="uid://cujjgfbq7qtl5" path="res://data/games/prime1/item_images/Space Jump Boots.png" id="30_leyhf"]
-[ext_resource type="Texture2D" uid="uid://dc6fc27xpslgt" path="res://data/games/prime1/item_images/Charge Beam.png" id="31_vulfn"]
-[ext_resource type="Texture2D" uid="uid://5gd5b6bdmfj0" path="res://data/games/prime1/item_images/Grapple Beam.png" id="32_lukqw"]
-[ext_resource type="PackedScene" uid="uid://rf1tr2kber25" path="res://resources/artifact_container.tscn" id="33_34bhy"]
 [ext_resource type="Script" uid="uid://b7qd0t5cpovw6" path="res://scripts/ui/logic_interface.gd" id="37_ky3bh"]
-[ext_resource type="Script" uid="uid://bdmwta1pv4a3b" path="res://scripts/ui/inventory_interface.gd" id="43_d2t1y"]
 [ext_resource type="Script" uid="uid://cydamye1a7mcf" path="res://scripts/ui/tricks_interface.gd" id="44_rbq56"]
 [ext_resource type="Script" uid="uid://couihycgxctla" path="res://scripts/ui/randovania_interface.gd" id="45_px4t2"]
 [ext_resource type="Script" uid="uid://dn3sra4otjpff" path="res://addons/html5_file_dialog/HTML5FileDialog.gd" id="46_tfmeg"]
@@ -68,7 +40,7 @@ anchors_preset = 0
 script = ExtResource("1_gb56k")
 game_map = NodePath("../game_map")
 
-[node name="game_map" type="Control" parent="." node_paths=PackedStringArray("ui", "inventory_interface", "trick_interface", "randovania_interface", "logic_interface", "camera")]
+[node name="game_map" type="Control" parent="." node_paths=PackedStringArray("ui", "trick_interface", "randovania_interface", "logic_interface", "camera")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -79,7 +51,6 @@ mouse_filter = 1
 mouse_default_cursor_shape = 3
 script = ExtResource("2_0cp0l")
 ui = NodePath("../UI/ui")
-inventory_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory")
 trick_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Tricks")
 randovania_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania")
 logic_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Logic")
@@ -253,470 +224,16 @@ mouse_filter = 2
 layout_mode = 2
 mouse_filter = 2
 
-[node name="TabContainer" type="TabContainer" parent="UI/ui/MarginContainer/VBoxContainer"]
+[node name="TabContainer" type="TabContainer" parent="UI/ui/MarginContainer/VBoxContainer" node_paths=PackedStringArray("game_map", "logic_interface")]
 custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-current_tab = 1
 tab_focus_mode = 0
 deselect_enabled = true
 script = ExtResource("4_0yqv7")
-
-[node name="inv2" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer"]
-visible = false
-layout_mode = 2
-script = ExtResource("43_d2t1y")
-min_size = Vector2(500, 650)
-metadata/_tab_index = 0
-
-[node name="Inventory" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("randovania_interface", "missile_label", "missile_slider", "pb_label", "pb_slider", "has_launcher_button", "has_main_pb_button", "etank_label", "etank_slider", "artifact_label", "artifact_slider", "artifact_container", "all_button", "none_button")]
-layout_mode = 2
-script = ExtResource("9_cfl7w")
-randovania_interface = NodePath("../Randovania")
-missile_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/missile_count")
-missile_slider = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/missile_slider")
-pb_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/HBoxContainer/VBoxContainer/pb_count")
-pb_slider = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/HBoxContainer/VBoxContainer/pb_slider")
-has_launcher_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer2/has_launcher")
-has_main_pb_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/VBoxContainer2/has_main")
-etank_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer/VBoxContainer/etank_count")
-etank_slider = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer/VBoxContainer/etank_slider")
-artifact_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/VBoxContainer/artifact_count")
-artifact_slider = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/VBoxContainer/artifact_slider")
-artifact_container = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/artifact_container")
-all_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer2/suits/all")
-none_button = NodePath("MarginContainer/VBoxContainer/HBoxContainer2/visors/none")
-min_size = Vector2(650, 500)
-metadata/_tab_index = 1
-
-[node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer"]
-layout_mode = 2
-alignment = 2
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 2.0
-alignment = 1
-
-[node name="suits" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2"]
-custom_minimum_size = Vector2(64, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="all" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/suits"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-text = "All"
-
-[node name="Power Suit" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/suits"]
-visible = false
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("14_h3m2s")
-icon_alignment = 1
-expand_icon = true
-
-[node name="Varia Suit" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/suits"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("15_hij7d")
-icon_alignment = 1
-expand_icon = true
-
-[node name="Gravity Suit" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/suits"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("16_0jsk2")
-icon_alignment = 1
-expand_icon = true
-
-[node name="Phazon Suit" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/suits"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("17_3n2di")
-icon_alignment = 1
-expand_icon = true
-
-[node name="spacer" type="Control" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/suits"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="visors" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2"]
-custom_minimum_size = Vector2(64, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="none" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/visors"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-text = "None"
-
-[node name="Combat Visor" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/visors"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("18_t33sj")
-icon_alignment = 1
-expand_icon = true
-
-[node name="Scan Visor" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/visors"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("19_jvtm1")
-icon_alignment = 1
-expand_icon = true
-
-[node name="Thermal Visor" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/visors"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("20_gqktq")
-icon_alignment = 1
-expand_icon = true
-
-[node name="X-Ray Visor" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/visors"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("21_polxb")
-icon_alignment = 1
-expand_icon = true
-
-[node name="upgrades" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2"]
-custom_minimum_size = Vector2(64, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Space Jump Boots" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/upgrades"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("30_leyhf")
-icon_alignment = 1
-expand_icon = true
-
-[node name="Morph Ball" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/upgrades"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("10_kut4r")
-icon_alignment = 1
-expand_icon = true
-
-[node name="Morph Ball Bomb" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/upgrades"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("11_k32ci")
-icon_alignment = 1
-expand_icon = true
-
-[node name="Boost Ball" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/upgrades"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("12_d1sf4")
-icon_alignment = 1
-expand_icon = true
-
-[node name="Spider Ball" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/upgrades"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("13_ss08w")
-icon_alignment = 1
-expand_icon = true
-
-[node name="beams" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2"]
-custom_minimum_size = Vector2(64, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Charge Beam" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/beams"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("31_vulfn")
-icon_alignment = 1
-expand_icon = true
-
-[node name="Power Beam" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/beams"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("22_7wnnf")
-icon_alignment = 1
-expand_icon = true
-
-[node name="Wave Beam" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/beams"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("23_d2hg3")
-icon_alignment = 1
-expand_icon = true
-
-[node name="Ice Beam" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/beams"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("24_riedu")
-icon_alignment = 1
-expand_icon = true
-
-[node name="Plasma Beam" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/beams"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("25_e2b3b")
-icon_alignment = 1
-expand_icon = true
-
-[node name="combos" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2"]
-custom_minimum_size = Vector2(64, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Grapple Beam" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/combos"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("32_lukqw")
-icon_alignment = 1
-expand_icon = true
-
-[node name="Super Missile" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/combos"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("26_f6yiy")
-icon_alignment = 1
-expand_icon = true
-
-[node name="Wavebuster" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/combos"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("27_xip3y")
-icon_alignment = 1
-expand_icon = true
-
-[node name="Ice Spreader" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/combos"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("28_mtvc2")
-icon_alignment = 1
-expand_icon = true
-
-[node name="Flamethrower" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer2/combos"]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-icon = ExtResource("29_tdoby")
-icon_alignment = 1
-expand_icon = true
-
-[node name="HSeparator" type="HSeparator" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-alignment = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 10
-theme_override_constants/separation = 30
-
-[node name="TextureRect" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-texture = ExtResource("6_6j0ik")
-expand_mode = 2
-stretch_mode = 5
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-alignment = 1
-
-[node name="missile_count" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-text = "250"
-horizontal_alignment = 1
-
-[node name="missile_slider" type="HSlider" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
-custom_minimum_size = Vector2(90, 0)
-layout_mode = 2
-size_flags_vertical = 2
-focus_mode = 0
-max_value = 49.0
-value = 49.0
-rounded = true
-tick_count = 3
-ticks_on_borders = true
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-alignment = 1
-
-[node name="has_launcher" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer2"]
-layout_mode = 2
-focus_mode = 0
-theme_override_font_sizes/font_size = 16
-text = "Has Launcher?"
-
-[node name="VSeparator" type="VSeparator" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 0.1
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-alignment = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
-layout_mode = 2
-size_flags_vertical = 10
-theme_override_constants/separation = 30
-
-[node name="TextureRect" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/HBoxContainer"]
-layout_mode = 2
-texture = ExtResource("7_ntsns")
-expand_mode = 2
-stretch_mode = 5
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-alignment = 1
-
-[node name="pb_count" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-text = "8"
-horizontal_alignment = 1
-
-[node name="pb_slider" type="HSlider" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/HBoxContainer/VBoxContainer"]
-custom_minimum_size = Vector2(90, 0)
-layout_mode = 2
-size_flags_vertical = 2
-focus_mode = 0
-max_value = 4.0
-value = 4.0
-rounded = true
-tick_count = 3
-ticks_on_borders = true
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
-layout_mode = 2
-size_flags_vertical = 3
-alignment = 1
-
-[node name="has_main" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/VBoxContainer2"]
-layout_mode = 2
-focus_mode = 0
-theme_override_font_sizes/font_size = 16
-text = "Has Main PB?"
-
-[node name="VSeparator2" type="VSeparator" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 0.1
-
-[node name="VBoxContainer3" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 0.5
-alignment = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3"]
-layout_mode = 2
-size_flags_vertical = 6
-
-[node name="TextureRect" type="TextureRect" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer"]
-layout_mode = 2
-texture = ExtResource("10_pry43")
-expand_mode = 2
-stretch_mode = 5
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-alignment = 1
-
-[node name="etank_count" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-text = "14"
-horizontal_alignment = 1
-
-[node name="etank_slider" type="HSlider" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer/VBoxContainer"]
-custom_minimum_size = Vector2(90, 0)
-layout_mode = 2
-size_flags_vertical = 2
-focus_mode = 0
-max_value = 14.0
-value = 14.0
-rounded = true
-tick_count = 3
-ticks_on_borders = true
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3"]
-layout_mode = 2
-size_flags_vertical = 6
-
-[node name="artifact_container" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2" instance=ExtResource("33_34bhy")]
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-alignment = 1
-
-[node name="artifact_count" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/VBoxContainer"]
-layout_mode = 2
-text = "12"
-horizontal_alignment = 1
-
-[node name="artifact_slider" type="HSlider" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Inventory/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer3/HBoxContainer2/VBoxContainer"]
-custom_minimum_size = Vector2(90, 0)
-layout_mode = 2
-size_flags_vertical = 2
-focus_mode = 0
-max_value = 12.0
-value = 12.0
-rounded = true
-tick_count = 3
-ticks_on_borders = true
+game_map = NodePath("../../../../../game_map")
+logic_interface = NodePath("Logic")
 
 [node name="Tricks" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("game_map", "randovania_interface", "tricks_container")]
 visible = false
@@ -726,7 +243,7 @@ game_map = NodePath("../../../../../../game_map")
 randovania_interface = NodePath("../Randovania")
 tricks_container = NodePath("MarginContainer/ScrollContainer/VBoxContainer")
 min_size = Vector2(500, 900)
-metadata/_tab_index = 2
+metadata/_tab_index = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Tricks"]
 layout_mode = 1
@@ -763,7 +280,7 @@ word_hash_label = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxCo
 rdv_options_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer")
 bool_options_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/bool_options")
 loaded_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/loaded_container")
-metadata/_tab_index = 3
+metadata/_tab_index = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania"]
 layout_mode = 1
@@ -836,16 +353,15 @@ offset_right = 960.0
 offset_bottom = 78.0
 size_flags_vertical = 3
 
-[node name="Logic" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("inventory_interface", "tricks_interface", "container", "tooltip_label")]
+[node name="Logic" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("tricks_interface", "container", "tooltip_label")]
 visible = false
 layout_mode = 2
 script = ExtResource("37_ky3bh")
-inventory_interface = NodePath("../Inventory")
 tricks_interface = NodePath("../Tricks")
 container = NodePath("VBoxContainer")
 tooltip_label = NodePath("VBoxContainer/Label")
 min_size = Vector2(550, 900)
-metadata/_tab_index = 4
+metadata/_tab_index = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Logic"]
 layout_mode = 1

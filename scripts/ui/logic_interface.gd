@@ -5,7 +5,6 @@ const PASS_COLOR := Color.LIME_GREEN
 const NO_DATA_SIZE := Vector2(550, 150)
 const DATA_SIZE := Vector2(550, 900)
 
-@export var inventory_interface : PrimeInventoryInterface
 @export var tricks_interface : TricksInterface
 @export var container : VBoxContainer
 @export var tooltip_label : Label
@@ -16,7 +15,6 @@ var displayed_node : NodeMarker = null
 
 func _ready() -> void:
 	super()
-	inventory_interface.items_changed.connect(display_data)
 	tricks_interface.tricks_changed.connect(display_data)
 	
 	min_size = NO_DATA_SIZE

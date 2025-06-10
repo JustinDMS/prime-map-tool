@@ -23,6 +23,8 @@ var subregion_map : Dictionary[StringName, Dictionary] = {}
 var  z_index_override : Dictionary[StringName, int] = {}
 ## Map of region names and their color
 var region_color : Dictionary[StringName, Color] = {}
+## 2D Array describing how the inventory is displayed
+var inventory_layout : Array[Array] = []
 
 func _init(rdv_header : Dictionary) -> void:
 	_header = rdv_header
@@ -241,8 +243,8 @@ class Item:
 	
 	var name : String = ""
 	var long_name : String = ""
-	var current_capacity : int = -1
-	var max_capacity : int = -1
+	var current_capacity : int = 0
+	var max_capacity : int = 0
 	
 	func _init(_name : String, data : Dictionary) -> void:
 		name = _name

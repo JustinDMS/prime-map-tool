@@ -12,7 +12,6 @@ signal map_drawn(dock_connections : Dictionary[NodeMarker, NodeMarker])
 signal map_resolved(reached_nodes : Array[NodeData])
 
 @export var ui : Control
-@export var inventory_interface : UITab
 @export var trick_interface : UITab
 @export var randovania_interface : UITab
 @export var logic_interface : UITab
@@ -26,7 +25,6 @@ var room_map : Dictionary[RoomData, Room] = {}
 var start_node : NodeData = null
 
 func _ready() -> void:
-	inventory_interface.items_changed.connect(resolve_map)
 	trick_interface.tricks_changed.connect(resolve_map)
 	
 	randovania_interface.settings_changed.connect(resolve_map)

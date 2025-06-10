@@ -50,3 +50,61 @@ func _init(rdv_header : Dictionary) -> void:
 		&"Phazon Mines" : Color("#BC96E6"),
 		&"Magmoor Caverns" : Color("#A7333F"),
 		}
+	
+	var all := InventoryInterface.AllButton.new(self)
+	var none := InventoryInterface.NoneButton.new(self)
+	var space_jump := InventoryInterface.PickupButton.new(self, &"SpaceJump", &"res://data/games/prime1/item_images/Space Jump Boots.png")
+	var charge_beam := InventoryInterface.PickupButton.new(self, &"Charge", &"res://data/games/prime1/item_images/Charge Beam.png")
+	var grapple_beam := InventoryInterface.PickupButton.new(self, &"Grapple", &"res://data/games/prime1/item_images/Grapple Beam.png")
+	
+	var varia := InventoryInterface.PickupButton.new(self, &"VariaSuit", &"res://data/games/prime1/item_images/Varia Suit.png")
+	var combat := InventoryInterface.PickupButton.new(self, &"Combat", &"res://data/games/prime1/item_images/Combat Visor.png")
+	var morph := InventoryInterface.PickupButton.new(self, &"MorphBall", &"res://data/games/prime1/item_images/Morph Ball.png")
+	var power := InventoryInterface.PickupButton.new(self, &"Power", &"res://data/games/prime1/item_images/Power Beam.png")
+	var supers := InventoryInterface.PickupButton.new(self, &"Supers", &"res://data/games/prime1/item_images/Super Missile.png")
+	
+	var gravity := InventoryInterface.PickupButton.new(self, &"GravitySuit", &"res://data/games/prime1/item_images/Gravity Suit.png")
+	var scan := InventoryInterface.PickupButton.new(self, &"Scan", &"res://data/games/prime1/item_images/Scan Visor.png")
+	var bombs := InventoryInterface.PickupButton.new(self, &"Bombs", &"res://data/games/prime1/item_images/Morph Ball Bomb.png")
+	var wave := InventoryInterface.PickupButton.new(self, &"Wave", &"res://data/games/prime1/item_images/Wave Beam.png")
+	var wavebuster := InventoryInterface.PickupButton.new(self, &"Wavebuster", &"res://data/games/prime1/item_images/Wavebuster.png")
+	
+	var phazon := InventoryInterface.PickupButton.new(self, &"PhazonSuit", &"res://data/games/prime1/item_images/Phazon Suit.png")
+	var thermal := InventoryInterface.PickupButton.new(self, &"Thermal", &"res://data/games/prime1/item_images/Thermal Visor.png")
+	var boost := InventoryInterface.PickupButton.new(self, &"Boost", &"res://data/games/prime1/item_images/Boost Ball.png")
+	var ice := InventoryInterface.PickupButton.new(self, &"Ice", &"res://data/games/prime1/item_images/Ice Beam.png")
+	var ice_spreader := InventoryInterface.PickupButton.new(self, &"IceSpreader", &"res://data/games/prime1/item_images/Ice Spreader.png")
+	
+	var spacer := InventoryInterface.Spacer.new()
+	var xray := InventoryInterface.PickupButton.new(self, &"X-Ray", &"res://data/games/prime1/item_images/X-Ray Visor.png")
+	var spider := InventoryInterface.PickupButton.new(self, &"Spider", &"res://data/games/prime1/item_images/Spider Ball.png")
+	var plasma := InventoryInterface.PickupButton.new(self, &"Plasma", &"res://data/games/prime1/item_images/Plasma Beam.png")
+	var flamethrower := InventoryInterface.PickupButton.new(self, &"Flamethrower", &"res://data/games/prime1/item_images/Flamethrower.png")
+	
+	var missiles := InventoryInterface.PickupSlider.new(self, &"Missile", &"res://data/games/prime1/item_images/Missile Expansion.png", 5, 50)
+	var etanks := InventoryInterface.PickupSlider.new(self, &"EnergyTank", &"res://data/games/prime1/item_images/Energy Tank.png", 1, 14)
+	var pbs := InventoryInterface.PickupSlider.new(self, &"PowerBomb", &"res://data/games/prime1/item_images/Power Bomb Expansion.png", 1, 8)
+	
+	var truth := InventoryInterface.PickupButton.new(self, &"Truth", &"res://data/games/prime1/item_images/Artifact of Truth.png")
+	var strength := InventoryInterface.PickupButton.new(self, &"Strength", &"res://data/games/prime1/item_images/Artifact of Strength.png")
+	var elder := InventoryInterface.PickupButton.new(self, &"Elder", &"res://data/games/prime1/item_images/Artifact of Elder.png")
+	var wild := InventoryInterface.PickupButton.new(self, &"Wild", &"res://data/games/prime1/item_images/Artifact of Wild.png")
+	var lifegiver := InventoryInterface.PickupButton.new(self, &"Lifegiver", &"res://data/games/prime1/item_images/Artifact of Lifegiver.png")
+	var warrior := InventoryInterface.PickupButton.new(self, &"Warrior", &"res://data/games/prime1/item_images/Artifact of Warrior.png")
+	var chozo := InventoryInterface.PickupButton.new(self, &"Chozo", &"res://data/games/prime1/item_images/Artifact of Chozo.png")
+	var nature := InventoryInterface.PickupButton.new(self, &"Nature", &"res://data/games/prime1/item_images/Artifact of Nature.png")
+	var sun := InventoryInterface.PickupButton.new(self, &"Sun", &"res://data/games/prime1/item_images/Artifact of Sun.png")
+	var world := InventoryInterface.PickupButton.new(self, &"World", &"res://data/games/prime1/item_images/Artifact of World.png")
+	var spirit := InventoryInterface.PickupButton.new(self, &"Spirit", &"res://data/games/prime1/item_images/Artifact of Spirit.png")
+	var newborn := InventoryInterface.PickupButton.new(self, &"Newborn", &"res://data/games/prime1/item_images/Artifact of Newborn.png")
+	
+	inventory_layout = [
+		[all, none, space_jump, charge_beam, grapple_beam],
+		[varia, combat, morph, power, supers],
+		[gravity, scan, bombs, wave, wavebuster],
+		[phazon, thermal, boost, ice, ice_spreader],
+		[spacer, xray, spider, plasma, flamethrower],
+		[missiles, etanks, pbs],
+		[truth, strength, elder, wild, lifegiver, warrior],
+		[chozo, nature, sun, world, spirit, newborn]
+	]
