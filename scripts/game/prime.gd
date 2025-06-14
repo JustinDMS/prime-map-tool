@@ -23,7 +23,37 @@ func _init(rdv_header : Dictionary) -> void:
 			&"East Tower" : 1, 
 			&"Aether Lab Entryway" : 1,
 		},
-		&"Phazon Mines" : {}
+		&"Phazon Mines" : {
+			&"Elevator A" : 1,
+			&"Elite Control Access" : 1,
+			&"Elite Control" : 1,
+			&"Maintenance Tunnel" : 1,
+			&"Phazon Processing Center" : 1,
+			&"Transport Access" : 1,
+			&"Transport to Magmoor Caverns South" : 1,
+			&"Ventilation Shaft" : 1,
+			&"Omega Research" : 1,
+			&"Map Station Mines" : 1,
+			&"Dynamo Access" : 1,
+			&"Central Dynamo" : 1,
+			&"Save Station Mines B" : 1,
+			&"Quarantine Access A" : 1,
+			&"Metroid Quarantine A" : 1,
+			&"Elevator Access B" : 1,
+			
+			&"Elevator B" : 2,
+			&"Fungal Hall Access" : 2,
+			&"Fungal Hall A" : 2,
+			&"Phazon Mining Tunnel" : 2,
+			&"Fungal Hall B" : 2,
+			&"Missile Station Mines" : 2,
+			&"Quarantine Access B" : 2,
+			&"Metroid Quarantine B" : 2,
+			&"Save Station Mines C" : 2,
+			&"Elite Quarters Access" : 2,
+			&"Elite Quarters" : 2,
+			&"Processing Center Access" : 2,
+		}
 	}
 	z_index_override = {
 		&"Hall of the Elders" : 1,
@@ -51,7 +81,7 @@ func _init(rdv_header : Dictionary) -> void:
 		&"Magmoor Caverns" : Color("#A7333F"),
 		}
 	
-	var all := InventoryInterface.AllButton.new(self)
+	var _all := InventoryInterface.AllButton.new(self)
 	var none := InventoryInterface.NoneButton.new(self)
 	var space_jump := InventoryInterface.PickupButton.new(self, &"SpaceJump", &"res://data/games/prime1/item_images/Space Jump Boots.png")
 	var charge_beam := InventoryInterface.PickupButton.new(self, &"Charge", &"res://data/games/prime1/item_images/Charge Beam.png")
@@ -99,7 +129,7 @@ func _init(rdv_header : Dictionary) -> void:
 	var newborn := InventoryInterface.PickupButton.new(self, &"Newborn", &"res://data/games/prime1/item_images/Artifact of Newborn.png")
 	
 	inventory_layout = [
-		[all, none, space_jump, charge_beam, grapple_beam],
+		[_all, none, space_jump, charge_beam, grapple_beam],
 		[varia, combat, morph, power, supers],
 		[gravity, scan, bombs, wave, wavebuster],
 		[phazon, thermal, boost, ice, ice_spreader],
@@ -108,3 +138,14 @@ func _init(rdv_header : Dictionary) -> void:
 		[truth, strength, elder, wild, lifegiver, warrior],
 		[chozo, nature, sun, world, spirit, newborn]
 	]
+
+func new_room_data() -> PrimeRoomData:
+	return PrimeRoomData.new()
+func new_room() -> PrimeRoom:
+	const BASE_ROOM : PackedScene = preload("res://resources/base_room.tscn")
+	const PRIME_ROOM_SCRIPT : GDScript = preload("res://scripts/room/prime/prime_room.gd")
+	
+	var room := BASE_ROOM.instantiate()
+	room.set_script(PRIME_ROOM_SCRIPT)
+	
+	return room

@@ -1,33 +1,35 @@
 class_name NodeData extends Resource
 
+# NOTE - Might be better to move this to a dedicated factory class?
+static func create_data_from_type(game : Game, type : String) -> NodeData:
+	match type:
+		"dock":
+			if game is Prime:
+				return PrimeDockNodeData.new()
+			return DockNodeData.new()
+		"pickup":
+			return PickupNodeData.new()
+		"generic":
+			return GenericNodeData.new()
+		"event":
+			return EventNodeData.new()
+		_:
+			assert(false, "Unhandled NodeData type: %s" % type)
+	
+	return null
+
 @export var region : StringName
 @export var room_name : String
 @export var name : String
 @export var coordinates : Vector3
 @export var connections : Array[NodeData]
 
-static func create_data_from_type(type : String) -> NodeData:
-	var data : NodeData = null
-	
-	match type:
-		"dock":
-			data = DockNodeData.new()
-		"pickup":
-			data = PickupNodeData.new()
-		"generic":
-			data = GenericNodeData.new()
-		"event":
-			data = EventNodeData.new()
-		_:
-			assert(false, "Unhandled NodeData type: %s" % type)
-	
-	return data
-
 func init(_game : Game, _name : String, _room_data : RoomData, _data : Dictionary) -> void:
 	region = _room_data.region
 	room_name = _room_data.name
 	name = _name
 	
+	# Populate coordinates depending on how the game's logic database is structured
 	if _game is Prime:
 		coordinates = Vector3(
 			_data.extra.world_position[0],

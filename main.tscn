@@ -229,6 +229,7 @@ custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
+current_tab = 0
 tab_focus_mode = 0
 deselect_enabled = true
 script = ExtResource("4_0yqv7")
@@ -236,7 +237,6 @@ game_map = NodePath("../../../../../game_map")
 logic_interface = NodePath("Logic")
 
 [node name="Tricks" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("game_map", "randovania_interface", "tricks_container")]
-visible = false
 layout_mode = 2
 script = ExtResource("44_rbq56")
 game_map = NodePath("../../../../../../game_map")

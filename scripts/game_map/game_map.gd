@@ -55,7 +55,7 @@ func init_map() -> void:
 		world_data[r] = {}
 		
 		for j in rdv_logic[r]["areas"]:
-			var room_data := RoomData.new()
+			var room_data := game.new_room_data()
 			room_data.init(game, r, j, rdv_logic[r]["areas"][j])
 			world_data[r][j] = room_data
 			
@@ -73,9 +73,8 @@ func add_subregions(to_parent : Control, amount : int, offsets : Array[Vector2])
 		sub_region.set_position(offsets[i])
 
 func draw_room(room_data : RoomData) -> Room:
-	const BASE_ROOM : PackedScene = preload("res://resources/base_room.tscn")
+	var room := game.new_room()
 	
-	var room := BASE_ROOM.instantiate()
 	room.data = room_data
 	room.double_clicked.connect(set_start_node)
 	room.double_clicked.connect(camera.center_on_room.bind(room))
@@ -116,7 +115,7 @@ func init_nodes() -> void:
 				if k == "Pickup (Items Every Room)":
 					continue
 				
-				var node_data := NodeData.create_data_from_type(rdv_logic[r]["areas"][j]["nodes"][k]["node_type"])
+				var node_data := NodeData.create_data_from_type(game, rdv_logic[r]["areas"][j]["nodes"][k]["node_type"])
 				nodes.append(node_data)
 				node_data.init(game, k, room_data, rdv_logic[r]["areas"][j]["nodes"][k])
 				
@@ -161,6 +160,7 @@ func init_nodes() -> void:
 				add_node_connections.call_deferred(node_marker_map[node_data])
 	
 	map_drawn.emit( get_elevators(rdvgame) )
+	resolve_map()
 
 func get_node_data(region : StringName, room_name : String, node_name : String) -> NodeData:
 	var room_data := get_room_data(region, room_name)
@@ -202,7 +202,7 @@ func add_marker_to_map(node_marker : NodeMarker) -> void:
 	pos += Vector2(data.coordinates.x, -data.coordinates.y)
 	
 	if game.has_subregions(data.region):
-		var subregion : int = game.get_room_subregion_index(data.region, data.name)
+		var subregion : int = game.get_room_subregion_index(data.region, data.room_name)
 		pos += game.get_subregion_offsets(data.region)[subregion] * Vector2(1, -1) # Regions are vertically flipped, flip again so math is right
 	
 	node_marker.global_position = pos
@@ -222,7 +222,7 @@ func get_elevators(rdvgame : RDVGame) -> Dictionary[NodeMarker, NodeMarker]:
 			var to_split : PackedStringArray = dock_connections[key].split("/")
 			if not game.has_region(from_split[0]) or not game.has_region(to_split[0]):
 				continue
-				
+			
 			var from_node := get_node_data(from_split[0], from_split[1], from_split[2])
 			var to_node := get_node_data(to_split[0], to_split[1], to_split[2])
 			

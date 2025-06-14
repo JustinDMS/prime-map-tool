@@ -65,28 +65,8 @@ func init_room():
 	
 	set_name(data.name) # Set name in SceneTree
 	set_texture_normal(data.texture)
-	set_z_index( 0 if not game else game.get_room_z_index(data.name) )
+	set_z_index( game.get_room_z_index(data.name) )
 	region = data.region
-	
-	if game is Prime:
-		create_bitmap_from_room_image(data.texture.get_image(), false, true)
-		
-		var x1 : float = data.aabb[0]
-		var y1 : float = data.aabb[1]
-		var _z1 : float = data.aabb[2]
-		var x2 : float = data.aabb[3]
-		var y2 : float = data.aabb[4]
-		var _z2 : float = data.aabb[5]
-		
-		position.x = x1
-		position.y = y1
-		
-		custom_minimum_size.x = abs(x2 - x1)
-		custom_minimum_size.y = abs(y2 - y1)
-		
-		material = OUTLINE_SHADER.duplicate()
-		material.set_shader_parameter(&"pattern", 1)
-		material.set_shader_parameter(&"inside", true)
 	
 	set_state(game, State.DEFAULT)
 
@@ -104,25 +84,21 @@ func set_state(game : Game, new_state : State) -> void:
 	
 	match state:
 		State.DEFAULT:
-			if game is Prime:
-				var color : Color = game.get_region_color(region)
-				change_to_color(color)
-				set_outline(color, OUTLINE_THICKNESS)
+			var color : Color = game.get_region_color(region)
+			change_to_color(color)
+			set_outline(color, OUTLINE_THICKNESS)
 		State.HOVERED:
-			if game is Prime:
-				if prev_state == State.STARTER:
-					set_outline(Color.GREEN, OUTLINE_THICKNESS + 1)
-				else:
-					set_outline(Color.WHITE, OUTLINE_THICKNESS + 1)
+			if prev_state == State.STARTER:
+				set_outline(Color.GREEN, OUTLINE_THICKNESS + 1)
+			else:
+				set_outline(Color.WHITE, OUTLINE_THICKNESS + 1)
 		State.UNREACHABLE:
-			if game is Prime:
-				change_to_color(UNREACHABLE_COLOR)
-				set_outline(UNREACHABLE_OUTLINE_COLOR, OUTLINE_THICKNESS)
+			change_to_color(UNREACHABLE_COLOR)
+			set_outline(UNREACHABLE_OUTLINE_COLOR, OUTLINE_THICKNESS)
 		State.STARTER:
-			if game is Prime:
-				prev_state = State.STARTER
-				change_to_color( game.get_region_color(region) )
-				set_outline(Color.GREEN, OUTLINE_THICKNESS * 4)
+			prev_state = State.STARTER
+			change_to_color( game.get_region_color(region) )
+			set_outline(Color.GREEN, OUTLINE_THICKNESS * 4)
 
 func change_to_color(new_color : Color, duration := COLOR_CHANGE_DURATION) -> void:
 	if room_color_tween and room_color_tween.is_valid():

@@ -10,21 +10,34 @@ var _templates := {}
 
 var last_failed_event_id : String = "" ## Used when resolving
 
-# Virtual Members
+#region Virtual Members
 ## Map of region names and their offsets in global space
-var region_offset : Dictionary[StringName, Vector2] = {} 
+var region_offset : Dictionary[StringName, Vector2] = {}
+
 ## Map of region names that contain subregions and their offsets in local coordinates
 ## Inner array expected type is Array[Vector2]
-var subregion_offset : Dictionary[StringName, Array] = {} 
+var subregion_offset : Dictionary[StringName, Array] = {}
+
 ## Map of region names and room subregion indices
 ## Inner dictionary expected type is Dictionary[StrinName, int] 
 var subregion_map : Dictionary[StringName, Dictionary] = {}
+
 ## Map of room names and their z-indices
 var  z_index_override : Dictionary[StringName, int] = {}
+
 ## Map of region names and their color
 var region_color : Dictionary[StringName, Color] = {}
+
 ## 2D Array describing how the inventory is displayed
 var inventory_layout : Array[Array] = []
+#endregion
+
+#region Virtual Methods
+func new_room_data() -> RoomData:
+	return null
+func new_room() -> Room:
+	return null
+#endregion
 
 func _init(rdv_header : Dictionary) -> void:
 	_header = rdv_header

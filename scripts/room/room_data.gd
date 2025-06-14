@@ -3,7 +3,6 @@ class_name RoomData extends Resource
 @export var region : StringName
 @export var name : String
 @export var texture : Texture2D
-@export var aabb : Array[float]
 
 @export var nodes : Array[NodeData]
 @export var default_node : NodeData
@@ -12,19 +11,10 @@ func init(_game : Game, _region : StringName, _name : String, _data : Dictionary
 	region = _region
 	name = _name
 	texture = get_room_texture()
-	
-	if _game is Prime:
-		aabb = [
-			_data.extra.aabb[0],
-			_data.extra.aabb[1],
-			_data.extra.aabb[2],
-			_data.extra.aabb[3],
-			_data.extra.aabb[4],
-			_data.extra.aabb[5]
-			]
 
+## Override in subclasses
 func get_room_texture() -> Texture2D:
-	return load("res://data/games/prime1/room_images/%s/%s.png" % [region, name])
+	return null
 
 func clear_nodes() -> void:
 	nodes.clear()
