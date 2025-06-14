@@ -13,6 +13,8 @@ static func create_data_from_type(game : Game, type : String) -> NodeData:
 			return GenericNodeData.new()
 		"event":
 			return EventNodeData.new()
+		"hint":
+			return GenericNodeData.new() # TODO
 		_:
 			assert(false, "Unhandled NodeData type: %s" % type)
 	
