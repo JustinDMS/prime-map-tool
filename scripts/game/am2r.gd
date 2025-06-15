@@ -13,6 +13,18 @@ func _init(rdv_header : Dictionary) -> void:
 		&"Magmoor Caverns" : Color("#A7333F"),
 	}
 	
+	region_offset = {
+		&"Main Caves": Vector2.ZERO,
+		&"Golden Temple": Vector2.ZERO,
+		&"Hydro Station": Vector2.ZERO,
+		&"Industrial Complex": Vector2.ZERO,
+		&"The Tower": Vector2.ZERO,
+		&"Distribution Center": Vector2.ZERO,
+		&"The Depths": Vector2.ZERO,
+		&"Genetics Laboratory": Vector2.ZERO,
+		&"GFS Thoth": Vector2.ZERO,
+	}
+	
 	# TODO: Fix inventory
 	var _all := InventoryInterface.AllButton.new(self)
 	var none := InventoryInterface.NoneButton.new(self)
