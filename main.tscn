@@ -57,6 +57,7 @@ logic_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/
 camera = NodePath("../Camera2D")
 
 [node name="legend" type="Panel" parent="."]
+visible = false
 offset_left = 2496.0
 offset_top = 1143.0
 offset_right = 2813.0
