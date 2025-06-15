@@ -143,7 +143,7 @@ func _init(rdv_header : Dictionary) -> void:
 		&"res://data/games/prime1/item_images/Artifact of Spirit.png",
 		&"res://data/games/prime1/item_images/Artifact of Newborn.png"
 	]
-	var artifacts := InventoryInterface.MultiPickupSlider.new(self, artifact_names, artifact_icon_paths, Color("#F1A34C"), Color("#4CDAF5"), 1)
+	var artifacts := InventoryInterface.ArtifactSlider.new(self, artifact_names, artifact_icon_paths, Color("#F1A34C"), Color("#4CDAF5"))
 	
 	inventory_layout = [
 		[_all, none, space_jump, charge_beam, grapple_beam],

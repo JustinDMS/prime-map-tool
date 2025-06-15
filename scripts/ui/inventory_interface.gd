@@ -206,6 +206,92 @@ class MultiPickupSlider extends HBoxContainer:
 	signal item_changed()
 	
 	var items : Array[Game.Item] = []
+	var item_value : int = 1
+	var _label : Label = null
+	var _slider : HSlider = null
+	
+	func _init(
+		_game : Game, _item_names : Array[StringName], _icon_path : StringName,
+		_item_value : int = 1, _slider_ticks : int = 3, _ticks_on_borders : bool = true,
+		) -> void:
+		item_value = _item_value
+		
+		for _name in _item_names:
+			var item := _game.get_item(_name)
+			items.append(item)
+			item.changed.connect(
+				func(_item : Game.Item):
+					_slider.set_value_no_signal( get_current_item_count() )
+					slider_value_changed( _slider.get_value() )
+					)
+		
+		self.set_h_size_flags(Control.SIZE_EXPAND + Control.SIZE_SHRINK_CENTER)
+		
+		var texture_rect := TextureRect.new()
+		texture_rect.set_texture( load(_icon_path) )
+		texture_rect.set_expand_mode(TextureRect.EXPAND_FIT_WIDTH)
+		texture_rect.set_stretch_mode(TextureRect.STRETCH_KEEP_ASPECT_CENTERED)
+		self.add_child(texture_rect)
+		
+		# Inner container for label and slider
+		var vbox := VBoxContainer.new()
+		vbox.set_alignment(BoxContainer.ALIGNMENT_CENTER)
+		vbox.set_h_size_flags(Control.SIZE_EXPAND_FILL)
+		self.add_child(vbox)
+		
+		_label = Label.new()
+		_label.set_text( "%d/%d" % [get_current_item_count(), items.size()] )
+		_label.set_horizontal_alignment(HORIZONTAL_ALIGNMENT_CENTER)
+		vbox.add_child(_label)
+		
+		_slider = HSlider.new()
+		_slider.set_ticks(_slider_ticks) # Number of vertical ticks shown on the slider
+		_slider.set_ticks_on_borders(_ticks_on_borders)
+		_slider.set_use_rounded_values(true) # Value is rounded to nearest int
+		_slider.set_min(0)
+		_slider.set_max( items.size() )
+		_slider.set_value( get_current_item_count() )
+		
+		_slider.set_custom_minimum_size( Vector2(128, 0) )
+		_slider.set_v_size_flags(Control.SIZE_SHRINK_BEGIN)
+		_slider.set_focus_mode(Control.FOCUS_NONE)
+		
+		_slider.drag_ended.connect(slider_drag_ended)
+		_slider.value_changed.connect(slider_value_changed)
+		vbox.add_child(_slider)
+	
+	## Called after the slider grabber is released
+	func slider_drag_ended(value_changed : bool) -> void:
+		if not value_changed:
+			return
+		
+		var value := int( _slider.get_value() )
+		for i in range( items.size() ):
+			items[i].set_capacity_no_signal( 1 if (i < value) else 0 )
+		
+		item_changed.emit()
+	
+	## Called continuously while dragging
+	func slider_value_changed(value : float) -> void:
+		var text : String = "%d/%d" % [int(value), items.size()]
+		# Show in-game item value
+		if item_value > 1:
+			text += " (%d)" % [int(value) * item_value]
+		_label.set_text(text)
+	
+	## Determine the total item count
+	## Doesn't care about order
+	func get_current_item_count() -> int:
+		var total : int = 0
+		for item in items:
+			total += item.get_capacity()
+		return total
+
+## Special container for editing [Prime] Artifacts via slider
+class ArtifactSlider extends HBoxContainer:
+	signal item_changed()
+	
+	var items : Array[Game.Item] = []
 	var icons : Array[TextureRect] = []
 	var has_color : Color
 	var not_has_color : Color
