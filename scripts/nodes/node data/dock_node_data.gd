@@ -16,7 +16,7 @@ func get_texture() -> Texture2D:
 		"teleporter" : preload("res://data/icons/node marker/teleporter_marker.png"),
 		"morph_ball" : preload("res://data/icons/node marker/node_marker.png")
 	}
-	return TEXTURE_MAP[type]
+	return TEXTURE_MAP["door"]	 # HACK! Breaks prime
 
 func is_door() -> bool:
 	return type == "door"

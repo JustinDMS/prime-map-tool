@@ -5,7 +5,7 @@ static var game : Game = null
 static func get_game() -> Game:
 	return game
 static func _static_init() -> void:
-	game = GameFactory.create_from_game_name("prime1")
+	game = GameFactory.create_from_game_name("am2r")	# HACK! Breaks prime.
 	game.all()
 
 signal map_drawn(dock_connections : Dictionary[NodeMarker, NodeMarker])
@@ -43,7 +43,7 @@ func init_map() -> void:
 	for r in rdv_logic:
 		var region := Control.new()
 		region_nodes[r] = region
-		region.set_scale(Vector2(1, -1)) # Flip vertically
+		region.set_scale(Vector2(1, 1)) # Flip vertically - Sign change is a HACK! Breaks prime
 		region.set_name(r)
 		add_child(region)
 		region.set_position( game.get_region_offset(r) )
@@ -110,8 +110,10 @@ func init_nodes() -> void:
 			var room_data : RoomData = world_data[r][j]
 			room_data.clear_nodes()
 			
-			var default_node_name : String = rdv_logic[r]["areas"][j]["default_node"]
+			# Stuff relating to default_node is a HACK! Breaks prime.
+			var default_node_name : String = ""# rdv_logic[r]["areas"][j]["default_node"]
 			var nodes : Array[NodeData] = []
+			room_data.default_node = null
 			for k in rdv_logic[r]["areas"][j]["nodes"]:
 				if k == "Pickup (Items Every Room)":
 					continue
@@ -132,7 +134,7 @@ func init_nodes() -> void:
 					if format_string in dock_weaknesses:
 						node_data.default_dock_weakness = dock_weaknesses[format_string]["name"]
 				
-				if k == default_node_name:
+				if k == default_node_name or room_data.default_node == null:
 					room_data.default_node = node_data
 			room_data.nodes = nodes
 	
@@ -213,7 +215,7 @@ func add_marker_to_map(node_marker : NodeMarker) -> void:
 	room.add_child(node_marker)
 	
 	var pos : Vector2 = region_nodes[data.region].global_position
-	pos += Vector2(data.coordinates.x, -data.coordinates.y)
+	pos += Vector2(data.coordinates.x, data.coordinates.y) # Sign change is a HACK! Breaks prime.
 	
 	if game.has_subregions(data.region):
 		var subregion : int = game.get_room_subregion_index(data.region, data.room_name)
@@ -273,8 +275,9 @@ func resolve_map() -> void:
 	print("---Resolving map---")
 	#print_stack()
 	
-	if not start_node:
-		start_node = get_node_data("Tallon Overworld", "Landing Site", "Ship")
+	if not start_node:	
+		# HACK! Use proper start node from the DB
+		start_node = get_node_data("Main Caves", "Landing Site", "Ship")
 	
 	set_all_unreachable()
 	

@@ -38,6 +38,18 @@ func init(_game : Game, _name : String, _room_data : RoomData, _data : Dictionar
 			_data.extra.world_position[1],
 			_data.extra.world_position[2]
 		)
+	if _game is AM2R:
+		var x_coord = _room_data.x_position
+		x_coord += (_data["coordinates"]["x"] / _room_data.ROOM_DIVISOR)
+		
+		var y_coord = _room_data.y_position
+		y_coord += _room_data.texture.get_height() / _room_data.ROOM_DIVISOR
+		y_coord -= (_data["coordinates"]["y"] / _room_data.ROOM_DIVISOR)
+		coordinates = Vector3(
+			x_coord,
+			y_coord,
+			0
+		)
 
 func get_color() -> Color:
 	return Color.WHITE
