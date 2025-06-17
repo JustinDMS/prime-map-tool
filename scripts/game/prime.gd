@@ -6,21 +6,21 @@ func _init(rdv_header : Dictionary) -> void:
 	# Set virtual members
 	region_offset = {
 		&"Chozo Ruins" :      Vector2(2250, -300),
-		&"Phendrana Drifts" : Vector2(500, 0),
+		&"Phendrana Drifts" : Vector2(600, 0),
 		&"Tallon Overworld" : Vector2(2500, 700),
-		&"Phazon Mines" :     Vector2(1490, 1350),
+		&"Phazon Mines" :     Vector2(1490, 1270),
 		&"Magmoor Caverns" :  Vector2(1000, -500),
 	}
 	subregion_offset = {
 		&"Phendrana Drifts" : [Vector2.ZERO, Vector2(100, 75)],
-		&"Phazon Mines" :     [Vector2(230, 300), Vector2(0, -200), Vector2(180, -600)]
+		&"Phazon Mines" :     [Vector2(230, 300), Vector2(230, -140), Vector2(-50, -670)]
 	}
 	subregion_map = {
 		&"Phendrana Drifts" : {
 			&"West Tower Entrance" : 1, 
 			&"West Tower" : 1, 
 			&"Control Tower" : 1, 
-			&"East Tower" : 1, 
+			&"East Tower" : 1,
 			&"Aether Lab Entryway" : 1,
 		},
 		&"Phazon Mines" : {
@@ -58,6 +58,7 @@ func _init(rdv_header : Dictionary) -> void:
 	z_index_override = {
 		&"Hall of the Elders" : 1,
 		
+		&"Control Tower" : 1,
 		&"Upper Edge Tunnel" : 1,
 		&"Frost Cave Access" : 1,
 		
