@@ -6,21 +6,21 @@ func _init(rdv_header : Dictionary) -> void:
 	# Set virtual members
 	region_offset = {
 		&"Chozo Ruins" :      Vector2(2250, -300),
-		&"Phendrana Drifts" : Vector2(500, 0),
+		&"Phendrana Drifts" : Vector2(600, 0),
 		&"Tallon Overworld" : Vector2(2500, 700),
-		&"Phazon Mines" :     Vector2(1490, 1350),
+		&"Phazon Mines" :     Vector2(1490, 1270),
 		&"Magmoor Caverns" :  Vector2(1000, -500),
 	}
 	subregion_offset = {
 		&"Phendrana Drifts" : [Vector2.ZERO, Vector2(100, 75)],
-		&"Phazon Mines" :     [Vector2(230, 300), Vector2(0, -200), Vector2(180, -600)]
+		&"Phazon Mines" :     [Vector2(230, 300), Vector2(230, -140), Vector2(-50, -670)]
 	}
 	subregion_map = {
 		&"Phendrana Drifts" : {
 			&"West Tower Entrance" : 1, 
 			&"West Tower" : 1, 
 			&"Control Tower" : 1, 
-			&"East Tower" : 1, 
+			&"East Tower" : 1,
 			&"Aether Lab Entryway" : 1,
 		},
 		&"Phazon Mines" : {
@@ -58,6 +58,7 @@ func _init(rdv_header : Dictionary) -> void:
 	z_index_override = {
 		&"Hall of the Elders" : 1,
 		
+		&"Control Tower" : 1,
 		&"Upper Edge Tunnel" : 1,
 		&"Frost Cave Access" : 1,
 		
@@ -115,18 +116,35 @@ func _init(rdv_header : Dictionary) -> void:
 	var etanks := InventoryInterface.PickupSlider.new(self, &"EnergyTank", &"res://data/games/prime1/item_images/Energy Tank.png", 1, 14)
 	var pbs := InventoryInterface.PickupSlider.new(self, &"PowerBomb", &"res://data/games/prime1/item_images/Power Bomb Expansion.png", 1, 8)
 	
-	var truth := InventoryInterface.PickupButton.new(self, &"Truth", &"res://data/games/prime1/item_images/Artifact of Truth.png")
-	var strength := InventoryInterface.PickupButton.new(self, &"Strength", &"res://data/games/prime1/item_images/Artifact of Strength.png")
-	var elder := InventoryInterface.PickupButton.new(self, &"Elder", &"res://data/games/prime1/item_images/Artifact of Elder.png")
-	var wild := InventoryInterface.PickupButton.new(self, &"Wild", &"res://data/games/prime1/item_images/Artifact of Wild.png")
-	var lifegiver := InventoryInterface.PickupButton.new(self, &"Lifegiver", &"res://data/games/prime1/item_images/Artifact of Lifegiver.png")
-	var warrior := InventoryInterface.PickupButton.new(self, &"Warrior", &"res://data/games/prime1/item_images/Artifact of Warrior.png")
-	var chozo := InventoryInterface.PickupButton.new(self, &"Chozo", &"res://data/games/prime1/item_images/Artifact of Chozo.png")
-	var nature := InventoryInterface.PickupButton.new(self, &"Nature", &"res://data/games/prime1/item_images/Artifact of Nature.png")
-	var sun := InventoryInterface.PickupButton.new(self, &"Sun", &"res://data/games/prime1/item_images/Artifact of Sun.png")
-	var world := InventoryInterface.PickupButton.new(self, &"World", &"res://data/games/prime1/item_images/Artifact of World.png")
-	var spirit := InventoryInterface.PickupButton.new(self, &"Spirit", &"res://data/games/prime1/item_images/Artifact of Spirit.png")
-	var newborn := InventoryInterface.PickupButton.new(self, &"Newborn", &"res://data/games/prime1/item_images/Artifact of Newborn.png")
+	var artifact_names : Array[StringName] = [
+		&"Truth",
+		&"Strength",
+		&"Elder",
+		&"Wild",
+		&"Lifegiver",
+		&"Warrior",
+		&"Chozo",
+		&"Nature",
+		&"Sun",
+		&"World",
+		&"Spirit",
+		&"Newborn"
+	]
+	var artifact_icon_paths : Array[StringName] = [
+		&"res://data/games/prime1/item_images/Artifact of Truth.png",
+		&"res://data/games/prime1/item_images/Artifact of Strength.png",
+		&"res://data/games/prime1/item_images/Artifact of Elder.png",
+		&"res://data/games/prime1/item_images/Artifact of Wild.png",
+		&"res://data/games/prime1/item_images/Artifact of Lifegiver.png",
+		&"res://data/games/prime1/item_images/Artifact of Warrior.png",
+		&"res://data/games/prime1/item_images/Artifact of Chozo.png",
+		&"res://data/games/prime1/item_images/Artifact of Nature.png",
+		&"res://data/games/prime1/item_images/Artifact of Sun.png",
+		&"res://data/games/prime1/item_images/Artifact of World.png",
+		&"res://data/games/prime1/item_images/Artifact of Spirit.png",
+		&"res://data/games/prime1/item_images/Artifact of Newborn.png"
+	]
+	var artifacts := InventoryInterface.ArtifactSlider.new(self, artifact_names, artifact_icon_paths, Color("#F1A34C"), Color("#4CDAF5"))
 	
 	inventory_layout = [
 		[_all, none, space_jump, charge_beam, grapple_beam],
@@ -134,9 +152,8 @@ func _init(rdv_header : Dictionary) -> void:
 		[gravity, scan, bombs, wave, wavebuster],
 		[phazon, thermal, boost, ice, ice_spreader],
 		[spacer, xray, spider, plasma, flamethrower],
-		[missiles, etanks, pbs],
-		[truth, strength, elder, wild, lifegiver, warrior],
-		[chozo, nature, sun, world, spirit, newborn]
+		[missiles, etanks],
+		[pbs, artifacts]
 	]
 
 func new_room_data() -> PrimeRoomData:

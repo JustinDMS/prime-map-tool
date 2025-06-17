@@ -101,7 +101,8 @@ func init_nodes() -> void:
 	node_marker_map.clear()
 	
 	var rdvgame := RandovaniaInterface.get_rdvgame()
-	var dock_weaknesses : Dictionary = {} if not rdvgame else rdvgame.get_dock_weaknesses()
+	var dock_weaknesses := {} if not rdvgame else rdvgame.get_dock_weaknesses()
+	var dock_connections := {} if not rdvgame else rdvgame.get_dock_connections()
 	
 	# Create new node data and add to respective room data
 	for r in rdv_logic:
@@ -161,7 +162,20 @@ func init_nodes() -> void:
 				
 				add_node_connections.call_deferred(node_marker_map[node_data])
 	
-	map_drawn.emit( get_elevators(rdvgame) )
+	# Overwrite with rdvgame connections if they exist
+	if not dock_connections.is_empty():
+		for key in dock_connections:
+			var from_split : PackedStringArray = key.split("/")
+			var to_split : PackedStringArray = dock_connections[key].split("/")
+			if not game.has_region(from_split[0]) or not game.has_region(to_split[0]):
+				continue
+			
+			var from_node := get_node_data(from_split[0], from_split[1], from_split[2])
+			var to_node := get_node_data(to_split[0], to_split[1], to_split[2])
+			from_node.default_connection = to_node
+			to_node.default_connection = from_node
+	
+	map_drawn.emit( get_elevators() )
 	resolve_map()
 
 func get_node_data(region : StringName, room_name : String, node_name : String) -> NodeData:
@@ -213,44 +227,35 @@ func get_room_obj(region : StringName, room_name : String) -> Room:
 	var data : RoomData = get_room_data(region, room_name)
 	return room_map[data]
 
-func get_elevators(rdvgame : RDVGame) -> Dictionary[NodeMarker, NodeMarker]:
+func get_elevators() -> Dictionary[NodeMarker, NodeMarker]:
 	var elevators : Dictionary[NodeMarker, NodeMarker] = {}
-	
-	# If there's an RDVGame, get elevator connections from it instead
-	if rdvgame:
-		var dock_connections := rdvgame.get_dock_connections()
-		for key in dock_connections:
-			var from_split : PackedStringArray = key.split("/")
-			var to_split : PackedStringArray = dock_connections[key].split("/")
-			if not game.has_region(from_split[0]) or not game.has_region(to_split[0]):
-				continue
-			
-			var from_node := get_node_data(from_split[0], from_split[1], from_split[2])
-			var to_node := get_node_data(to_split[0], to_split[1], to_split[2])
-			
-			# ALERT - This is probably a bad place to put this
-			# Node data changes should be contained in init_nodes()
-			from_node.default_connection = to_node
-			to_node.default_connection = from_node
-			
-			var from_marker := node_marker_map[from_node]
-			var to_marker := node_marker_map[to_node]
-			elevators[from_marker] = to_marker
-		
-		return elevators
 	
 	for data in node_marker_map:
 		if (
-			data is DockNodeData and 
-			data.is_teleporter() and
+			data is DockNodeData and
 			data.default_connection
-			):
-			var from_marker := node_marker_map[data]
-			var to_marker := node_marker_map[data.default_connection]
-			
-			if from_marker in elevators or to_marker in elevators:
+		):
+			# Elevators
+			if data.is_teleporter():
+				var from_marker := node_marker_map[data]
+				var to_marker := node_marker_map[data.default_connection]
+				if from_marker in elevators or to_marker in elevators:
+					continue
+				elevators[from_marker] = to_marker
 				continue
-			elevators[from_marker] = to_marker
+			
+			# Subregions
+			if (
+				data.is_door() and
+				game.get_room_subregion_index(data.region, data.room_name) != \
+				game.get_room_subregion_index(data.default_connection.region, data.default_connection.room_name)
+				):
+				var from_marker := node_marker_map[data]
+				var to_marker := node_marker_map[data.default_connection]
+				if from_marker in elevators or to_marker in elevators:
+					continue
+				elevators[from_marker] = to_marker
+				continue
 	
 	return elevators
 
