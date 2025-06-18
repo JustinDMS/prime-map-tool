@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bqxakt0hixf7v"
-path="res://.godot/imported/space_jump.png-c1d83f64e6ad07037c4196e1046efa7f.ctex"
+uid="uid://cr46arvxi4qfg"
+path="res://.godot/imported/Power Bomb Launcher.png-08cc2bfa6d7f1b3fcaefde97ed9bffe6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/games/am2r/item_images/space_jump.png"
-dest_files=["res://.godot/imported/space_jump.png-c1d83f64e6ad07037c4196e1046efa7f.ctex"]
+source_file="res://data/games/am2r/item_images/Power Bomb Launcher.png"
+dest_files=["res://.godot/imported/Power Bomb Launcher.png-08cc2bfa6d7f1b3fcaefde97ed9bffe6.ctex"]
 
 [params]
 

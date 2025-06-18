@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c8phkoa7g2ahm"
-path="res://.godot/imported/missile.png-d5cc9f29b8edfb9555b53af1741d811e.ctex"
+uid="uid://b544roglawfmj"
+path="res://.godot/imported/Hi-Jump Boots.png-710ce8894cef2d505b43e7ecf231172a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/games/am2r/item_images/missile.png"
-dest_files=["res://.godot/imported/missile.png-d5cc9f29b8edfb9555b53af1741d811e.ctex"]
+source_file="res://data/games/am2r/item_images/Hi-Jump Boots.png"
+dest_files=["res://.godot/imported/Hi-Jump Boots.png-710ce8894cef2d505b43e7ecf231172a.ctex"]
 
 [params]
 

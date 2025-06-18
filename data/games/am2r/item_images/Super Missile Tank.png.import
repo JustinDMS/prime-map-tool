@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cetnewwnefpp7"
-path="res://.godot/imported/spring_ball.png-8d2ebe86831f63b618f6217bbae0b765.ctex"
+uid="uid://bf6qp1xlnxyid"
+path="res://.godot/imported/Super Missile Tank.png-381dff35c1374bb9ed034177476e110a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/games/am2r/item_images/spring_ball.png"
-dest_files=["res://.godot/imported/spring_ball.png-8d2ebe86831f63b618f6217bbae0b765.ctex"]
+source_file="res://data/games/am2r/item_images/Super Missile Tank.png"
+dest_files=["res://.godot/imported/Super Missile Tank.png-381dff35c1374bb9ed034177476e110a.ctex"]
 
 [params]
 

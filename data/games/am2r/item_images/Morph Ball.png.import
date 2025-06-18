@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://csdbpnms4p1w8"
-path="res://.godot/imported/screw_attack.png-bc752c69c41794db6aee3afe7e75be9c.ctex"
+uid="uid://c25yhsqn5jxrn"
+path="res://.godot/imported/Morph Ball.png-f3fcbd9b163994b8d7951ffcc2bd2f6f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/games/am2r/item_images/screw_attack.png"
-dest_files=["res://.godot/imported/screw_attack.png-bc752c69c41794db6aee3afe7e75be9c.ctex"]
+source_file="res://data/games/am2r/item_images/Morph Ball.png"
+dest_files=["res://.godot/imported/Morph Ball.png-f3fcbd9b163994b8d7951ffcc2bd2f6f.ctex"]
 
 [params]
 

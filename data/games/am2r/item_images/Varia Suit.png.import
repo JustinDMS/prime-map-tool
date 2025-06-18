@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cii5dk1otbv65"
-path="res://.godot/imported/missile_launcher.png-f6b95a2c661ac9ed5b4726bc50954044.ctex"
+uid="uid://bwolsjmvhnmea"
+path="res://.godot/imported/Varia Suit.png-09b2d762328ba4909b85d9e9a9b62aeb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/games/am2r/item_images/missile_launcher.png"
-dest_files=["res://.godot/imported/missile_launcher.png-f6b95a2c661ac9ed5b4726bc50954044.ctex"]
+source_file="res://data/games/am2r/item_images/Varia Suit.png"
+dest_files=["res://.godot/imported/Varia Suit.png-09b2d762328ba4909b85d9e9a9b62aeb.ctex"]
 
 [params]
 

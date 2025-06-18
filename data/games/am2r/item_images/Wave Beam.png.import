@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://72gn74ksodkc"
-path="res://.godot/imported/gravity_suit.png-4e57fe878f1a18e949dee53ef73e2c09.ctex"
+uid="uid://bqneahv41cwy0"
+path="res://.godot/imported/Wave Beam.png-3759267ebff49fc355ceaf622abaa37d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/games/am2r/item_images/gravity_suit.png"
-dest_files=["res://.godot/imported/gravity_suit.png-4e57fe878f1a18e949dee53ef73e2c09.ctex"]
+source_file="res://data/games/am2r/item_images/Wave Beam.png"
+dest_files=["res://.godot/imported/Wave Beam.png-3759267ebff49fc355ceaf622abaa37d.ctex"]
 
 [params]
 

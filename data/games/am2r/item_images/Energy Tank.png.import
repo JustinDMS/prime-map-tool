@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://63b6ryuoivji"
-path="res://.godot/imported/plasma_beam.png-6979dbea26f39e7bb7fd1e443777366d.ctex"
+uid="uid://t3g6b3xubei"
+path="res://.godot/imported/Energy Tank.png-50d56c0b6d5a75f1581e715b8d27e5ed.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/games/am2r/item_images/plasma_beam.png"
-dest_files=["res://.godot/imported/plasma_beam.png-6979dbea26f39e7bb7fd1e443777366d.ctex"]
+source_file="res://data/games/am2r/item_images/Energy Tank.png"
+dest_files=["res://.godot/imported/Energy Tank.png-50d56c0b6d5a75f1581e715b8d27e5ed.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bwolsjmvhnmea"
-path="res://.godot/imported/varia_suit.png-c4998abbf90e3b88388170148d874a29.ctex"
+uid="uid://dx4ss3vx58dp1"
+path="res://.godot/imported/Power Bomb Tank.png-36c644dd8beb679296b55fe1ae946842.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/games/am2r/item_images/varia_suit.png"
-dest_files=["res://.godot/imported/varia_suit.png-c4998abbf90e3b88388170148d874a29.ctex"]
+source_file="res://data/games/am2r/item_images/Power Bomb Tank.png"
+dest_files=["res://.godot/imported/Power Bomb Tank.png-36c644dd8beb679296b55fe1ae946842.ctex"]
 
 [params]
 

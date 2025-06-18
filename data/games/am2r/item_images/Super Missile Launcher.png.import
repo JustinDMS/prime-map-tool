@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bqneahv41cwy0"
-path="res://.godot/imported/wave_beam.png-72030c3db63ff741a637209be5050f26.ctex"
+uid="uid://cicafosjvyamf"
+path="res://.godot/imported/Super Missile Launcher.png-20b5d257f61f283c428261c91d9aed9b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/games/am2r/item_images/wave_beam.png"
-dest_files=["res://.godot/imported/wave_beam.png-72030c3db63ff741a637209be5050f26.ctex"]
+source_file="res://data/games/am2r/item_images/Super Missile Launcher.png"
+dest_files=["res://.godot/imported/Super Missile Launcher.png-20b5d257f61f283c428261c91d9aed9b.ctex"]
 
 [params]
 

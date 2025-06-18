@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://pcmvyrmbvj82"
-path="res://.godot/imported/ice_beam.png-693fee167fca63c2d648e781a231c824.ctex"
+uid="uid://csniu4r38tjre"
+path="res://.godot/imported/Spider Ball.png-5930b80dbb1d1630ea6f48150f6b37ce.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/games/am2r/item_images/ice_beam.png"
-dest_files=["res://.godot/imported/ice_beam.png-693fee167fca63c2d648e781a231c824.ctex"]
+source_file="res://data/games/am2r/item_images/Spider Ball.png"
+dest_files=["res://.godot/imported/Spider Ball.png-5930b80dbb1d1630ea6f48150f6b37ce.ctex"]
 
 [params]
 

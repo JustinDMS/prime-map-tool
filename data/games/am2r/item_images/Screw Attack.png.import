@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cicafosjvyamf"
-path="res://.godot/imported/sm_launcher.png-0f32175bccd8262b5cf0ded38a5b5e36.ctex"
+uid="uid://csdbpnms4p1w8"
+path="res://.godot/imported/Screw Attack.png-ca79df475709d3acfb5c08c2f965d65c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/games/am2r/item_images/sm_launcher.png"
-dest_files=["res://.godot/imported/sm_launcher.png-0f32175bccd8262b5cf0ded38a5b5e36.ctex"]
+source_file="res://data/games/am2r/item_images/Screw Attack.png"
+dest_files=["res://.godot/imported/Screw Attack.png-ca79df475709d3acfb5c08c2f965d65c.ctex"]
 
 [params]
 

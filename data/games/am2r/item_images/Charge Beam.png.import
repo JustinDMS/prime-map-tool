@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cr46arvxi4qfg"
-path="res://.godot/imported/pb_launcher.png-6ce50cf8b09da1af23a264de9acff1dd.ctex"
+uid="uid://1t27nlry6fnh"
+path="res://.godot/imported/Charge Beam.png-286d98b9571df93cd645376f02d888cb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/games/am2r/item_images/pb_launcher.png"
-dest_files=["res://.godot/imported/pb_launcher.png-6ce50cf8b09da1af23a264de9acff1dd.ctex"]
+source_file="res://data/games/am2r/item_images/Charge Beam.png"
+dest_files=["res://.godot/imported/Charge Beam.png-286d98b9571df93cd645376f02d888cb.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bf6qp1xlnxyid"
-path="res://.godot/imported/super_missile.png-ca6ab47018d15fb673a1eadc9a8b4470.ctex"
+uid="uid://72gn74ksodkc"
+path="res://.godot/imported/Gravity Suit.png-aeb6a5fb4b957a5cf5b5799c5f47bd5b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/games/am2r/item_images/super_missile.png"
-dest_files=["res://.godot/imported/super_missile.png-ca6ab47018d15fb673a1eadc9a8b4470.ctex"]
+source_file="res://data/games/am2r/item_images/Gravity Suit.png"
+dest_files=["res://.godot/imported/Gravity Suit.png-aeb6a5fb4b957a5cf5b5799c5f47bd5b.ctex"]
 
 [params]
 

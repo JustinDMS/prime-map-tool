@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://t3g6b3xubei"
-path="res://.godot/imported/energy_tank.png-f007f2e891e6f245c2083416160ab763.ctex"
+uid="uid://5212buiu6ahv"
+path="res://.godot/imported/Power Grip.png-b9cd3df5de22199d79bda1c3a5b91f66.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/games/am2r/item_images/energy_tank.png"
-dest_files=["res://.godot/imported/energy_tank.png-f007f2e891e6f245c2083416160ab763.ctex"]
+source_file="res://data/games/am2r/item_images/Power Grip.png"
+dest_files=["res://.godot/imported/Power Grip.png-b9cd3df5de22199d79bda1c3a5b91f66.ctex"]
 
 [params]
 

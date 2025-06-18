@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://1t27nlry6fnh"
-path="res://.godot/imported/charge_beam.png-688e8d95695b2356e6aec058c6ce3f8d.ctex"
+uid="uid://bqxakt0hixf7v"
+path="res://.godot/imported/Space Jump.png-c6955e4c33caa54b1ea54f7f202a9be7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/games/am2r/item_images/charge_beam.png"
-dest_files=["res://.godot/imported/charge_beam.png-688e8d95695b2356e6aec058c6ce3f8d.ctex"]
+source_file="res://data/games/am2r/item_images/Space Jump.png"
+dest_files=["res://.godot/imported/Space Jump.png-c6955e4c33caa54b1ea54f7f202a9be7.ctex"]
 
 [params]
 

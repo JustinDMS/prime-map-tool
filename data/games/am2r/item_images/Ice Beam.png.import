@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://sy6kjyhqpgyl"
-path="res://.godot/imported/morph_ball_bomb.png-5f78c165d03a376b2be48b8080789ae1.ctex"
+uid="uid://pcmvyrmbvj82"
+path="res://.godot/imported/Ice Beam.png-1708c332a7d43c7be77dea50bdbc892e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/games/am2r/item_images/morph_ball_bomb.png"
-dest_files=["res://.godot/imported/morph_ball_bomb.png-5f78c165d03a376b2be48b8080789ae1.ctex"]
+source_file="res://data/games/am2r/item_images/Ice Beam.png"
+dest_files=["res://.godot/imported/Ice Beam.png-1708c332a7d43c7be77dea50bdbc892e.ctex"]
 
 [params]
 

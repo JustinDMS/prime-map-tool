@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://csniu4r38tjre"
-path="res://.godot/imported/spider_ball.png-b65e6bad9f699f4f50b4021376ee2f64.ctex"
+uid="uid://c4lwdup0fe8ar"
+path="res://.godot/imported/Speed Booster.png-91e7f8d51a8df3942d5407db9ded8cc4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/games/am2r/item_images/spider_ball.png"
-dest_files=["res://.godot/imported/spider_ball.png-b65e6bad9f699f4f50b4021376ee2f64.ctex"]
+source_file="res://data/games/am2r/item_images/Speed Booster.png"
+dest_files=["res://.godot/imported/Speed Booster.png-91e7f8d51a8df3942d5407db9ded8cc4.ctex"]
 
 [params]
 

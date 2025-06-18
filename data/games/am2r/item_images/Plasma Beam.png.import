@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4lwdup0fe8ar"
-path="res://.godot/imported/speed_booster.png-be77a8fb544cd5bd9756751ae166e917.ctex"
+uid="uid://63b6ryuoivji"
+path="res://.godot/imported/Plasma Beam.png-f27fbe2a4123f62fefd7305ab1620664.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/games/am2r/item_images/speed_booster.png"
-dest_files=["res://.godot/imported/speed_booster.png-be77a8fb544cd5bd9756751ae166e917.ctex"]
+source_file="res://data/games/am2r/item_images/Plasma Beam.png"
+dest_files=["res://.godot/imported/Plasma Beam.png-f27fbe2a4123f62fefd7305ab1620664.ctex"]
 
 [params]
 

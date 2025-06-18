@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dx4ss3vx58dp1"
-path="res://.godot/imported/power_bomb.png-49cece23b2300932e4a0c2fb5d4a7497.ctex"
+uid="uid://c8phkoa7g2ahm"
+path="res://.godot/imported/Missile Expansion.png-6103e78201c83bde46b61008e0e48335.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/games/am2r/item_images/power_bomb.png"
-dest_files=["res://.godot/imported/power_bomb.png-49cece23b2300932e4a0c2fb5d4a7497.ctex"]
+source_file="res://data/games/am2r/item_images/Missile Expansion.png"
+dest_files=["res://.godot/imported/Missile Expansion.png-6103e78201c83bde46b61008e0e48335.ctex"]
 
 [params]
 

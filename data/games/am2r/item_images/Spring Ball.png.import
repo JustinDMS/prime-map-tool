@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c25yhsqn5jxrn"
-path="res://.godot/imported/morph_ball.png-56b787c139e3df3b0e7abdf0b8a0a871.ctex"
+uid="uid://cetnewwnefpp7"
+path="res://.godot/imported/Spring Ball.png-55e1a766ac2be5a71b263a5062b59fbe.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/games/am2r/item_images/morph_ball.png"
-dest_files=["res://.godot/imported/morph_ball.png-56b787c139e3df3b0e7abdf0b8a0a871.ctex"]
+source_file="res://data/games/am2r/item_images/Spring Ball.png"
+dest_files=["res://.godot/imported/Spring Ball.png-55e1a766ac2be5a71b263a5062b59fbe.ctex"]
 
 [params]
 

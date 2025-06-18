@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://5212buiu6ahv"
-path="res://.godot/imported/power_grip.png-ca5692e1049046c63f25aba03f0a334c.ctex"
+uid="uid://danukpcttfa55"
+path="res://.godot/imported/Spazer Beam.png-623f221a14e519622a5eedeb36ae0d60.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://data/games/am2r/item_images/power_grip.png"
-dest_files=["res://.godot/imported/power_grip.png-ca5692e1049046c63f25aba03f0a334c.ctex"]
+source_file="res://data/games/am2r/item_images/Spazer Beam.png"
+dest_files=["res://.godot/imported/Spazer Beam.png-623f221a14e519622a5eedeb36ae0d60.ctex"]
 
 [params]
 
