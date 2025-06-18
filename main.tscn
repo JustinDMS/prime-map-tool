@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://br45wp8jdj0tx"]
+[gd_scene load_steps=18 format=3 uid="uid://br45wp8jdj0tx"]
 
 [ext_resource type="Script" uid="uid://c3u7c3gsctgar" path="res://scripts/game_map/elevator_manager.gd" id="1_gb56k"]
 [ext_resource type="Script" uid="uid://cs002s81robiq" path="res://scripts/game_map/game_map.gd" id="2_0cp0l"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://dabxqxfeyelsc" path="res://data/games/prime1/item_images/Missile Expansion.png" id="6_6j0ik"]
 [ext_resource type="Texture2D" uid="uid://dlwtuc01be6cw" path="res://data/icons/node marker/teleporter_marker.png" id="6_gngh3"]
 [ext_resource type="Texture2D" uid="uid://dvo2x4ywtxhdk" path="res://data/icons/node marker/event_marker.png" id="7_0n3wm"]
+[ext_resource type="Script" uid="uid://dsirh33xsa7cj" path="res://scripts/ui/game_interface.gd" id="12_2cqfq"]
 [ext_resource type="Script" uid="uid://b7qd0t5cpovw6" path="res://scripts/ui/logic_interface.gd" id="37_ky3bh"]
 [ext_resource type="Script" uid="uid://cydamye1a7mcf" path="res://scripts/ui/tricks_interface.gd" id="44_rbq56"]
 [ext_resource type="Script" uid="uid://couihycgxctla" path="res://scripts/ui/randovania_interface.gd" id="45_px4t2"]
@@ -226,7 +227,7 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="TabContainer" type="TabContainer" parent="UI/ui/MarginContainer/VBoxContainer" node_paths=PackedStringArray("game_map", "logic_interface")]
-custom_minimum_size = Vector2(500, 0)
+custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
@@ -237,14 +238,38 @@ script = ExtResource("4_0yqv7")
 game_map = NodePath("../../../../../game_map")
 logic_interface = NodePath("Logic")
 
+[node name="Game" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("options")]
+layout_mode = 2
+script = ExtResource("12_2cqfq")
+options = NodePath("MarginContainer/OptionButton")
+min_size = Vector2(600, 125)
+metadata/_custom_type_script = "uid://cmv3a55dt88lx"
+metadata/_tab_index = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Game"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="OptionButton" type="OptionButton" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Game/MarginContainer"]
+layout_mode = 2
+
 [node name="Tricks" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("game_map", "randovania_interface", "tricks_container")]
+visible = false
 layout_mode = 2
 script = ExtResource("44_rbq56")
 game_map = NodePath("../../../../../../game_map")
 randovania_interface = NodePath("../Randovania")
 tricks_container = NodePath("MarginContainer/ScrollContainer/VBoxContainer")
-min_size = Vector2(500, 900)
-metadata/_tab_index = 0
+min_size = Vector2(600, 900)
+metadata/_tab_index = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Tricks"]
 layout_mode = 1
@@ -281,7 +306,8 @@ word_hash_label = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxCo
 rdv_options_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer")
 bool_options_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/bool_options")
 loaded_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/loaded_container")
-metadata/_tab_index = 1
+min_size = Vector2(600, 0)
+metadata/_tab_index = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania"]
 layout_mode = 1
@@ -361,8 +387,8 @@ script = ExtResource("37_ky3bh")
 tricks_interface = NodePath("../Tricks")
 container = NodePath("VBoxContainer")
 tooltip_label = NodePath("VBoxContainer/Label")
-min_size = Vector2(550, 900)
-metadata/_tab_index = 2
+min_size = Vector2(600, 900)
+metadata/_tab_index = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Logic"]
 layout_mode = 1

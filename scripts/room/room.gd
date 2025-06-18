@@ -68,6 +68,10 @@ func init_room():
 	set_z_index( game.get_room_z_index(data.name) )
 	region = data.region
 	
+	var _scale := game.get_region_scale()
+	set_flip_h( _scale.x < 0 )
+	set_flip_v( _scale.y < 0 )
+	
 	set_state(game, State.DEFAULT)
 
 func create_bitmap_from_room_image(image : Image, flip_x : bool = false, flip_y : bool = false) -> void:

@@ -158,6 +158,8 @@ func _init(rdv_header : Dictionary) -> void:
 
 func get_game_id() -> StringName:
 	return &"prime1"
+func get_region_scale() -> Vector2:
+	return Vector2(1, -1)
 func new_room_data() -> PrimeRoomData:
 	return PrimeRoomData.new()
 func new_room() -> PrimeRoom:

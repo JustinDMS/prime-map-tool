@@ -5,7 +5,7 @@ static var game : Game = null
 static func get_game() -> Game:
 	return game
 static func _static_init() -> void:
-	game = GameFactory.create_from_game_name("am2r")	# HACK! Breaks prime.
+	game = GameFactory.create_from_game_name("prime1")
 	game.all()
 
 signal map_drawn(dock_connections : Dictionary[NodeMarker, NodeMarker])
@@ -43,7 +43,7 @@ func init_map() -> void:
 	for r in rdv_logic:
 		var region := Control.new()
 		region_nodes[r] = region
-		region.set_scale(Vector2(1, 1)) # Flip vertically - Sign change is a HACK! Breaks prime
+		region.set_scale( game.get_region_scale() )
 		region.set_name(r)
 		add_child(region)
 		region.set_position( game.get_region_offset(r) )
@@ -110,10 +110,10 @@ func init_nodes() -> void:
 			var room_data : RoomData = world_data[r][j]
 			room_data.clear_nodes()
 			
-			# Stuff relating to default_node is a HACK! Breaks prime.
-			var default_node_name : String = ""# rdv_logic[r]["areas"][j]["default_node"]
+			var default_node_buffer = rdv_logic[r]["areas"][j]["default_node"] # Can be null or [String]
+			var default_node_name : String = "" if not default_node_buffer else default_node_buffer
+			
 			var nodes : Array[NodeData] = []
-			room_data.default_node = null
 			for k in rdv_logic[r]["areas"][j]["nodes"]:
 				if k == "Pickup (Items Every Room)":
 					continue
@@ -134,7 +134,7 @@ func init_nodes() -> void:
 					if format_string in dock_weaknesses:
 						node_data.default_dock_weakness = dock_weaknesses[format_string]["name"]
 				
-				if k == default_node_name or room_data.default_node == null:
+				if k == default_node_name:
 					room_data.default_node = node_data
 			room_data.nodes = nodes
 	
@@ -215,11 +215,11 @@ func add_marker_to_map(node_marker : NodeMarker) -> void:
 	room.add_child(node_marker)
 	
 	var pos : Vector2 = region_nodes[data.region].global_position
-	pos += Vector2(data.coordinates.x, data.coordinates.y) # Sign change is a HACK! Breaks prime.
+	pos += Vector2(data.coordinates.x, data.coordinates.y) * game.get_region_scale()
 	
 	if game.has_subregions(data.region):
 		var subregion : int = game.get_room_subregion_index(data.region, data.room_name)
-		pos += game.get_subregion_offsets(data.region)[subregion] * Vector2(1, -1) # Regions are vertically flipped, flip again so math is right
+		pos += game.get_subregion_offsets(data.region)[subregion] * game.get_region_scale()
 	
 	node_marker.global_position = pos
 
@@ -275,9 +275,8 @@ func resolve_map() -> void:
 	print("---Resolving map---")
 	#print_stack()
 	
-	if not start_node:	
-		# HACK! Use proper start node from the DB
-		start_node = get_node_data("Main Caves", "Landing Site", "Ship")
+	if not start_node:
+		start_node = get_default_start_node()
 	
 	set_all_unreachable()
 	
@@ -391,6 +390,10 @@ func set_start_node(new_node : NodeData) -> void:
 	start_node = new_node
 	camera.center_on_room(start_node, get_room_obj(start_node.region, start_node.room_name))
 	resolve_map()
+
+func get_default_start_node() -> NodeData:
+	var data : Dictionary = game._header.starting_location
+	return get_node_data(data.region, data.area, data.node)
 
 func rdvgame_cleared() -> void:
 	start_node = null

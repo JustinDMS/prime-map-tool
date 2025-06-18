@@ -35,9 +35,9 @@ func init_elevators(dock_connections : Dictionary[NodeMarker, NodeMarker]) -> vo
 		
 		# Add additional offset if either room is part of a subregion
 		if game_map.game.has_subregions(from_data.region):
-			from_point += from_region.get_child( game_map.game.get_room_subregion_index(from_data.region, from_data.room_name) ).position * Vector2(1, -1)
+			from_point += from_region.get_child( game_map.game.get_room_subregion_index(from_data.region, from_data.room_name) ).position * game_map.game.get_region_scale()
 		if game_map.game.has_subregions(to_data.region):
-			to_point += to_region.get_child( game_map.game.get_room_subregion_index(to_data.region, to_data.room_name) ).position * Vector2(1, -1)
+			to_point += to_region.get_child( game_map.game.get_room_subregion_index(to_data.region, to_data.room_name) ).position * game_map.game.get_region_scale()
 		
 		# Interpolate between region colors
 		var color := game_map.game.get_region_color(from_data.region).lerp(game_map.game.get_region_color(to_data.region), 0.5)

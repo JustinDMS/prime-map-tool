@@ -36,6 +36,8 @@ var inventory_layout : Array[Array] = []
 ## Game ID used by Randovania
 func get_game_id() -> StringName:
 	return &""
+func get_region_scale() -> Vector2:
+	return Vector2(1, 1)
 func new_room_data() -> RoomData:
 	return null
 func new_room() -> Room:
