@@ -156,6 +156,8 @@ func _init(rdv_header : Dictionary) -> void:
 		[pbs, artifacts]
 	]
 
+func get_game_id() -> StringName:
+	return &"prime1"
 func new_room_data() -> PrimeRoomData:
 	return PrimeRoomData.new()
 func new_room() -> PrimeRoom:

@@ -33,6 +33,9 @@ var inventory_layout : Array[Array] = []
 #endregion
 
 #region Virtual Methods
+## Game ID used by Randovania
+func get_game_id() -> StringName:
+	return &""
 func new_room_data() -> RoomData:
 	return null
 func new_room() -> Room:

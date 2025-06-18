@@ -2,9 +2,12 @@ class_name PickupNodeData extends NodeData
 
 @export var item_name : String
 
+## Used to determine path for texture
+var game : Game = null
+
 func init(_game : Game, _name : String, room_data : RoomData, data : Dictionary) -> void:
 	super(_game, _name, room_data, data)
-	
+	game = _game
 	parse_item_name()
 
 func get_color() -> Color:
@@ -14,7 +17,13 @@ func get_texture() -> Texture2D:
 	if is_nothing() or is_artifact():
 		return null
 	
-	return load("res://data/games/prime1/item_images/%s.png" % item_name)
+	var path := "res://data/games/%s/item_images/%s.png" % [game.get_game_id(), item_name]
+	
+	if not ResourceLoader.exists(path, "Texture2D"):
+		push_warning("Failed to find texture for item: %s" % item_name)
+		return null
+	
+	return load(path)
 
 func get_scale() -> Vector2:
 	const SCALE := Vector2(0.0375, 0.0375)
