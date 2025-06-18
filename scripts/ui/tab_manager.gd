@@ -1,6 +1,6 @@
 extends TabContainer
 
-const MIN_SIZE := Vector2(500, 0)
+const MIN_SIZE := Vector2(600, 0)
 
 # Since we create the inventory dynamically,
 # export dependencies here
@@ -16,7 +16,7 @@ func _ready() -> void:
 	inventory_interface.items_changed.connect(game_map.resolve_map)
 	inventory_interface.items_changed.connect(logic_interface.display_data)
 	add_child(inventory_interface)
-	move_child(inventory_interface, 0)
+	move_child(inventory_interface, 1)
 	
 	for i in range(get_child_count()):
 		var ui_tab := get_child(i) as UITab
