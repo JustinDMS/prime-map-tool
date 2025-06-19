@@ -154,4 +154,4 @@ func show_import_status_message(text : String) -> void:
 	import_status_tween.tween_property(import_status_label, "self_modulate", Color.TRANSPARENT, DURATION).set_delay(DISPLAY_TIME)
 
 func set_button_color(setting : Game.MiscSetting, button : Button) -> void:
-	button.self_modulate = PrimeInventoryInterface.ON_COLOR if setting.is_enabled() else PrimeInventoryInterface.OFF_COLOR
+	button.self_modulate = InventoryInterface.ON_COLOR if setting.is_enabled() else InventoryInterface.OFF_COLOR
