@@ -10,7 +10,6 @@ class_name RoomData extends Resource
 func init(_game : Game, _region : StringName, _name : String, _data : Dictionary) -> void:
 	region = _region
 	name = _name
-	texture = get_room_texture()
 
 ## Override in subclasses
 func get_room_texture() -> Texture2D:

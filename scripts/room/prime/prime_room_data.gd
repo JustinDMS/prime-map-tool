@@ -7,6 +7,7 @@ class_name PrimeRoomData extends RoomData
 func init(_game : Game, _region : StringName, _name : String, _data : Dictionary) -> void:
 	super(_game, _region, _name, _data)
 	
+	texture = get_room_texture()
 	aabb = [
 		_data.extra.aabb[0],
 		_data.extra.aabb[1],

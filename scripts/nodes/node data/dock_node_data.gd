@@ -11,12 +11,7 @@ func init(_game : Game, _name : String, _room_data : RoomData, _data : Dictionar
 	default_dock_weakness = _data.default_dock_weakness
 
 func get_texture() -> Texture2D:
-	const TEXTURE_MAP := {
-		"door" : preload("res://data/icons/node marker/door.png"),
-		"teleporter" : preload("res://data/icons/node marker/teleporter_marker.png"),
-		"morph_ball" : preload("res://data/icons/node marker/node_marker.png")
-	}
-	return TEXTURE_MAP["door"]	 # HACK! Breaks prime
+	return null
 
 func is_door() -> bool:
 	return type == "door"

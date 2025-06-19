@@ -6,6 +6,8 @@ static func create_data_from_type(game : Game, type : String) -> NodeData:
 		"dock":
 			if game is Prime:
 				return PrimeDockNodeData.new()
+			if game is AM2R:
+				return AM2RDockNodeData.new()
 			return DockNodeData.new()
 		"pickup":
 			return PickupNodeData.new()
