@@ -227,7 +227,7 @@ mouse_filter = 2
 layout_mode = 2
 mouse_filter = 2
 
-[node name="TabContainer" type="TabContainer" parent="UI/ui/MarginContainer/VBoxContainer" node_paths=PackedStringArray("game_map", "logic_interface")]
+[node name="TabContainer" type="TabContainer" parent="UI/ui/MarginContainer/VBoxContainer" node_paths=PackedStringArray("game_map", "game_interface", "logic_interface")]
 custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -237,6 +237,7 @@ tab_focus_mode = 0
 deselect_enabled = true
 script = ExtResource("4_0yqv7")
 game_map = NodePath("../../../../../game_map")
+game_interface = NodePath("Game")
 logic_interface = NodePath("Logic")
 
 [node name="Game" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("options")]

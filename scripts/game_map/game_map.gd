@@ -412,9 +412,16 @@ func rdvgame_cleared() -> void:
 	camera.center_on_room(start_node, get_room_obj(start_node.region, start_node.room_name))
 
 func change_to_game(game_id : StringName) -> void:
+	rdv_logic.clear()
+	region_nodes.clear()
+	world_data.clear()
+	node_marker_map.clear()
+	room_map.clear()
+	start_node = null
+
 	game = GameFactory.create_from_game_name(game_id)
+	game.all()
 	
 	load_rdv_logic()
 	init_map()
-	start_node = get_default_start_node()
 	init_nodes()
