@@ -12,6 +12,7 @@ signal map_drawn(dock_connections : Dictionary[NodeMarker, NodeMarker])
 signal map_resolved(reached_nodes : Array[NodeData])
 
 @export var ui : Control
+@export var game_interface : GameInterface
 @export var trick_interface : UITab
 @export var randovania_interface : UITab
 @export var logic_interface : UITab
@@ -25,6 +26,8 @@ var room_map : Dictionary[RoomData, Room] = {}
 var start_node : NodeData = null
 
 func _ready() -> void:
+	game_interface.game_selected.connect(change_to_game)
+	
 	trick_interface.tricks_changed.connect(resolve_map)
 	
 	randovania_interface.settings_changed.connect(resolve_map)
@@ -40,6 +43,9 @@ func load_rdv_logic() -> void:
 
 ## Create region [Control] nodes and draw rooms
 func init_map() -> void:
+	for n in get_children():
+		n.queue_free()
+	
 	for r in rdv_logic:
 		var region := Control.new()
 		region_nodes[r] = region
@@ -404,3 +410,11 @@ func rdvgame_cleared() -> void:
 	resolve_map()
 	
 	camera.center_on_room(start_node, get_room_obj(start_node.region, start_node.room_name))
+
+func change_to_game(game_id : StringName) -> void:
+	game = GameFactory.create_from_game_name(game_id)
+	
+	load_rdv_logic()
+	init_map()
+	start_node = get_default_start_node()
+	init_nodes()

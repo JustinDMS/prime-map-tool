@@ -41,7 +41,7 @@ anchors_preset = 0
 script = ExtResource("1_gb56k")
 game_map = NodePath("../game_map")
 
-[node name="game_map" type="Control" parent="." node_paths=PackedStringArray("ui", "trick_interface", "randovania_interface", "logic_interface", "camera")]
+[node name="game_map" type="Control" parent="." node_paths=PackedStringArray("ui", "game_interface", "trick_interface", "randovania_interface", "logic_interface", "camera")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -52,6 +52,7 @@ mouse_filter = 1
 mouse_default_cursor_shape = 3
 script = ExtResource("2_0cp0l")
 ui = NodePath("../UI/ui")
+game_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Game")
 trick_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Tricks")
 randovania_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania")
 logic_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Logic")
