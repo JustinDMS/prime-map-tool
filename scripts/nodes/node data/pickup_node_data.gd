@@ -33,10 +33,10 @@ func get_hover_scale() -> Vector2:
 	const HOVER_SCALE := Vector2(0.05, 0.05)
 	return HOVER_SCALE
 
+# HACK - This is ugly
 func parse_item_name() -> void:
 	var rdvgame := RandovaniaInterface.get_rdvgame()
 	
-	# HACK This is ugly
 	item_name = name.split("(")[1].split(")")[0]
 	if rdvgame:
 		item_name = rdvgame.get_pickup_locations()[region]["%s/%s" % [room_name, name]]
