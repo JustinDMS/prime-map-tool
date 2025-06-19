@@ -1,5 +1,9 @@
 class_name RandovaniaInterface extends UITab
 
+static var rdvgame : RDVGame = null
+static func get_rdvgame() -> RDVGame:
+	return rdvgame
+
 signal settings_changed()
 signal rdvgame_loaded()
 
@@ -15,11 +19,6 @@ signal rdvgame_cleared()
 @export var rdv_options_container : ScrollContainer
 @export var bool_options_container : VBoxContainer
 @export var loaded_container : VBoxContainer
-
-static var rdvgame : RDVGame = null
-
-static func get_rdvgame() -> RDVGame:
-	return rdvgame
 
 var import_status_tween : Tween
 var starting_size := Vector2()
@@ -116,6 +115,7 @@ func parse_rdv(data : Dictionary) -> void:
 	rdvgame_load_success()
 
 func rdvgame_load_failed(error_message : String) -> void:
+	rdvgame = null
 	show_import_status_message(error_message)
 
 func rdvgame_load_success() -> void:
