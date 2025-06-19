@@ -2,8 +2,8 @@ class_name LogicInterface extends UITab
 
 const FAIL_COLOR := Color.INDIAN_RED
 const PASS_COLOR := Color.LIME_GREEN
-const NO_DATA_SIZE := Vector2(550, 150)
-const DATA_SIZE := Vector2(550, 900)
+const NO_DATA_SIZE := Vector2(600, 150)
+const DATA_SIZE := Vector2(600, 900)
 
 @export var tricks_interface : TricksInterface
 @export var container : VBoxContainer
