@@ -27,11 +27,13 @@ func init_elevators(dock_connections : Dictionary[NodeMarker, NodeMarker]) -> vo
 	for nf in dock_connections:
 		var from_data := nf.data
 		var from_region : Control = game_map.region_nodes[from_data.region]
-		var from_point : Vector2 = from_region.position + Vector2(from_data.coordinates.x, -from_data.coordinates.y)
+		var from_point : Vector2 = from_region.position + \
+		Vector2(from_data.coordinates.x, from_data.coordinates.y) * game_map.game.get_region_scale()
 		
 		var to_data := dock_connections[nf].data
 		var to_region : Control = game_map.region_nodes[to_data.region]
-		var to_point : Vector2 = to_region.position + Vector2(to_data.coordinates.x, -to_data.coordinates.y)
+		var to_point : Vector2 = to_region.position + \
+		Vector2(to_data.coordinates.x, to_data.coordinates.y) * game_map.game.get_region_scale()
 		
 		# Add additional offset if either room is part of a subregion
 		if game_map.game.has_subregions(from_data.region):
