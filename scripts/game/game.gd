@@ -40,8 +40,8 @@ func get_region_scale() -> Vector2:
 	return Vector2(1, 1)
 func new_room_data() -> RoomData:
 	return null
-func new_room() -> Room:
-	return null
+func init_room(_room : Room) -> void: 
+	pass
 #endregion
 
 func _init(rdv_header : Dictionary) -> void:

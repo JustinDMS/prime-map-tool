@@ -162,11 +162,26 @@ func get_region_scale() -> Vector2:
 	return Vector2(1, -1)
 func new_room_data() -> PrimeRoomData:
 	return PrimeRoomData.new()
-func new_room() -> PrimeRoom:
-	const BASE_ROOM : PackedScene = preload("res://resources/base_room.tscn")
-	const PRIME_ROOM_SCRIPT : GDScript = preload("res://scripts/room/prime/prime_room.gd")
+
+func init_room(room : Room) -> void:
+	room.create_bitmap()
 	
-	var room := BASE_ROOM.instantiate()
-	room.set_script(PRIME_ROOM_SCRIPT)
+	var x1 : float = room.data.aabb[0]
+	var y1 : float = room.data.aabb[1]
+	#var _z1 : float = room.data.aabb[2]
+	var x2 : float = room.data.aabb[3]
+	var y2 : float = room.data.aabb[4]
+	#var _z2 : float = room.data.aabb[5]
 	
-	return room
+	room.position.x = x1
+	room.position.y = y1
+	
+	room.custom_minimum_size.x = abs(x2 - x1)
+	room.custom_minimum_size.y = abs(y2 - y1)
+	
+	var outline_config := Room.OutlineConfig.new(
+		&"res://resources/highlight_shader.tres",
+		2, 3, 8
+	)
+	room.material = load( outline_config.shader_path ).duplicate()
+	room.config = outline_config

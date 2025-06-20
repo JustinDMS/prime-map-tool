@@ -89,11 +89,16 @@ func get_game_id() -> StringName:
 	return &"am2r"
 func new_room_data() -> AM2RRoomData:
 	return AM2RRoomData.new()
-func new_room() -> AM2RRoom:
-	const BASE_ROOM : PackedScene = preload("res://resources/base_room.tscn")
-	const ROOM_SCRIPT : GDScript = preload("res://scripts/room/am2r/am2r_room.gd")
+func init_room(room : Room) -> void:
+	room.position.x = room.data.x_position
+	room.position.y = room.data.y_position
 	
-	var room := BASE_ROOM.instantiate()
-	room.set_script(ROOM_SCRIPT)
+	room.custom_minimum_size.x = room.data.image_width
+	room.custom_minimum_size.y = room.data.image_height
 	
-	return room
+	var outline_config := Room.OutlineConfig.new(
+		&"res://resources/highlight_shader.tres",
+		0, 15, 25
+	)
+	room.material = load( outline_config.shader_path ).duplicate()
+	room.config = outline_config

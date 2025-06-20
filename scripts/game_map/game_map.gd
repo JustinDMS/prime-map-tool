@@ -79,7 +79,7 @@ func add_subregions(to_parent : Control, amount : int, offsets : Array[Vector2])
 		sub_region.set_position(offsets[i])
 
 func draw_room(room_data : RoomData) -> Room:
-	var room := game.new_room()
+	var room := Room.new(game, room_data)
 	
 	room.data = room_data
 	room.double_clicked.connect(set_start_node)
@@ -341,7 +341,7 @@ func resolve_map() -> void:
 	for r in visited_rooms:
 		for n in visited_rooms[r]:
 			var room_obj := get_room_obj(r, n)
-			room_obj.set_state(game, Room.State.DEFAULT)
+			room_obj.change_state(Room.State.DEFAULT)
 	
 	for key in node_marker_map:
 		var reached : bool = key in reached_nodes
@@ -357,13 +357,13 @@ func resolve_map() -> void:
 					c.modulate = Color.RED
 	
 	var starter_room := get_room_obj(start_node.region, start_node.room_name)
-	starter_room.set_state(game, Room.State.STARTER)
+	starter_room.change_state(Room.State.STARTER)
 	
 	map_resolved.emit(reached_nodes)
 
 func set_all_unreachable() -> void:
 	for key in room_map:
-		room_map[key].set_state(game, Room.State.UNREACHABLE)
+		room_map[key].change_state(Room.State.UNREACHABLE)
 		for node in room_map[key].node_markers:
 			node.self_modulate = Room.UNREACHABLE_COLOR
 
