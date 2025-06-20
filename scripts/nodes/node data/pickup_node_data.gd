@@ -21,7 +21,7 @@ func get_texture() -> Texture2D:
 	
 	if not ResourceLoader.exists(path, "Texture2D"):
 		push_warning("Failed to find texture for item: %s" % item_name)
-		return null
+		return load("res://data/games/am2r/item_images/Unknown.png")
 	
 	return load(path)
 
