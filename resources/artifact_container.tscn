@@ -1,7 +1,7 @@
 [gd_scene load_steps=14 format=3 uid="uid://rf1tr2kber25"]
 
 [ext_resource type="Texture2D" uid="uid://dru606t8hdv5r" path="res://data/games/prime1/item_images/Artifact of Truth.png" id="1_fkmxt"]
-[ext_resource type="Script" uid="uid://dy3our73qlvbe" path="res://scripts/nodes/artifact_container.gd" id="1_krss5"]
+[ext_resource type="Script" uid="uid://dy3our73qlvbe" path="res://scripts/node/artifact_container.gd" id="1_krss5"]
 [ext_resource type="Texture2D" uid="uid://jrhb555rnrls" path="res://data/games/prime1/item_images/Artifact of Strength.png" id="2_o6gpi"]
 [ext_resource type="Texture2D" uid="uid://mcvvufcgjlyd" path="res://data/games/prime1/item_images/Artifact of Elder.png" id="3_x3sv0"]
 [ext_resource type="Texture2D" uid="uid://8toni85jy7ou" path="res://data/games/prime1/item_images/Artifact of Wild.png" id="4_sfnc0"]
