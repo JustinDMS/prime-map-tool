@@ -2,32 +2,19 @@ shader_type canvas_item;
 
 uniform vec4 color : source_color = vec4(1.0);
 uniform float width : hint_range(0, 20) = 1.0;
-uniform int pattern : hint_range(0, 2) = 0; // diamond, circle, square
 uniform bool inside = false;
-uniform bool add_margins = true; // only useful when inside is false
 
 varying flat vec4 modulate;
 
+// Color inside outline
 void vertex() {
 	modulate = COLOR;
-
-	if (add_margins) {
-		VERTEX += (UV * 2.0 - 1.0) * width;
-	}
 }
 
 bool hasContraryNeighbour(vec2 uv, vec2 texture_pixel_size, sampler2D texture) {
 	for (float i = -ceil(width); i <= ceil(width); i++) {
 		float x = abs(i) > width ? width * sign(i) : i;
-		float offset;
-
-		if (pattern == 0) {
-			offset = width - abs(x);
-		} else if (pattern == 1) {
-			offset = floor(sqrt(pow(width + 0.5, 2) - x * x));
-		} else if (pattern == 2) {
-			offset = width;
-		}
+		float offset = floor(sqrt(pow(width + 0.5, 2) - x * x));
 
 		for (float j = -ceil(offset); j <= ceil(offset); j++) {
 			float y = abs(j) > offset ? offset * sign(j) : j;
@@ -44,20 +31,7 @@ bool hasContraryNeighbour(vec2 uv, vec2 texture_pixel_size, sampler2D texture) {
 
 void fragment() {
 	vec2 uv = UV;
-
-	if (add_margins) {
-		vec2 texture_pixel_size = vec2(1.0) / (vec2(1.0) / TEXTURE_PIXEL_SIZE + vec2(width * 2.0));
-
-		uv = (uv - texture_pixel_size * width) * TEXTURE_PIXEL_SIZE / texture_pixel_size;
-
-		if (uv != clamp(uv, vec2(0.0), vec2(1.0))) {
-			COLOR.a = 0.0;
-		} //else {
-			//COLOR = texture(TEXTURE, uv) * modulate;
-		//}
-	} else { // Everything inside the outline?
-		COLOR = texture(TEXTURE, uv) * modulate;
-	}
+	COLOR = texture(TEXTURE, uv) * modulate;
 
 	if ((COLOR.a > 0.0) == inside && hasContraryNeighbour(uv, TEXTURE_PIXEL_SIZE, TEXTURE)) {
 		COLOR.rgb = inside ? mix(COLOR.rgb, color.rgb, color.a * modulate.a) : color.rgb * modulate.rgb;
