@@ -1,5 +1,9 @@
 class_name AM2R extends Game
 
+const ROOM_WIDTH : int = 320
+const ROOM_HEIGHT : int = 240
+const ROOM_DIVISOR : int = 8
+
 func _init(rdv_header : Dictionary) -> void:
 	super(rdv_header)
 	
@@ -87,14 +91,40 @@ func _init(rdv_header : Dictionary) -> void:
 
 func get_game_id() -> StringName:
 	return &"am2r"
-func new_room_data() -> AM2RRoomData:
-	return AM2RRoomData.new()
-func init_room(room : Room) -> void:
-	room.position.x = room.data.x_position
-	room.position.y = room.data.y_position
+
+@warning_ignore_start("integer_division") # https://github.com/godotengine/godot/issues/42966
+func init_room_data(_room_data : RoomData, _extra_data : Dictionary) -> void:
+	_room_data.extra.map_name = _extra_data.extra.map_name
 	
-	room.custom_minimum_size.x = room.data.image_width
-	room.custom_minimum_size.y = room.data.image_height
+	var all_x : Array[int] = []
+	var all_y : Array[int] = []
+	for ele in _extra_data.extra.minimap_data:
+		all_x.append( int(ele.x) )
+		all_y.append( int(ele.y) )
+	all_x.sort()
+	all_y.sort()
+	
+	if len(all_x) > 0:
+		_room_data.extra.x_position = all_x[0] * (ROOM_WIDTH / ROOM_DIVISOR)
+		_room_data.extra.y_position = all_y[0] * (ROOM_HEIGHT / ROOM_DIVISOR)
+	else:
+		_room_data.extra.x_position = 10
+		_room_data.extra.y_position = 10
+	
+	# Set room texture
+	var path := "res://data/games/%s/room_images/%s.png" % [get_game_id(), _room_data.extra.map_name]
+	_room_data.texture = get_room_texture(path)
+	
+	_room_data.extra.image_width = _room_data.texture.get_width() / ROOM_DIVISOR
+	_room_data.extra.image_height = _room_data.texture.get_height() / ROOM_DIVISOR
+@warning_ignore_restore("integer_division")
+
+func init_room(room : Room) -> void:
+	room.position.x = room.data.extra.x_position
+	room.position.y = room.data.extra.y_position
+	
+	room.custom_minimum_size.x = room.data.extra.image_width
+	room.custom_minimum_size.y = room.data.extra.image_height
 	
 	var outline_config := Room.OutlineConfig.new(
 		&"res://resources/highlight_shader.tres",

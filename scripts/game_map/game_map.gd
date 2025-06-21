@@ -61,8 +61,7 @@ func init_map() -> void:
 		world_data[r] = {}
 		
 		for j in rdv_logic[r]["areas"]:
-			var room_data := game.new_room_data()
-			room_data.init(game, r, j, rdv_logic[r]["areas"][j])
+			var room_data := RoomData.new(game, r, j, rdv_logic[r]["areas"][j])
 			world_data[r][j] = room_data
 			
 			var room := draw_room(room_data)

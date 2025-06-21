@@ -77,7 +77,7 @@ func room_clicked() -> void:
 
 ## Used for accurate hover detection with irregular room shapes
 func create_bitmap() -> void:
-	var image := data.get_room_texture().get_image()
+	var image := data.texture.get_image()
 	if is_flipped_h(): image.flip_x()
 	if is_flipped_v(): image.flip_y()
 	

@@ -1,19 +1,22 @@
 class_name RoomData extends Resource
 
-@export var region : StringName
-@export var name : String
-@export var texture : Texture2D
+var game : Game = null
+var region : StringName
+var name : String
+var extra : Dictionary
+var texture : Texture2D
 
-@export var nodes : Array[NodeData]
-@export var default_node : NodeData
+# Set by [GameMap]
+var nodes : Array[NodeData]
+var default_node : NodeData
 
-func init(_game : Game, _region : StringName, _name : String, _data : Dictionary) -> void:
+func _init(_game : Game, _region : StringName, _name : String, _data : Dictionary) -> void:
+	game = _game
 	region = _region
 	name = _name
-
-## Override in subclasses
-func get_room_texture() -> Texture2D:
-	return null
+	
+	# Texture must be set by game
+	game.init_room_data(self, _data)
 
 func clear_nodes() -> void:
 	nodes.clear()

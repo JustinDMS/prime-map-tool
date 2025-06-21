@@ -160,18 +160,31 @@ func get_game_id() -> StringName:
 	return &"prime1"
 func get_region_scale() -> Vector2:
 	return Vector2(1, -1)
-func new_room_data() -> PrimeRoomData:
-	return PrimeRoomData.new()
+
+func init_room_data(_room_data : RoomData, _extra_data : Dictionary) -> void:
+	# Float array of size 6
+	# x_min, y_min, z_min, x_max, y_max, z_max
+	_room_data.extra.aabb = [
+		_extra_data.extra.aabb[0],
+		_extra_data.extra.aabb[1],
+		_extra_data.extra.aabb[2],
+		_extra_data.extra.aabb[3],
+		_extra_data.extra.aabb[4],
+		_extra_data.extra.aabb[5]
+		]
+	
+	# Set room texture
+	var path := "res://data/games/%s/room_images/%s/%s.png" % \
+	[get_game_id(), _room_data.region, _room_data.name]
+	_room_data.texture = get_room_texture(path)
 
 func init_room(room : Room) -> void:
 	room.create_bitmap()
 	
-	var x1 : float = room.data.aabb[0]
-	var y1 : float = room.data.aabb[1]
-	#var _z1 : float = room.data.aabb[2]
-	var x2 : float = room.data.aabb[3]
-	var y2 : float = room.data.aabb[4]
-	#var _z2 : float = room.data.aabb[5]
+	var x1 : float = room.data.extra.aabb[0]
+	var y1 : float = room.data.extra.aabb[1]
+	var x2 : float = room.data.extra.aabb[3]
+	var y2 : float = room.data.extra.aabb[4]
 	
 	room.position.x = x1
 	room.position.y = y1

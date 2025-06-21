@@ -38,8 +38,8 @@ func get_game_id() -> StringName:
 	return &""
 func get_region_scale() -> Vector2:
 	return Vector2(1, 1)
-func new_room_data() -> RoomData:
-	return null
+func init_room_data(_room_data : RoomData, _extra_data : Dictionary) -> void:
+	pass
 func init_room(_room : Room) -> void: 
 	pass
 #endregion
@@ -116,6 +116,12 @@ func get_room_z_index(room_name : StringName) -> int:
 
 func get_region_color(region : StringName) -> Color:
 	return region_color.get(region, Color.WHITE)
+
+func get_room_texture(path : String) -> Texture2D:
+	if not ResourceLoader.exists(path, "Texture2D"):
+		push_warning("Failed to find room image at:\n%s" % path)
+		return null
+	return load(path)
 
 ## Returns an [member Item] given its name. 
 ## Supports both short/long names for lookup.
