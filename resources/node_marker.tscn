@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://qw3bgt3468bw"]
-
-[ext_resource type="Script" uid="uid://cymyyp3p6q5po" path="res://scripts/node marker/node_marker.gd" id="2_bykt2"]
-
-[node name="node_marker" type="Sprite2D"]
-z_index = 1
-scale = Vector2(0.1, 0.1)
-script = ExtResource("2_bykt2")

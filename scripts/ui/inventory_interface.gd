@@ -54,9 +54,10 @@ func draw_inventory() -> void:
 		vbox.add_child(hbox)
 
 class Spacer extends Control:
-	func _init() -> void:
+	func _init(stretch_ratio : float = 1.0) -> void:
 		self.set_h_size_flags(Control.SIZE_EXPAND_FILL)
 		self.set_v_size_flags(Control.SIZE_EXPAND_FILL)
+		self.set_stretch_ratio(stretch_ratio)
 
 class AllButton extends Button:
 	func _init(_game : Game) -> void:

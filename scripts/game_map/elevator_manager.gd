@@ -27,17 +27,19 @@ func init_elevators(dock_connections : Dictionary[NodeMarker, NodeMarker]) -> vo
 	for nf in dock_connections:
 		var from_data := nf.data
 		var from_region : Control = game_map.region_nodes[from_data.region]
-		var from_point : Vector2 = from_region.position + Vector2(from_data.coordinates.x, -from_data.coordinates.y)
+		var from_point : Vector2 = from_region.position + \
+		Vector2(from_data.coordinates.x, from_data.coordinates.y) * game_map.game.get_region_scale()
 		
 		var to_data := dock_connections[nf].data
 		var to_region : Control = game_map.region_nodes[to_data.region]
-		var to_point : Vector2 = to_region.position + Vector2(to_data.coordinates.x, -to_data.coordinates.y)
+		var to_point : Vector2 = to_region.position + \
+		Vector2(to_data.coordinates.x, to_data.coordinates.y) * game_map.game.get_region_scale()
 		
 		# Add additional offset if either room is part of a subregion
 		if game_map.game.has_subregions(from_data.region):
-			from_point += from_region.get_child( game_map.game.get_room_subregion_index(from_data.region, from_data.room_name) ).position * Vector2(1, -1)
+			from_point += from_region.get_child( game_map.game.get_room_subregion_index(from_data.region, from_data.room_name) ).position * game_map.game.get_region_scale()
 		if game_map.game.has_subregions(to_data.region):
-			to_point += to_region.get_child( game_map.game.get_room_subregion_index(to_data.region, to_data.room_name) ).position * Vector2(1, -1)
+			to_point += to_region.get_child( game_map.game.get_room_subregion_index(to_data.region, to_data.room_name) ).position * game_map.game.get_region_scale()
 		
 		# Interpolate between region colors
 		var color := game_map.game.get_region_color(from_data.region).lerp(game_map.game.get_region_color(to_data.region), 0.5)
@@ -72,7 +74,7 @@ func update_lines_from_visited(reached_nodes : Array[NodeData]) -> void:
 		lines[data].modulate = Room.UNREACHABLE_COLOR
 	
 	for node in reached_nodes:
-		if not node is DockNodeData:
+		if not node.is_dock():
 			continue
 		if node in lines:
 			var line : Line2D = lines[node]

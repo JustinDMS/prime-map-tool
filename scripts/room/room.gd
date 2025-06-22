@@ -6,132 +6,171 @@ signal clicked
 signal double_clicked(node_data : NodeData)
 
 enum State {
+	INIT = -1,
 	DEFAULT,
 	HOVERED,
 	UNREACHABLE,
 	STARTER,
 }
 
-const OUTLINE_SHADER := preload("res://resources/highlight_shader.tres")
-const OUTLINE_THICKNESS := 2
-const COLOR_CHANGE_DURATION : float = 0.2
 const HOVER_COLOR := Color.WHITE
-const UNREACHABLE_COLOR := Color("#4b7ea3") # Map Blue from Game
+const STARTER_COLOR := Color.GREEN
+const UNREACHABLE_COLOR := Color("#4b7ea3")
 const UNREACHABLE_OUTLINE_COLOR := Color("#62a5d4")
 
-var region : StringName
-var data : RoomData = null
-var state := State.DEFAULT
-var prev_state := State.DEFAULT ## Used to return to after hovering
-var _is_hovered : bool = false:
-	set(value):
-		if value == _is_hovered:
-			return
-		
-		_is_hovered = value
-		if _is_hovered:
-			started_hover.emit(self)
-			return
-		stopped_hover.emit(self)
 var room_color_tween : Tween = null
 var outline_tween : Tween = null
 var node_markers : Array[NodeMarker] = []
 
-func _gui_input(event: InputEvent) -> void:
-	if _is_hovered and event.is_action("press") and event.is_pressed():
-		if not event.double_click:
-			room_clicked()
-		else:
-			double_clicked.emit(data.default_node)
+var game : Game = null
+var data : RoomData = null
+var config : OutlineConfig = null
+var state : State = State.INIT
+var prev_state : State = State.INIT
 
-func _ready() -> void:
-	var game := GameMap.get_game()
-	mouse_entered.connect(
-		func():
-			set_state(game, State.HOVERED)
-			_is_hovered = true
-	)
-	mouse_exited.connect(
-		func():
-			set_state(game, prev_state)
-			_is_hovered = false
-	)
+func _init(_game : Game, _data : RoomData) -> void:
+	game = _game
+	data = _data
 	
-	if data:
-		init_room()
-
-func init_room():
-	var game := GameMap.get_game()
+	# Control and TextureButton properties
+	set_ignore_texture_size(true)
+	set_stretch_mode(TextureButton.STRETCH_KEEP_ASPECT_COVERED)
+	set_mouse_filter(Control.MOUSE_FILTER_PASS)
+	set_default_cursor_shape(Control.CURSOR_POINTING_HAND)
+	
+	mouse_entered.connect(hover_start)
+	mouse_exited.connect(hover_end)
 	
 	set_name(data.name) # Set name in SceneTree
 	set_texture_normal(data.texture)
 	set_z_index( game.get_room_z_index(data.name) )
-	region = data.region
 	
-	set_state(game, State.DEFAULT)
+	var _scale := game.get_region_scale()
+	set_flip_h( _scale.x < 0 )
+	set_flip_v( _scale.y < 0 )
 
-func create_bitmap_from_room_image(image : Image, flip_x : bool = false, flip_y : bool = false) -> void:
-	if flip_x: image.flip_x()
-	if flip_y: image.flip_y()
-	
-	var bitmap := BitMap.new()
-	bitmap.create_from_image_alpha(image, 0.1)
-	set_click_mask(bitmap)
+func _ready() -> void:
+	game.init_room(self)
 
-func set_state(game : Game, new_state : State) -> void:
-	prev_state = state
-	state = new_state
-	
-	match state:
-		State.DEFAULT:
-			var color : Color = game.get_region_color(region)
-			change_to_color(color)
-			set_outline(color, OUTLINE_THICKNESS)
-		State.HOVERED:
-			if prev_state == State.STARTER:
-				set_outline(Color.GREEN, OUTLINE_THICKNESS + 1)
-			else:
-				set_outline(Color.WHITE, OUTLINE_THICKNESS + 1)
-		State.UNREACHABLE:
-			change_to_color(UNREACHABLE_COLOR)
-			set_outline(UNREACHABLE_OUTLINE_COLOR, OUTLINE_THICKNESS)
-		State.STARTER:
-			prev_state = State.STARTER
-			change_to_color( game.get_region_color(region) )
-			set_outline(Color.GREEN, OUTLINE_THICKNESS * 4)
+func _input(event: InputEvent) -> void:
+	if (
+		event is InputEventMouseButton and
+		state == State.HOVERED and
+		event.get_button_index() == MOUSE_BUTTON_LEFT
+	):
+		room_clicked()
+		
+		if event.is_double_click() and is_instance_valid(data.default_node):
+			double_clicked.emit(data.default_node)
 
-func change_to_color(new_color : Color, duration := COLOR_CHANGE_DURATION) -> void:
-	if room_color_tween and room_color_tween.is_valid():
-		room_color_tween.kill()
-	
-	room_color_tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
-	room_color_tween.tween_property(self, "self_modulate", new_color, duration)
+func hover_start() -> void:
+	change_state(State.HOVERED)
+	started_hover.emit(self)
+
+func hover_end() -> void:
+	change_state(prev_state)
+	stopped_hover.emit(self)
 
 func room_clicked() -> void:
 	print_debug(data.name)
 	clicked.emit()
 
+## Used for accurate hover detection with irregular room shapes
+func create_bitmap() -> void:
+	var image := data.texture.get_image()
+	if is_flipped_h(): image.flip_x()
+	if is_flipped_v(): image.flip_y()
+	
+	var bitmap := BitMap.new()
+	bitmap.create_from_image_alpha(image, 0.1)
+	set_click_mask(bitmap)
+
+func get_global_center() -> Vector2:
+	return global_position + ( size * game.get_region_scale() * 0.5 )
+
+#region Room State
+func change_state(new_state : State) -> void:
+	prev_state = state
+	state = new_state
+	
+	match state:
+		State.DEFAULT:
+			default()
+		State.HOVERED:
+			hovered()
+		State.UNREACHABLE:
+			unreachable()
+		State.STARTER:
+			starter()
+
+func default() -> void:
+	set_color( game.get_region_color(data.region) )
+	set_outline( game.get_region_color(data.region), config.outline_thickness)
+
+func hovered() -> void:
+	if prev_state == State.STARTER:
+		set_outline(STARTER_COLOR, config.outline_hover_thickness)
+		return
+	
+	set_outline(HOVER_COLOR, config.outline_hover_thickness)
+
+func unreachable() -> void:
+	set_color(UNREACHABLE_COLOR)
+	set_outline(UNREACHABLE_OUTLINE_COLOR, config.outline_thickness)
+
+func starter() -> void:
+	prev_state = State.STARTER
+	set_color( game.get_region_color(data.region) )
+	set_outline(STARTER_COLOR, config.starter_thickness)
+#endregion
+
+func set_color(new_color : Color) -> void:
+	const DURATION : float = 0.2
+	if room_color_tween and room_color_tween.is_valid():
+		room_color_tween.kill()
+	
+	room_color_tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+	room_color_tween.tween_property(self, "self_modulate", new_color, DURATION)
+
 func set_outline(color : Color, width : float) -> void:
 	const DURATION : float = 0.2
+	
+	# Color methods
+	var set_outline_color := \
+	func(value : Color) -> void:
+		material.set_shader_parameter(&"color", value)
+	var get_outline_color := \
+	func() -> Color:
+		return material.get_shader_parameter(&"color")
+	
+	# Width methods
+	var get_outline_width := \
+	func() -> float:
+		return material.get_shader_parameter(&"width")
+	var set_outline_width := \
+	func(value : float) -> void:
+		material.set_shader_parameter(&"width", value)
 	
 	if outline_tween and outline_tween.is_running():
 		outline_tween.kill()
 	
 	outline_tween = create_tween().set_parallel(true).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
-	outline_tween.tween_method(set_outline_color, get_outline_color(), color, DURATION)
-	outline_tween.tween_method(set_outline_width, get_outline_width(), width, DURATION)
+	outline_tween.tween_method(set_outline_color, get_outline_color.call(), color, DURATION)
+	outline_tween.tween_method(set_outline_width, get_outline_width.call(), width, DURATION)
 
-func set_outline_color(value : Color) -> void:
-	material.set_shader_parameter(&"color", value)
-func get_outline_color() -> Color:
-	return material.get_shader_parameter(&"color")
-
-func set_outline_width(value : float) -> void:
-	material.set_shader_parameter(&"width", value)
-func get_outline_width() -> float:
-	return material.get_shader_parameter(&"width")
-
-func get_global_center() -> Vector2:
-	var tmp = size
-	tmp.y *= -1
-	return global_position + (tmp * 0.5)
+class OutlineConfig:
+	var shader_path : StringName
+	var outline_thickness : float
+	var outline_hover_thickness : float
+	var starter_thickness : float
+	
+	func _init(
+		_shader_path : StringName,
+		_outline_thickness : float,
+		_outline_hover_thickness : float,
+		_starter_thickness : float
+	):
+		shader_path = _shader_path
+		outline_thickness = _outline_thickness
+		outline_hover_thickness = _outline_hover_thickness
+		starter_thickness = _starter_thickness

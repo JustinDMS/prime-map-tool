@@ -48,7 +48,7 @@ func node_stop_hover(marker : NodeMarker) -> void:
 	region_name_label.text = hovered_nodes[-1].data.region
 
 func set_node_name(marker : NodeMarker) -> void:
-	if marker is DoorNodeMarker:
-		node_name_label.text = "%s (%s)" % [marker.data.name, marker.data.default_dock_weakness.split(" (", 1)[0]]
+	if marker.data.is_door():
+		node_name_label.text = "%s (%s)" % [marker.data.name, marker.data.get_dock_weakness()]
 	else:
 		node_name_label.text = marker.data.name

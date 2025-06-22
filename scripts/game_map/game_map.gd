@@ -10,8 +10,10 @@ static func _static_init() -> void:
 
 signal map_drawn(dock_connections : Dictionary[NodeMarker, NodeMarker])
 signal map_resolved(reached_nodes : Array[NodeData])
+signal new_game_loaded()
 
 @export var ui : Control
+@export var game_interface : GameInterface
 @export var trick_interface : UITab
 @export var randovania_interface : UITab
 @export var logic_interface : UITab
@@ -25,6 +27,8 @@ var room_map : Dictionary[RoomData, Room] = {}
 var start_node : NodeData = null
 
 func _ready() -> void:
+	game_interface.game_selected.connect(change_to_game)
+	
 	trick_interface.tricks_changed.connect(resolve_map)
 	
 	randovania_interface.settings_changed.connect(resolve_map)
@@ -40,10 +44,13 @@ func load_rdv_logic() -> void:
 
 ## Create region [Control] nodes and draw rooms
 func init_map() -> void:
+	for n in get_children():
+		n.queue_free()
+	
 	for r in rdv_logic:
 		var region := Control.new()
 		region_nodes[r] = region
-		region.set_scale(Vector2(1, -1)) # Flip vertically
+		region.set_scale( game.get_region_scale() )
 		region.set_name(r)
 		add_child(region)
 		region.set_position( game.get_region_offset(r) )
@@ -55,8 +62,7 @@ func init_map() -> void:
 		world_data[r] = {}
 		
 		for j in rdv_logic[r]["areas"]:
-			var room_data := game.new_room_data()
-			room_data.init(game, r, j, rdv_logic[r]["areas"][j])
+			var room_data := RoomData.new(game, r, j, rdv_logic[r]["areas"][j])
 			world_data[r][j] = room_data
 			
 			var room := draw_room(room_data)
@@ -73,7 +79,7 @@ func add_subregions(to_parent : Control, amount : int, offsets : Array[Vector2])
 		sub_region.set_position(offsets[i])
 
 func draw_room(room_data : RoomData) -> Room:
-	var room := game.new_room()
+	var room := Room.new(game, room_data)
 	
 	room.data = room_data
 	room.double_clicked.connect(set_start_node)
@@ -110,22 +116,20 @@ func init_nodes() -> void:
 			var room_data : RoomData = world_data[r][j]
 			room_data.clear_nodes()
 			
-			var default_node_name : String = rdv_logic[r]["areas"][j]["default_node"]
+			var default_node_buffer = rdv_logic[r]["areas"][j]["default_node"] # Can be null or [String]
+			var default_node_name : String = "" if not default_node_buffer else default_node_buffer
+			
 			var nodes : Array[NodeData] = []
 			for k in rdv_logic[r]["areas"][j]["nodes"]:
 				if k == "Pickup (Items Every Room)":
 					continue
 				
-				var node_data := NodeData.create_data_from_type(game, rdv_logic[r]["areas"][j]["nodes"][k]["node_type"])
+				var node_data := NodeData.new(game, room_data, k, rdv_logic[r]["areas"][j]["nodes"][k])
 				nodes.append(node_data)
-				node_data.init(game, k, room_data, rdv_logic[r]["areas"][j]["nodes"][k])
 				
 				var node_marker := draw_node_marker(node_data)
 				node_marker_map[node_data] = node_marker
 				add_marker_to_map(node_marker)
-				
-				if node_data is EventNodeData:
-					node_data.event_id = rdv_logic[r]["areas"][j]["nodes"][k]["event_name"]
 				
 				if rdvgame:
 					var format_string : String = "%s/%s/%s" % [node_data.region, j, k]
@@ -188,18 +192,7 @@ func get_room_data(region : StringName, room_name : String) -> RoomData:
 	return world_data[region][room_name]
 
 func draw_node_marker(node_data : NodeData) -> NodeMarker:
-	const BASE_NODE_MARKER : PackedScene = preload("res://resources/node_marker.tscn")
-	
-	var node_marker := BASE_NODE_MARKER.instantiate()
-	
-	if node_data is PickupNodeData:
-		if node_data.is_artifact():
-			node_marker.set_script(load("res://scripts/node marker/artifact_node_marker.gd"))
-		else:
-			node_marker.set_script(load("res://scripts/node marker/pickup_node_marker.gd"))
-	elif node_data is DockNodeData and node_data.is_door():
-		node_marker.set_script(load("res://scripts/node marker/door_node_marker.gd"))
-	
+	var node_marker := NodeMarker.new(game, node_data)
 	node_marker.data = node_data
 	node_marker.started_hover.connect(ui.node_hover)
 	node_marker.stopped_hover.connect(ui.node_stop_hover)
@@ -213,11 +206,11 @@ func add_marker_to_map(node_marker : NodeMarker) -> void:
 	room.add_child(node_marker)
 	
 	var pos : Vector2 = region_nodes[data.region].global_position
-	pos += Vector2(data.coordinates.x, -data.coordinates.y)
+	pos += Vector2(data.coordinates.x, data.coordinates.y) * game.get_region_scale()
 	
 	if game.has_subregions(data.region):
 		var subregion : int = game.get_room_subregion_index(data.region, data.room_name)
-		pos += game.get_subregion_offsets(data.region)[subregion] * Vector2(1, -1) # Regions are vertically flipped, flip again so math is right
+		pos += game.get_subregion_offsets(data.region)[subregion] * game.get_region_scale()
 	
 	node_marker.global_position = pos
 
@@ -230,7 +223,7 @@ func get_elevators() -> Dictionary[NodeMarker, NodeMarker]:
 	
 	for data in node_marker_map:
 		if (
-			data is DockNodeData and
+			data.is_dock() and
 			data.default_connection
 		):
 			# Elevators
@@ -274,7 +267,7 @@ func resolve_map() -> void:
 	#print_stack()
 	
 	if not start_node:
-		start_node = get_node_data("Tallon Overworld", "Landing Site", "Ship")
+		start_node = get_default_start_node()
 	
 	set_all_unreachable()
 	
@@ -298,7 +291,7 @@ func resolve_map() -> void:
 		if not node.room_name in visited_rooms[node.region]:
 			visited_rooms[node.region].append(node.room_name)
 		
-		var default_connection : NodeData = null if not node is DockNodeData else node.default_connection
+		var default_connection : NodeData = null if not node.is_dock() else node.default_connection
 		if (
 			is_instance_valid(default_connection) and
 			not default_connection in reached_nodes and
@@ -314,12 +307,13 @@ func resolve_map() -> void:
 			if can_reach_internal(node, n):
 				reached_nodes.append(n)
 				
-				if n is EventNodeData:
-					game.set_event(n.event_id, true)
+				if n.is_event():
+					var id := n.get_event_id()
+					game.set_event(id, true)
 					
-					if unreached_nodes.has(n.event_id):
-						queue.append_array(unreached_nodes[n.event_id])
-						unreached_nodes.erase(n.event_id)
+					if unreached_nodes.has(id):
+						queue.append_array(unreached_nodes[id])
+						unreached_nodes.erase(id)
 				
 				queue.append(n)
 				continue
@@ -333,14 +327,12 @@ func resolve_map() -> void:
 	for r in visited_rooms:
 		for n in visited_rooms[r]:
 			var room_obj := get_room_obj(r, n)
-			room_obj.set_state(game, Room.State.DEFAULT)
+			room_obj.change_state(Room.State.DEFAULT)
 	
 	for key in node_marker_map:
 		var reached : bool = key in reached_nodes
 		var marker : NodeMarker = node_marker_map[key]
-		if marker is PickupNodeMarker or marker is ArtifactNodeMarker:
-			marker.set_reachable(reached)
-		marker.set_state(NodeMarker.State.DEFAULT if reached else NodeMarker.State.UNREACHABLE)
+		marker.change_state(NodeMarker.State.DEFAULT if reached else NodeMarker.State.UNREACHABLE)
 		for c in marker.node_connections:
 			match c._to_marker.state:
 				NodeMarker.State.DEFAULT:
@@ -349,23 +341,23 @@ func resolve_map() -> void:
 					c.modulate = Color.RED
 	
 	var starter_room := get_room_obj(start_node.region, start_node.room_name)
-	starter_room.set_state(game, Room.State.STARTER)
+	starter_room.change_state(Room.State.STARTER)
 	
 	map_resolved.emit(reached_nodes)
 
 func set_all_unreachable() -> void:
 	for key in room_map:
-		room_map[key].set_state(game, Room.State.UNREACHABLE)
+		room_map[key].change_state(Room.State.UNREACHABLE)
 		for node in room_map[key].node_markers:
-			node.self_modulate = Room.UNREACHABLE_COLOR
+			node.change_state(NodeMarker.State.UNREACHABLE)
 
-func can_reach_external(from_node : DockNodeData, to_node : DockNodeData) -> bool:
+func can_reach_external(from_node : NodeData, to_node : NodeData) -> bool:
 	return (
-		game.can_pass_dock(from_node.type, from_node.default_dock_weakness) and 
-		game.can_pass_lock(from_node.type, from_node.default_dock_weakness)
+		game.can_pass_dock(from_node.extra.dock_type, from_node.extra.dock_weakness) and 
+		game.can_pass_lock(from_node.extra.dock_type, from_node.extra.dock_weakness)
 		) and (
-			game.can_pass_dock(from_node.type, from_node.default_dock_weakness) and 
-			game.can_pass_lock(to_node.type, to_node.default_dock_weakness)
+			game.can_pass_dock(from_node.extra.dock_type, from_node.extra.dock_weakness) and 
+			game.can_pass_lock(to_node.extra.dock_type, to_node.extra.dock_weakness)
 			)
 
 func can_reach_internal(from_node : NodeData, to_node : NodeData) -> bool:
@@ -389,6 +381,10 @@ func set_start_node(new_node : NodeData) -> void:
 	camera.center_on_room(start_node, get_room_obj(start_node.region, start_node.room_name))
 	resolve_map()
 
+func get_default_start_node() -> NodeData:
+	var data : Dictionary = game._header.starting_location
+	return get_node_data(data.region, data.area, data.node)
+
 func rdvgame_cleared() -> void:
 	start_node = null
 	
@@ -398,3 +394,20 @@ func rdvgame_cleared() -> void:
 	resolve_map()
 	
 	camera.center_on_room(start_node, get_room_obj(start_node.region, start_node.room_name))
+
+func change_to_game(game_id : StringName) -> void:
+	rdv_logic.clear()
+	region_nodes.clear()
+	world_data.clear()
+	node_marker_map.clear()
+	room_map.clear()
+	start_node = null
+
+	game = GameFactory.create_from_game_name(game_id)
+	game.all()
+	
+	new_game_loaded.emit()
+	
+	load_rdv_logic()
+	init_map()
+	init_nodes()

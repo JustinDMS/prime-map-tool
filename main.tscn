@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://br45wp8jdj0tx"]
+[gd_scene load_steps=18 format=3 uid="uid://br45wp8jdj0tx"]
 
 [ext_resource type="Script" uid="uid://c3u7c3gsctgar" path="res://scripts/game_map/elevator_manager.gd" id="1_gb56k"]
 [ext_resource type="Script" uid="uid://cs002s81robiq" path="res://scripts/game_map/game_map.gd" id="2_0cp0l"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://dabxqxfeyelsc" path="res://data/games/prime1/item_images/Missile Expansion.png" id="6_6j0ik"]
 [ext_resource type="Texture2D" uid="uid://dlwtuc01be6cw" path="res://data/icons/node marker/teleporter_marker.png" id="6_gngh3"]
 [ext_resource type="Texture2D" uid="uid://dvo2x4ywtxhdk" path="res://data/icons/node marker/event_marker.png" id="7_0n3wm"]
+[ext_resource type="Script" uid="uid://dsirh33xsa7cj" path="res://scripts/ui/game_interface.gd" id="12_2cqfq"]
 [ext_resource type="Script" uid="uid://b7qd0t5cpovw6" path="res://scripts/ui/logic_interface.gd" id="37_ky3bh"]
 [ext_resource type="Script" uid="uid://cydamye1a7mcf" path="res://scripts/ui/tricks_interface.gd" id="44_rbq56"]
 [ext_resource type="Script" uid="uid://couihycgxctla" path="res://scripts/ui/randovania_interface.gd" id="45_px4t2"]
@@ -40,7 +41,7 @@ anchors_preset = 0
 script = ExtResource("1_gb56k")
 game_map = NodePath("../game_map")
 
-[node name="game_map" type="Control" parent="." node_paths=PackedStringArray("ui", "trick_interface", "randovania_interface", "logic_interface", "camera")]
+[node name="game_map" type="Control" parent="." node_paths=PackedStringArray("ui", "game_interface", "trick_interface", "randovania_interface", "logic_interface", "camera")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -51,12 +52,14 @@ mouse_filter = 1
 mouse_default_cursor_shape = 3
 script = ExtResource("2_0cp0l")
 ui = NodePath("../UI/ui")
+game_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Game")
 trick_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Tricks")
 randovania_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania")
 logic_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Logic")
 camera = NodePath("../Camera2D")
 
 [node name="legend" type="Panel" parent="."]
+visible = false
 offset_left = 2496.0
 offset_top = 1143.0
 offset_right = 2813.0
@@ -188,6 +191,7 @@ text = "Event"
 vertical_alignment = 1
 
 [node name="Camera2D" type="Camera2D" parent="."]
+process_callback = 0
 position_smoothing_enabled = true
 position_smoothing_speed = 20.0
 script = ExtResource("3_et3qh")
@@ -224,8 +228,8 @@ mouse_filter = 2
 layout_mode = 2
 mouse_filter = 2
 
-[node name="TabContainer" type="TabContainer" parent="UI/ui/MarginContainer/VBoxContainer" node_paths=PackedStringArray("game_map", "logic_interface")]
-custom_minimum_size = Vector2(500, 0)
+[node name="TabContainer" type="TabContainer" parent="UI/ui/MarginContainer/VBoxContainer" node_paths=PackedStringArray("game_map", "game_interface", "logic_interface")]
+custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
@@ -234,16 +238,41 @@ tab_focus_mode = 0
 deselect_enabled = true
 script = ExtResource("4_0yqv7")
 game_map = NodePath("../../../../../game_map")
+game_interface = NodePath("Game")
 logic_interface = NodePath("Logic")
 
+[node name="Game" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("options")]
+layout_mode = 2
+script = ExtResource("12_2cqfq")
+options = NodePath("MarginContainer/OptionButton")
+min_size = Vector2(600, 125)
+metadata/_custom_type_script = "uid://cmv3a55dt88lx"
+metadata/_tab_index = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Game"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="OptionButton" type="OptionButton" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Game/MarginContainer"]
+layout_mode = 2
+
 [node name="Tricks" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("game_map", "randovania_interface", "tricks_container")]
+visible = false
 layout_mode = 2
 script = ExtResource("44_rbq56")
 game_map = NodePath("../../../../../../game_map")
 randovania_interface = NodePath("../Randovania")
 tricks_container = NodePath("MarginContainer/ScrollContainer/VBoxContainer")
-min_size = Vector2(500, 900)
-metadata/_tab_index = 0
+min_size = Vector2(600, 900)
+metadata/_tab_index = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Tricks"]
 layout_mode = 1
@@ -267,11 +296,12 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 20
 
-[node name="Randovania" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("import_rdvgame_button", "file_dialog", "import_status_label", "clear_rdvgame_button", "word_hash_label", "rdv_options_container", "bool_options_container", "loaded_container")]
+[node name="Randovania" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("game_map", "import_rdvgame_button", "file_dialog", "import_status_label", "clear_rdvgame_button", "word_hash_label", "rdv_options_container", "bool_options_container", "loaded_container")]
 visible = false
 custom_minimum_size = Vector2(400, 850)
 layout_mode = 2
 script = ExtResource("45_px4t2")
+game_map = NodePath("../../../../../../game_map")
 import_rdvgame_button = NodePath("MarginContainer/VBoxContainer/import_rdvgame")
 file_dialog = NodePath("HTML5FileDialog")
 import_status_label = NodePath("import_status")
@@ -280,7 +310,8 @@ word_hash_label = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxCo
 rdv_options_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer")
 bool_options_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/bool_options")
 loaded_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/loaded_container")
-metadata/_tab_index = 1
+min_size = Vector2(600, 0)
+metadata/_tab_index = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania"]
 layout_mode = 1
@@ -360,8 +391,8 @@ script = ExtResource("37_ky3bh")
 tricks_interface = NodePath("../Tricks")
 container = NodePath("VBoxContainer")
 tooltip_label = NodePath("VBoxContainer/Label")
-min_size = Vector2(550, 900)
-metadata/_tab_index = 2
+min_size = Vector2(600, 900)
+metadata/_tab_index = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Logic"]
 layout_mode = 1
