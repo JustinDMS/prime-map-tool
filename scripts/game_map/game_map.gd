@@ -349,7 +349,7 @@ func set_all_unreachable() -> void:
 	for key in room_map:
 		room_map[key].change_state(Room.State.UNREACHABLE)
 		for node in room_map[key].node_markers:
-			node.self_modulate = Room.UNREACHABLE_COLOR
+			node.change_state(NodeMarker.State.UNREACHABLE)
 
 func can_reach_external(from_node : NodeData, to_node : NodeData) -> bool:
 	return (
