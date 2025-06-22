@@ -10,6 +10,7 @@ static func _static_init() -> void:
 
 signal map_drawn(dock_connections : Dictionary[NodeMarker, NodeMarker])
 signal map_resolved(reached_nodes : Array[NodeData])
+signal new_game_loaded()
 
 @export var ui : Control
 @export var game_interface : GameInterface
@@ -404,6 +405,8 @@ func change_to_game(game_id : StringName) -> void:
 
 	game = GameFactory.create_from_game_name(game_id)
 	game.all()
+	
+	new_game_loaded.emit()
 	
 	load_rdv_logic()
 	init_map()

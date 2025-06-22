@@ -43,8 +43,12 @@ func _ready() -> void:
 			await get_tree().process_frame
 			update()
 	)
+	game_map.new_game_loaded.connect(init_sliders)
 
 func init_sliders() -> void:
+	for node in tricks_container.get_children():
+		node.queue_free()
+	
 	var game := GameMap.get_game()
 	
 	var all_slider := new_trick("Set All", TrickLevel.DISABLED)

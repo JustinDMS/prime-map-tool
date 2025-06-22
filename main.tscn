@@ -295,11 +295,12 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 20
 
-[node name="Randovania" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("import_rdvgame_button", "file_dialog", "import_status_label", "clear_rdvgame_button", "word_hash_label", "rdv_options_container", "bool_options_container", "loaded_container")]
+[node name="Randovania" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("game_map", "import_rdvgame_button", "file_dialog", "import_status_label", "clear_rdvgame_button", "word_hash_label", "rdv_options_container", "bool_options_container", "loaded_container")]
 visible = false
 custom_minimum_size = Vector2(400, 850)
 layout_mode = 2
 script = ExtResource("45_px4t2")
+game_map = NodePath("../../../../../../game_map")
 import_rdvgame_button = NodePath("MarginContainer/VBoxContainer/import_rdvgame")
 file_dialog = NodePath("HTML5FileDialog")
 import_status_label = NodePath("import_status")

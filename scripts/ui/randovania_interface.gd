@@ -9,6 +9,7 @@ signal rdvgame_loaded()
 
 signal rdvgame_cleared()
 
+@export var game_map : GameMap
 @export var import_rdvgame_button : Button
 @export var file_dialog : HTML5FileDialog
 @export var import_status_label : Label
@@ -53,14 +54,18 @@ func _ready() -> void:
 			)
 	
 	clear_rdvgame_button.pressed.connect(clear_rdvgame)
+	game_map.new_game_loaded.connect(init_settings)
 
 func init_settings() -> void:
+	for node in bool_options_container.get_children():
+		node.queue_free()
+	
 	var game := GameMap.get_game()
 	rdvgame_loaded.connect(game.rdvgame_loaded)
 	
 	for s in game._misc:
 		var setting := game.get_misc_setting(s)
-		setting.changed.connect(setting_changed)
+		setting.changed.connect( game_map.resolve_map.unbind(1) )
 		
 		var button := Button.new()
 		button.focus_mode = Control.FOCUS_NONE
@@ -124,10 +129,6 @@ func rdvgame_load_success() -> void:
 	word_hash_label.set_text(rdvgame.get_word_hash())
 	show_import_status_message("Import successful!")
 	rdvgame_loaded.emit()
-
-func setting_changed(_setting : Game.MiscSetting, emit : bool = false) -> void:
-	if emit:
-		settings_changed.emit()
 
 func clear_rdvgame() -> void:
 	rdvgame = null
