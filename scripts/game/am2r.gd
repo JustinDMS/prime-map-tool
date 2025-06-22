@@ -218,10 +218,15 @@ func init_node_data(_node_data : NodeData, _extra_data : Dictionary) -> void:
 		&"pickup":
 			# Get what is in the parenthesis
 			var item_name : StringName = _node_data.name.split("(")[1].split(")")[0]
+			
+			if _extra_data.location_category == "minor":
+				if &"Missile" in item_name and not &"Super" in item_name:
+					item_name = &"Missile Expansion"
+			
 			_node_data.set_item_name(item_name)
 			
-			_node_data.set_scale( Vector2(0.1, 0.1) )
-			_node_data.set_hover_scale( Vector2(0.15, 0.15) )
+			_node_data.set_scale( Vector2(0.3, 0.3) )
+			_node_data.set_hover_scale( Vector2(0.35, 0.35) )
 			
 			var path := "res://data/games/%s/item_images/%s.png" % \
 			[get_game_id(), _node_data.get_item_name()]
@@ -247,3 +252,10 @@ func init_node_data(_node_data : NodeData, _extra_data : Dictionary) -> void:
 			_node_data.set_scale( Vector2(0.1, 0.1) )
 			_node_data.set_hover_scale( Vector2(0.15, 0.15) )
 			_node_data.set_texture( SHARED_NODE_TEXTURES["generic"] )
+
+func init_node_marker(_marker : NodeMarker) -> void:
+	match _marker.data.get_type():
+		&"dock": pass
+		&"pickup": pass
+		&"generic": pass
+		&"event": pass
