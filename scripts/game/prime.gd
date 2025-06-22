@@ -1,5 +1,40 @@
 class_name Prime extends Game
 
+const DOCK_COLOR_MAP : Dictionary[StringName, Color] = {
+	&"teleporter" : Color.PURPLE,
+	&"morph_ball" : Color.ORCHID,
+	
+	&"Normal Door" : Color.DEEP_SKY_BLUE,
+	&"Normal Door (Forced)" : Color.DEEP_SKY_BLUE,
+	&"Circular Door" : Color.DEEP_SKY_BLUE,
+	&"Square Door" : Color.DEEP_SKY_BLUE,
+	
+	&"Charge Beam Blast Shield" : Color.CADET_BLUE,
+	
+	&"Power Beam Only Door" : Color.GOLD,
+	&"Super Missile Blast Shield" : Color.LAWN_GREEN,
+	
+	&"Wave Door" : Color.MEDIUM_PURPLE,
+	&"Wavebuster Blast Shield" : Color.WEB_PURPLE,
+	
+	&"Ice Door" : Color.ALICE_BLUE,
+	&"Ice Spreader Blast Shield" : Color.LIGHT_STEEL_BLUE,
+	
+	&"Plasma Door" : Color.ORANGE_RED,
+	&"Flamethrower Blast Shield" : Color.DARK_RED,
+	
+	&"Missile Blast Shield" : Color.DARK_GRAY,
+	&"Missile Blast Shield (randomprime)" : Color.DARK_GRAY,
+	
+	&"Permanently Locked" : Color.DIM_GRAY,
+	
+	&"Bomb Blast Shield" : Color.LIGHT_SALMON,
+	&"Power Bomb Blast Shield" : Color.ORANGE,
+}
+const DOOR_OFFSET : float = 50.0
+const ARTIFACT_BLUE := Color("#4CDAF5")
+const ARTIFACT_ORANGE := Color("#F1A34C")
+
 func _init(rdv_header : Dictionary) -> void:
 	super(rdv_header)
 	
@@ -198,3 +233,116 @@ func init_room(room : Room) -> void:
 	)
 	room.material = load( outline_config.shader_path ).duplicate()
 	room.config = outline_config
+
+func init_node_data(_node_data : NodeData, _extra_data : Dictionary) -> void:
+	_node_data.set_type(_extra_data.node_type)
+	_node_data.set_coords(Vector2(
+		_extra_data.extra.world_position[0],
+		_extra_data.extra.world_position[1]
+		))
+	
+	match _node_data.type:
+		&"dock":
+			_node_data.set_scale( Vector2(0.1, 0.1) )
+			_node_data.set_hover_scale( Vector2(0.15, 0.15) )
+			
+			_node_data.set_dock_type(_extra_data.dock_type)
+			_node_data.set_dock_weakness(_extra_data.default_dock_weakness)
+			
+			if _node_data.is_door():
+				_node_data.set_dock_rotation(Vector3(
+					_extra_data.extra.world_rotation[0],
+					_extra_data.extra.world_rotation[1],
+					_extra_data.extra.world_rotation[2]
+					))
+			
+			_node_data.set_color(
+				DOCK_COLOR_MAP[_node_data.extra.dock_type] if not _node_data.is_door() \
+				else DOCK_COLOR_MAP[_node_data.extra.dock_weakness]
+			)
+			
+			_node_data.set_texture(SHARED_NODE_TEXTURES.get(
+				_node_data.extra.dock_type,
+				SHARED_NODE_TEXTURES["default"]
+				))
+		
+		&"pickup":
+			_node_data.set_scale( Vector2(0.0375, 0.0375) )
+			_node_data.set_hover_scale( Vector2(0.05, 0.05) )
+			
+			# Logic db names don't match pickup long names so
+			# we need to parse it
+			# This is for pickup texture lookup
+			
+			# Get what is in the parenthesis
+			var item_name : StringName = _node_data.name.split("(")[1].split(")")[0]
+			if _extra_data.location_category == "minor":
+				if item_name.contains(&"Missile"):
+					item_name = &"Missile Expansion"
+				else:
+					match item_name:
+						&"Power Bomb":
+							item_name = &"Power Bomb Expansion"
+						&"Energy Transfer Module":
+							item_name = &"Nothing"
+			# Majors
+			else:
+				if is_artifact( item_name ):
+					item_name = &"Artifacts"
+					_node_data.set_color( ARTIFACT_BLUE )
+				match item_name:
+					&"Main Power Bombs":
+						item_name = &"Power Bomb"
+					&"Morph Ball Bombs":
+						item_name = &"Morph Ball Bomb"
+					&"Missile Launcher":
+						item_name = &"Missile Expansion"
+			
+			_node_data.set_item_name(item_name)
+			
+			var path := "res://data/games/%s/item_images/%s.png" % \
+			[get_game_id(), _node_data.get_item_name()]
+			_node_data.set_texture( get_pickup_texture(path) )
+		
+		&"generic":
+			_node_data.set_scale( Vector2(0.1, 0.1) )
+			_node_data.set_hover_scale( Vector2(0.15, 0.15) )
+			_node_data.set_color(Color.WHEAT)
+			_node_data.set_texture( SHARED_NODE_TEXTURES[_node_data.type] )
+			_node_data.set_heal(_extra_data.heal)
+		
+		&"event":
+			_node_data.set_scale( Vector2(0.1, 0.1) )
+			_node_data.set_hover_scale( Vector2(0.15, 0.15) )
+			_node_data.set_color(Color.LIME_GREEN)
+			_node_data.set_texture( SHARED_NODE_TEXTURES[_node_data.type] )
+			_node_data.set_event_id(_extra_data.event_name)
+
+func init_node_marker(_marker : NodeMarker) -> void:
+	match _marker.data.get_type():
+		&"dock":
+			var offset := Vector2()
+			
+			if _marker.data.is_door():
+				offset.x = -DOOR_OFFSET
+				if is_vertical_door( _marker.data.get_dock_rotation() ):
+					offset.y = DOOR_OFFSET
+				else:
+					_marker.rotation_degrees = _marker.data.get_dock_rotation().z
+			
+			_marker.set_offset(offset)
+		
+		&"pickup": 
+			_marker.set_flip_v(true)
+		
+		&"generic": pass
+		&"event": pass
+
+# Prime-specific methods
+
+func is_vertical_door(rotation : Vector3) -> bool:
+	const THRESHOLD := 20.0
+	return abs(rotation.x) > THRESHOLD
+
+func is_artifact(item_name : StringName) -> bool:
+	return &"Artifact" in item_name

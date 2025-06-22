@@ -74,7 +74,7 @@ func extend_line() -> void:
 	anim_tween.tween_callback(set_visible.bind(true))
 	anim_tween.tween_method(_line.set_width, 0.0, WIDTH, DURATION)
 	anim_tween.tween_method(set_line_end_pos, from_target, to_target, DURATION)
-	anim_tween.tween_callback(_to_marker.node_hover).set_delay(MARKER_SCALE_DELAY)
+	anim_tween.tween_callback(_to_marker._set_scale.bind(_to_marker.data.get_hover_scale())).set_delay(MARKER_SCALE_DELAY)
 
 func retract_line() -> void:
 	const DURATION : float = 0.3
@@ -83,7 +83,7 @@ func retract_line() -> void:
 		anim_tween.kill()
 	
 	anim_tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_BACK).set_parallel(true)
-	anim_tween.tween_callback(_to_marker.node_stop_hover)
+	anim_tween.tween_callback(_to_marker._set_scale.bind(_to_marker.data.get_scale()))
 	anim_tween.tween_method(set_line_end_pos, to_target, from_target, DURATION)
 	anim_tween.tween_method(_line.set_width, WIDTH, 0.0, DURATION)
 	

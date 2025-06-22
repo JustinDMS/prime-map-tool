@@ -123,16 +123,12 @@ func init_nodes() -> void:
 				if k == "Pickup (Items Every Room)":
 					continue
 				
-				var node_data := NodeData.create_data_from_type(game, rdv_logic[r]["areas"][j]["nodes"][k]["node_type"])
+				var node_data := NodeData.new(game, room_data, k, rdv_logic[r]["areas"][j]["nodes"][k])
 				nodes.append(node_data)
-				node_data.init(game, k, room_data, rdv_logic[r]["areas"][j]["nodes"][k])
 				
 				var node_marker := draw_node_marker(node_data)
 				node_marker_map[node_data] = node_marker
 				add_marker_to_map(node_marker)
-				
-				if node_data is EventNodeData:
-					node_data.event_id = rdv_logic[r]["areas"][j]["nodes"][k]["event_name"]
 				
 				if rdvgame:
 					var format_string : String = "%s/%s/%s" % [node_data.region, j, k]
@@ -195,18 +191,7 @@ func get_room_data(region : StringName, room_name : String) -> RoomData:
 	return world_data[region][room_name]
 
 func draw_node_marker(node_data : NodeData) -> NodeMarker:
-	const BASE_NODE_MARKER : PackedScene = preload("res://resources/node_marker.tscn")
-	
-	var node_marker := BASE_NODE_MARKER.instantiate()
-	
-	if node_data is PickupNodeData:
-		if node_data.is_artifact():
-			node_marker.set_script(load("res://scripts/node marker/artifact_node_marker.gd"))
-		else:
-			node_marker.set_script(load("res://scripts/node marker/pickup_node_marker.gd"))
-	elif node_data is DockNodeData and node_data.is_door():
-		node_marker.set_script(load("res://scripts/node marker/door_node_marker.gd"))
-	
+	var node_marker := NodeMarker.new(game, node_data)
 	node_marker.data = node_data
 	node_marker.started_hover.connect(ui.node_hover)
 	node_marker.stopped_hover.connect(ui.node_stop_hover)
@@ -237,7 +222,7 @@ func get_elevators() -> Dictionary[NodeMarker, NodeMarker]:
 	
 	for data in node_marker_map:
 		if (
-			data is DockNodeData and
+			data.is_dock() and
 			data.default_connection
 		):
 			# Elevators
@@ -305,7 +290,7 @@ func resolve_map() -> void:
 		if not node.room_name in visited_rooms[node.region]:
 			visited_rooms[node.region].append(node.room_name)
 		
-		var default_connection : NodeData = null if not node is DockNodeData else node.default_connection
+		var default_connection : NodeData = null if not node.is_dock() else node.default_connection
 		if (
 			is_instance_valid(default_connection) and
 			not default_connection in reached_nodes and
@@ -321,12 +306,13 @@ func resolve_map() -> void:
 			if can_reach_internal(node, n):
 				reached_nodes.append(n)
 				
-				if n is EventNodeData:
-					game.set_event(n.event_id, true)
+				if n.is_event():
+					var id := n.get_event_id()
+					game.set_event(id, true)
 					
-					if unreached_nodes.has(n.event_id):
-						queue.append_array(unreached_nodes[n.event_id])
-						unreached_nodes.erase(n.event_id)
+					if unreached_nodes.has(id):
+						queue.append_array(unreached_nodes[id])
+						unreached_nodes.erase(id)
 				
 				queue.append(n)
 				continue
@@ -345,9 +331,7 @@ func resolve_map() -> void:
 	for key in node_marker_map:
 		var reached : bool = key in reached_nodes
 		var marker : NodeMarker = node_marker_map[key]
-		if marker is PickupNodeMarker or marker is ArtifactNodeMarker:
-			marker.set_reachable(reached)
-		marker.set_state(NodeMarker.State.DEFAULT if reached else NodeMarker.State.UNREACHABLE)
+		marker.change_state(NodeMarker.State.DEFAULT if reached else NodeMarker.State.UNREACHABLE)
 		for c in marker.node_connections:
 			match c._to_marker.state:
 				NodeMarker.State.DEFAULT:
@@ -366,13 +350,13 @@ func set_all_unreachable() -> void:
 		for node in room_map[key].node_markers:
 			node.self_modulate = Room.UNREACHABLE_COLOR
 
-func can_reach_external(from_node : DockNodeData, to_node : DockNodeData) -> bool:
+func can_reach_external(from_node : NodeData, to_node : NodeData) -> bool:
 	return (
-		game.can_pass_dock(from_node.type, from_node.default_dock_weakness) and 
-		game.can_pass_lock(from_node.type, from_node.default_dock_weakness)
+		game.can_pass_dock(from_node.extra.dock_type, from_node.extra.dock_weakness) and 
+		game.can_pass_lock(from_node.extra.dock_type, from_node.extra.dock_weakness)
 		) and (
-			game.can_pass_dock(from_node.type, from_node.default_dock_weakness) and 
-			game.can_pass_lock(to_node.type, to_node.default_dock_weakness)
+			game.can_pass_dock(from_node.extra.dock_type, from_node.extra.dock_weakness) and 
+			game.can_pass_lock(to_node.extra.dock_type, to_node.extra.dock_weakness)
 			)
 
 func can_reach_internal(from_node : NodeData, to_node : NodeData) -> bool:

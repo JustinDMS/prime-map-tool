@@ -4,6 +4,56 @@ const ROOM_WIDTH : int = 320
 const ROOM_HEIGHT : int = 240
 const ROOM_DIVISOR : int = 8
 
+const TEXTURE_MAP : Dictionary[StringName, Texture2D] = {
+	&"vertical_dock" : preload("res://data/icons/node marker/door.png"),
+	&"horizontal_dock" : preload("res://data/icons/node marker/door.png"),
+	&"tunnel" : preload("res://data/icons/node marker/node_marker.png"),
+	&"other" : preload("res://data/icons/node marker/generic_marker.png")
+}
+const DOCK_COLOR_MAP : Dictionary[StringName, Color] = {
+	&"vertical_dock" : Color.WHITE,
+	&"horizontal_dock" : Color.WHITE,
+	&"tunnel" : Color.WHITE,
+	&"teleporter" : Color.WHITE,
+	&"other" : Color.WHITE,
+	
+	&"Open Transition" : Color.WHITE,
+	&"Normal Door" : Color.WHITE,
+	&"Normal Door (Forced)" : Color.WHITE,
+	&"Missile Door" : Color.WHITE,
+	&"Super Missile Door" : Color.WHITE,
+	&"Power Bomb Door" : Color.WHITE,
+	&"Hydro Station Water Turbine" : Color.WHITE,
+	&"Research Site Open Hatch" : Color.WHITE,
+	&"Guardian-Locked Door" : Color.WHITE,
+	&"Arachnus-Locked Door" : Color.WHITE,
+	&"Torizo-Locked Door" : Color.WHITE,
+	&"Tester-Locked Door" : Color.WHITE,
+	&"Serris-Locked Door" : Color.WHITE,
+	&"Genesis-Locked Door" : Color.WHITE,
+	&"Queen Metroid-Locked Door" : Color.WHITE,
+	&"Tower Energy Restored Door" : Color.WHITE,
+	&"Distribution Center Energy Restored Door" : Color.WHITE,
+	&"Golden Temple EMP Door" : Color.WHITE,
+	&"Hydro Station EMP Door" : Color.WHITE,
+	&"Industrial Complex EMP Door" : Color.WHITE,
+	&"Distribution Center EMP Ball Introduction EMP Door" : Color.WHITE,
+	&"Distribution Center Robot Home EMP Door" : Color.WHITE,
+	&"Distribution Center Energy Distribution Tower East EMP Door" : Color.WHITE,
+	&"Distribution Center Bullet Hell Room Access EMP Door" : Color.WHITE,
+	&"Distribution Center Pipe Hub Access EMP Door" : Color.WHITE,
+	&"Distribution Center Exterior East Access EMP Door" : Color.WHITE,
+	&"Charge Beam Door" : Color.WHITE,
+	&"Wave Beam Door" : Color.WHITE,
+	&"Spazer Beam Door" : Color.WHITE,
+	&"Plasma Beam Door" : Color.WHITE,
+	&"Ice Beam Door" : Color.WHITE,
+	&"Bomb Door" : Color.WHITE,
+	&"Spider Ball Door" : Color.WHITE,
+	&"Screw Attack Door" : Color.WHITE,
+	&"Locked Door" : Color.WHITE,
+}
+
 func _init(rdv_header : Dictionary) -> void:
 	super(rdv_header)
 	
@@ -117,7 +167,6 @@ func init_room_data(_room_data : RoomData, _extra_data : Dictionary) -> void:
 	
 	_room_data.extra.image_width = _room_data.texture.get_width() / ROOM_DIVISOR
 	_room_data.extra.image_height = _room_data.texture.get_height() / ROOM_DIVISOR
-@warning_ignore_restore("integer_division")
 
 func init_room(room : Room) -> void:
 	room.position.x = room.data.extra.x_position
@@ -132,3 +181,69 @@ func init_room(room : Room) -> void:
 	)
 	room.material = load( outline_config.shader_path ).duplicate()
 	room.config = outline_config
+
+func init_node_data(_node_data : NodeData, _extra_data : Dictionary) -> void:
+	_node_data.set_type(_extra_data.node_type)
+	
+	# Coordinates
+	var room_data : RoomData = _extra_data.room_data
+	
+	var x_coord = room_data.extra.x_position + \
+	(_extra_data.coordinates.x / ROOM_DIVISOR)
+	
+	var y_coord = room_data.extra.y_position + \
+	room_data.texture.get_height() / ROOM_DIVISOR - \
+	_extra_data.coordinates.y / ROOM_DIVISOR
+	
+	_node_data.set_coords( Vector2(x_coord, y_coord) )
+	
+	match _node_data.type:
+		&"dock":
+			_node_data.set_scale( Vector2(0.1, 0.1) )
+			_node_data.set_hover_scale( Vector2(0.15, 0.15) )
+			
+			_node_data.set_dock_type(_extra_data.dock_type)
+			_node_data.set_dock_weakness(_extra_data.default_dock_weakness)
+			
+			_node_data.set_color(
+				DOCK_COLOR_MAP[_node_data.extra.dock_type] if not _node_data.is_door() \
+				else DOCK_COLOR_MAP[_node_data.extra.dock_weakness]
+			)
+			
+			if _node_data.get_dock_type() in SHARED_NODE_TEXTURES:
+				_node_data.set_texture( SHARED_NODE_TEXTURES[_node_data.get_dock_type()] )
+			else:
+				_node_data.set_texture( TEXTURE_MAP[_node_data.get_dock_type()] )
+		
+		&"pickup":
+			# Get what is in the parenthesis
+			var item_name : StringName = _node_data.name.split("(")[1].split(")")[0]
+			_node_data.set_item_name(item_name)
+			
+			_node_data.set_scale( Vector2(0.1, 0.1) )
+			_node_data.set_hover_scale( Vector2(0.15, 0.15) )
+			
+			var path := "res://data/games/%s/item_images/%s.png" % \
+			[get_game_id(), _node_data.get_item_name()]
+			_node_data.set_texture( get_pickup_texture(path) )
+		
+		&"generic":
+			_node_data.set_heal(_extra_data.heal)
+			_node_data.set_color(Color.WHEAT)
+			_node_data.set_scale( Vector2(0.1, 0.1) )
+			_node_data.set_hover_scale( Vector2(0.15, 0.15) )
+			_node_data.set_texture( SHARED_NODE_TEXTURES[_node_data.type] )
+		
+		&"event":
+			_node_data.set_event_id(_extra_data.event_name)
+			_node_data.set_color(Color.LIME_GREEN)
+			_node_data.set_scale( Vector2(0.1, 0.1) )
+			_node_data.set_hover_scale( Vector2(0.15, 0.15) )
+			_node_data.set_texture( SHARED_NODE_TEXTURES[_node_data.type] )
+		
+		# TODO
+		&"hint":
+			_node_data.set_color(Color.WHEAT)
+			_node_data.set_scale( Vector2(0.1, 0.1) )
+			_node_data.set_hover_scale( Vector2(0.15, 0.15) )
+			_node_data.set_texture( SHARED_NODE_TEXTURES["generic"] )

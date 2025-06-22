@@ -52,7 +52,7 @@ func _init(_game : Game, _data : RoomData) -> void:
 func _ready() -> void:
 	game.init_room(self)
 
-func _gui_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if (
 		event is InputEventMouseButton and
 		state == State.HOVERED and

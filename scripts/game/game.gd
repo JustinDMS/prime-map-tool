@@ -1,12 +1,23 @@
 class_name Game extends Resource
 ## Generic data container for Randovania games
 
+const SHARED_NODE_TEXTURES : Dictionary[StringName, Texture2D] = {
+	&"default" : preload("res://data/icons/node marker/node_marker.png"),
+	&"door" : preload("res://data/icons/node marker/door.png"),
+	&"event" : preload("res://data/icons/node marker/event_marker.png"),
+	&"generic" : preload("res://data/icons/node marker/generic_marker.png"),
+	&"teleporter" : preload("res://data/icons/node marker/teleporter_marker.png"),
+}
+
 var _header := {} ## Randovania data
-var _items : Dictionary[String, Item] = {}
-var _events : Dictionary[String, Event] = {}
-var _tricks : Dictionary[String, Trick] = {}
-var _misc : Dictionary[String, MiscSetting] = {}
+var _items : Dictionary[StringName, Item] = {}
+var _events : Dictionary[StringName, Event] = {}
+var _tricks : Dictionary[StringName, Trick] = {}
+var _misc : Dictionary[StringName, MiscSetting] = {}
 var _templates := {}
+
+var item_long_name_map : Dictionary[StringName, Item] = {}
+var event_long_name_map : Dictionary[StringName, Event] = {}
 
 var last_failed_event_id : String = "" ## Used when resolving
 
@@ -19,7 +30,7 @@ var region_offset : Dictionary[StringName, Vector2] = {}
 var subregion_offset : Dictionary[StringName, Array] = {}
 
 ## Map of region names and room subregion indices
-## Inner dictionary expected type is Dictionary[StrinName, int] 
+## Inner dictionary expected type is Dictionary[StringName, int] 
 var subregion_map : Dictionary[StringName, Dictionary] = {}
 
 ## Map of room names and their z-indices
@@ -42,6 +53,10 @@ func init_room_data(_room_data : RoomData, _extra_data : Dictionary) -> void:
 	pass
 func init_room(_room : Room) -> void: 
 	pass
+func init_node_data(_node_data : NodeData, _extra_data : Dictionary) -> void:
+	pass
+func init_node_marker(_marker : NodeMarker) -> void:
+	pass
 #endregion
 
 func _init(rdv_header : Dictionary) -> void:
@@ -52,19 +67,23 @@ func _init(rdv_header : Dictionary) -> void:
 		match type:
 			"items":
 				for res in resource_db.items:
-					_items[res] = Item.new(res, resource_db.items[res])
+					var item := Item.new(res, resource_db.items[res])
+					_items[ StringName(res) ] = item
+					item_long_name_map[ StringName(item.long_name) ] = item
 			"events":
 				for res in resource_db.events:
-					_events[res] = Event.new(res, resource_db.events[res])
+					var event := Event.new(res, resource_db.events[res])
+					_events[ StringName(res) ] = event
+					event_long_name_map[ StringName(event.long_name) ] = event
 			"tricks":
 				for res in resource_db.tricks:
-					_tricks[res] = Trick.new(res, resource_db.tricks[res])
+					_tricks[ StringName(res) ] = Trick.new(res, resource_db.tricks[res])
 			"misc":
 				for res in resource_db.misc:
-					_misc[res] = MiscSetting.new(res, resource_db.misc[res])
+					_misc[ StringName(res) ] = MiscSetting.new(res, resource_db.misc[res])
 			"requirement_template":
 				for res in resource_db.requirement_template:
-					_templates[res] = resource_db.requirement_template[res].requirement
+					_templates[ StringName(res) ] = resource_db.requirement_template[res].requirement
 			_:
 				continue
 
@@ -123,24 +142,26 @@ func get_room_texture(path : String) -> Texture2D:
 		return null
 	return load(path)
 
+func get_pickup_texture(path : String) -> Texture2D:
+	if not ResourceLoader.exists(path, "Texture2D"):
+		push_warning("Failed to find pickup image at:\n%s" % path)
+		return null
+	return load(path)
+
 ## Returns an [member Item] given its name. 
 ## Supports both short/long names for lookup.
-func get_item(item_name : String) -> Item:
+func get_item(item_name : StringName) -> Item:
 	if " " in item_name:
 		return _get_item_from_long_name(item_name)
 	return _get_item(item_name)
 
-func _get_item(item_name : String) -> Item:
+func _get_item(item_name : StringName) -> Item:
 	assert(_items.has(item_name))
 	return _items[item_name]
 
-func _get_item_from_long_name(item_name : String) -> Item:
-	# Ugly brute force lookup
-	for i in _items:
-		var item := _get_item(i)
-		if item.long_name == item_name:
-			return item
-	return null
+func _get_item_from_long_name(item_name : StringName) -> Item:
+	assert(item_long_name_map.has(item_name))
+	return item_long_name_map[item_name]
 
 func set_items(names : Array[String]) -> void:
 	clear()
@@ -149,7 +170,7 @@ func set_items(names : Array[String]) -> void:
 		get_item(n).set_capacity(1)
 
 ## Returns a [member Trick] given its name.
-func get_trick(trick_name : String) -> Trick:
+func get_trick(trick_name : StringName) -> Trick:
 	assert(_tricks.has(trick_name))
 	return _tricks[trick_name]
 
@@ -158,7 +179,7 @@ func set_tricks(tricks : Dictionary) -> void:
 		get_trick(t).set_level_no_signal(tricks[t])
 
 ## Returns a [member MiscSetting] given its name.
-func get_misc_setting(setting_name : String) -> MiscSetting:
+func get_misc_setting(setting_name : StringName) -> MiscSetting:
 	assert(_misc.has(setting_name))
 	return _misc[setting_name]
 
@@ -171,10 +192,13 @@ func set_misc_settings(settings : Dictionary) -> void:
 		
 		get_misc_setting(s).set_enabled(settings[s])
 
-func get_event(event_name : String) -> Event:
+func get_event(event_name : StringName) -> Event:
 	assert(event_name in _events)
 	return _events[event_name]
-func set_event(event_name : String, b : bool) -> void:
+func get_event_from_long_name(event_name : StringName) -> Event:
+	assert(event_name in event_long_name_map)
+	return event_long_name_map[event_name]
+func set_event(event_name : StringName, b : bool) -> void:
 	assert(event_name in _events)
 	get_event(event_name).set_reached(b)
 func clear_events() -> void:
