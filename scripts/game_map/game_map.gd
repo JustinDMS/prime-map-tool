@@ -18,6 +18,7 @@ signal new_game_loaded()
 @export var randovania_interface : UITab
 @export var logic_interface : UITab
 @export var camera : Camera2D
+@export var start_nodes_container : VBoxContainer
 
 var rdv_logic : Dictionary[StringName, Dictionary] = {}
 var region_nodes : Dictionary[StringName, Control]
@@ -82,7 +83,7 @@ func draw_room(room_data : RoomData) -> Room:
 	var room := Room.new(game, room_data)
 	
 	room.data = room_data
-	room.double_clicked.connect(set_start_node)
+	room.double_clicked.connect(update_start_nodes)
 	room.double_clicked.connect(camera.center_on_room.bind(room))
 	room.started_hover.connect(ui.room_hover)
 	room.stopped_hover.connect(ui.room_stop_hover)
@@ -294,11 +295,16 @@ func resolve_map() -> void:
 		var default_connection : NodeData = null if not node.is_dock() else node.default_connection
 		if (
 			is_instance_valid(default_connection) and
-			not default_connection in reached_nodes and
-			can_reach_external(node, default_connection)
+			not default_connection in reached_nodes
 		):
-			reached_nodes.append(default_connection)
-			queue.append(default_connection)
+			var reached := can_reach_external(node, default_connection)
+			if reached:
+				reached_nodes.append(default_connection)
+				queue.append(default_connection)
+			elif not game.last_failed_event_id.is_empty():
+				if not unreached_nodes.has(game.last_failed_event_id):
+					unreached_nodes[game.last_failed_event_id] = []
+				unreached_nodes[game.last_failed_event_id].append(node)
 		
 		for n in node.connections:
 			if n in reached_nodes:
@@ -378,7 +384,6 @@ func rdvgame_loaded() -> void:
 
 func set_start_node(new_node : NodeData) -> void:
 	start_node = new_node
-	camera.center_on_room(start_node, get_room_obj(start_node.region, start_node.room_name))
 	resolve_map()
 
 func get_default_start_node() -> NodeData:
@@ -411,3 +416,13 @@ func change_to_game(game_id : StringName) -> void:
 	load_rdv_logic()
 	init_map()
 	init_nodes()
+
+func update_start_nodes(room_data : RoomData) -> void:
+	for node in start_nodes_container.get_children():
+		node.queue_free()
+	
+	for node in room_data.nodes:
+		var button := Button.new()
+		start_nodes_container.add_child(button)
+		button.set_text( node.name )
+		button.pressed.connect( set_start_node.bind(node) )
