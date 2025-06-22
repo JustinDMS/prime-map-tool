@@ -41,7 +41,7 @@ anchors_preset = 0
 script = ExtResource("1_gb56k")
 game_map = NodePath("../game_map")
 
-[node name="game_map" type="Control" parent="." node_paths=PackedStringArray("ui", "game_interface", "trick_interface", "randovania_interface", "logic_interface", "camera")]
+[node name="game_map" type="Control" parent="." node_paths=PackedStringArray("ui", "game_interface", "trick_interface", "randovania_interface", "logic_interface", "camera", "start_nodes_container")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -57,6 +57,7 @@ trick_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/
 randovania_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania")
 logic_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/Logic")
 camera = NodePath("../Camera2D")
+start_nodes_container = NodePath("../UI/ui/MarginContainer/MarginContainer/start_node_select_container")
 
 [node name="legend" type="Panel" parent="."]
 visible = false
@@ -433,3 +434,8 @@ horizontal_alignment = 1
 [node name="hovered_world_name" type="Label" parent="UI/ui/MarginContainer/MarginContainer/VBoxContainer2"]
 layout_mode = 2
 horizontal_alignment = 1
+
+[node name="start_node_select_container" type="VBoxContainer" parent="UI/ui/MarginContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0

@@ -3,6 +3,7 @@ class_name NodeMarker extends Sprite2D
 signal started_hover
 signal stopped_hover
 signal node_clicked(marker : NodeMarker)
+signal double_clicked(marker : NodeMarker)
 
 enum State {
 	INIT = -1,
@@ -44,11 +45,14 @@ func _input(event: InputEvent) -> void:
 		determine_hover()
 	
 	if (
-		state == State.HOVERED and 
-		event.is_action("press") and 
-		event.is_pressed()
+		state == State.HOVERED and
+		event is InputEventMouseButton and
+		event.get_button_index() == MOUSE_BUTTON_LEFT
 		):
-		_node_clicked()
+			if event.is_pressed():
+				_node_clicked()
+			elif event.is_double_click():
+				double_clicked.emit()
 
 func determine_hover() -> void:
 	var hover := rect.has_point( get_local_mouse_position() - offset )

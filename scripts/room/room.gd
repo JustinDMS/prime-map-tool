@@ -3,7 +3,7 @@ class_name Room extends TextureButton
 signal started_hover
 signal stopped_hover
 signal clicked
-signal double_clicked(node_data : NodeData)
+signal double_clicked(room_data : RoomData)
 
 enum State {
 	INIT = -1,
@@ -60,8 +60,8 @@ func _input(event: InputEvent) -> void:
 	):
 		room_clicked()
 		
-		if event.is_double_click() and is_instance_valid(data.default_node):
-			double_clicked.emit(data.default_node)
+		if event.is_double_click():
+			double_clicked.emit(data)
 
 func hover_start() -> void:
 	change_state(State.HOVERED)

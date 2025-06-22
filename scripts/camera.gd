@@ -57,8 +57,7 @@ func handle_zoom(_delta : float) -> void:
 func update_zoom(amount : float) -> void:
 	current_zoom = clampf(amount, MAX_ZOOM, MIN_ZOOM)
 
-## Runs on Room double_clicked which passes node data
-func center_on_room(_node_data : NodeData, room : Room) -> void:
+func center_on_room(_room_data : RoomData, room : Room) -> void:
 	move_to(room.get_global_center())
 	update_zoom(CENTER_ZOOM)
 
