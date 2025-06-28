@@ -180,7 +180,6 @@ func init_room(room : Room) -> void:
 		25  # - Outline thickness for starting room
 	)
 	room.config = outline_config
-	room._material = outline_config.SHADER.duplicate()
 
 func init_node_data(_node_data : NodeData, _extra_data : Dictionary) -> void:
 	_node_data.set_type(_extra_data.node_type)

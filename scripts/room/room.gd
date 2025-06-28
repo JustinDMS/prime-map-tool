@@ -4,6 +4,7 @@ signal started_hover
 signal stopped_hover
 signal clicked
 signal double_clicked(room_data : RoomData)
+signal state_changed(room : Room, new_state : State)
 
 enum State {
 	INIT = -1,
@@ -19,7 +20,7 @@ const UNREACHABLE_COLOR := Color("#4b7ea3")
 const UNREACHABLE_OUTLINE_COLOR := Color("#62a5d4")
 
 var room_color_tween : Tween = null
-var outline_tween : Tween = null
+
 var node_markers : Array[NodeMarker] = []
 
 var game : Game = null
@@ -27,8 +28,6 @@ var data : RoomData = null
 var config : OutlineConfig = null
 var state : State = State.INIT
 var prev_state : State = State.INIT
-
-var _material : ShaderMaterial = null
 
 func _init(_game : Game, _data : RoomData) -> void:
 	game = _game
@@ -97,21 +96,18 @@ func change_state(new_state : State) -> void:
 	
 	match state:
 		State.DEFAULT:
-			disable_material()
 			default()
 		State.HOVERED:
-			enable_material()
 			hovered()
 		State.UNREACHABLE:
-			disable_material()
 			unreachable()
 		State.STARTER:
-			enable_material()
 			starter()
+	
+	state_changed.emit(self, state)
 
 func default() -> void:
 	set_color( game.get_region_color(data.region) )
-	#set_outline( game.get_region_color(data.region), config.outline_thickness)
 
 func hovered() -> void:
 	if prev_state == State.STARTER:
@@ -122,48 +118,12 @@ func hovered() -> void:
 
 func unreachable() -> void:
 	set_color(UNREACHABLE_COLOR)
-	#set_outline(UNREACHABLE_OUTLINE_COLOR, config.outline_thickness)
 
 func starter() -> void:
 	prev_state = State.STARTER
 	set_color( game.get_region_color(data.region) )
 	#set_outline(STARTER_COLOR, config.starter_thickness)
 #endregion
-
-func enable_material() -> void:
-	set_material(_material)
-	
-	if outline_tween and outline_tween.is_running():
-		outline_tween.kill()
-	
-	match state:
-		State.DEFAULT:
-			pass
-		State.HOVERED:
-			if prev_state == State.STARTER:
-				set_outline(STARTER_COLOR, config.outline_hover_thickness)
-				return
-			set_outline(HOVER_COLOR, config.outline_hover_thickness)
-		State.UNREACHABLE:
-			pass
-		State.STARTER:
-			set_outline(STARTER_COLOR, config.starter_thickness)
-
-func disable_material() -> void:
-	const DURATION : float = 0.2
-	
-	if not _material:
-		return
-	
-	if outline_tween and outline_tween.is_running():
-		outline_tween.kill()
-	
-	outline_tween = create_tween().set_parallel(true).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
-	outline_tween.tween_method(_set_outline_color, _get_outline_color(), Color.TRANSPARENT, DURATION)
-	
-	await outline_tween.finished
-	
-	set_material(null)
 
 func set_color(new_color : Color) -> void:
 	const DURATION : float = 0.2
@@ -174,29 +134,7 @@ func set_color(new_color : Color) -> void:
 	room_color_tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 	room_color_tween.tween_property(self, "self_modulate", new_color, DURATION)
 
-func set_outline(color : Color, width : float) -> void:
-	const DURATION : float = 0.2
-	
-	if outline_tween and outline_tween.is_running():
-		await outline_tween.finished
-	
-	outline_tween = create_tween().set_parallel(true).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
-	outline_tween.tween_method(_set_outline_color, _get_outline_color(), color, DURATION)
-	outline_tween.tween_method(_set_outline_width, _get_outline_width(), width, DURATION)
-
-func _set_outline_color(value : Color) -> void:
-	_material.set_shader_parameter(&"color", value)
-func _get_outline_color() -> Color:
-	return _material.get_shader_parameter(&"color")
-
-func _set_outline_width(value : float) -> void:
-	_material.set_shader_parameter(&"width", value)
-func _get_outline_width() -> float:
-	return _material.get_shader_parameter(&"width")
-
 class OutlineConfig:
-	const SHADER := preload("res://resources/highlight_shader.tres")
-	
 	var outline_hover_thickness : float
 	var starter_thickness : float
 	

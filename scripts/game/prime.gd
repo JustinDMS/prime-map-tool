@@ -228,11 +228,10 @@ func init_room(room : Room) -> void:
 	room.custom_minimum_size.y = abs(y2 - y1)
 	
 	var outline_config := Room.OutlineConfig.new(
-		5, # - Outline thickness while hovered
+		3, # - Outline thickness while hovered
 		8  # - Outline thickness for starting room
 	)
 	room.config = outline_config
-	room._material = outline_config.SHADER.duplicate()
 
 func init_node_data(_node_data : NodeData, _extra_data : Dictionary) -> void:
 	_node_data.set_type(_extra_data.node_type)

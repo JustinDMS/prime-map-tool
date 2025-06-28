@@ -1,8 +1,9 @@
-[gd_scene load_steps=18 format=3 uid="uid://br45wp8jdj0tx"]
+[gd_scene load_steps=19 format=3 uid="uid://br45wp8jdj0tx"]
 
 [ext_resource type="Script" uid="uid://c3u7c3gsctgar" path="res://scripts/game_map/elevator_manager.gd" id="1_gb56k"]
 [ext_resource type="Script" uid="uid://cs002s81robiq" path="res://scripts/game_map/game_map.gd" id="2_0cp0l"]
 [ext_resource type="Script" uid="uid://obx1sghxlri" path="res://scripts/camera.gd" id="3_et3qh"]
+[ext_resource type="Script" uid="uid://dlsqt3n43r1og" path="res://scripts/game_map/shader_manager.gd" id="3_yaehf"]
 [ext_resource type="Texture2D" uid="uid://diydlmyeee38m" path="res://data/icons/node marker/door.png" id="4_0cp0l"]
 [ext_resource type="Script" uid="uid://cgpurrtywbole" path="res://scripts/ui/tab_manager.gd" id="4_0yqv7"]
 [ext_resource type="Script" uid="uid://cgdpilf1v6r75" path="res://scripts/ui/ui.gd" id="4_kybu4"]
@@ -39,6 +40,10 @@ color = Color(0.141176, 0.141176, 0.141176, 1)
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_gb56k")
+game_map = NodePath("../game_map")
+
+[node name="shader_manager" type="Node" parent="." node_paths=PackedStringArray("game_map")]
+script = ExtResource("3_yaehf")
 game_map = NodePath("../game_map")
 
 [node name="game_map" type="Control" parent="." node_paths=PackedStringArray("ui", "game_interface", "trick_interface", "randovania_interface", "logic_interface", "camera", "start_nodes_container")]
