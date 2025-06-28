@@ -50,7 +50,6 @@ func init_room_data(_room_data : RoomData, _extra_data : Dictionary) -> void:
 ## Outline material and config MUST be set
 func init_room(room : Room) -> void:
 	var outline_config := Room.OutlineConfig.new(
-		&"res://resources/highlight_shader.tres", # - Shader Path
 		2, # - Outline thickness
 		3, # - Outline thickness while hovered
 		8  # - Outline thickness for starting room
