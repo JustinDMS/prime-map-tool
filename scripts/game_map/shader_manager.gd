@@ -28,7 +28,7 @@ func room_state_changed(_room : Room, _state : Room.State) -> void:
 				set_outline(start_room_material, Room.STARTER_COLOR, _room.config.outline_hover_thickness)
 				return
 			
-			print("%s -> %s (%s)" % [_room.data.name, _state, _room.prev_state])
+			#print("%s -> %s (%s)" % [_room.data.name, _state, _room.prev_state])
 			_room.set_material(hover_material)
 			set_outline(hover_material, Room.HOVER_COLOR, _room.config.outline_hover_thickness)
 		
