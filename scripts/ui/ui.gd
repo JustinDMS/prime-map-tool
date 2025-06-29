@@ -1,5 +1,6 @@
 extends Control
 
+@export var game_map : GameMap
 @export var region_name_label : Label
 @export var room_name_label : Label
 @export var node_name_label : Label
@@ -7,6 +8,16 @@ extends Control
 
 var hovered_nodes : Array[NodeMarker] = []
 var hovered_room : Room = null
+
+func _ready() -> void:
+	game_map.new_game_loaded.connect( func(): hovered_nodes.clear() )
+
+func room_state_changed(room : Room, state : Room.State) -> void:
+	if state == Room.State.HOVERED:
+		room_hover(room)
+		return
+	
+	room_stop_hover(room)
 
 func room_hover(room : Room) -> void:
 	region_name_label.text = room.data.region
@@ -23,6 +34,12 @@ func room_stop_hover(_room : Room) -> void:
 	else:
 		region_name_label.text = hovered_nodes[-1].data.region
 		room_name_label.text = hovered_nodes[-1].data.room_name
+
+func node_state_changed(marker : NodeMarker, state : NodeMarker.State) -> void:
+	if state == NodeMarker.State.HOVERED:
+		node_hover(marker)
+	elif not marker.prev_state == NodeMarker.State.HOVERED:
+		node_stop_hover(marker)
 
 func node_hover(marker : NodeMarker) -> void:
 	hovered_nodes.append(marker)

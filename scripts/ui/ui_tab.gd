@@ -13,5 +13,5 @@ func _ready() -> void:
 
 func _gui_input(event: InputEvent) -> void:
 	# Capture the scroll event
-	if event is InputEventMouseButton or event.is_action("press"):
+	if event is InputEventMouseButton:
 		get_viewport().set_input_as_handled()

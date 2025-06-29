@@ -85,8 +85,7 @@ func draw_room(room_data : RoomData) -> Room:
 	room.data = room_data
 	room.double_clicked.connect(update_start_nodes)
 	room.double_clicked.connect(camera.center_on_room.bind(room))
-	room.started_hover.connect(ui.room_hover)
-	room.stopped_hover.connect(ui.room_stop_hover)
+	room.state_changed.connect(ui.room_state_changed)
 	
 	return room
 
@@ -195,8 +194,7 @@ func get_room_data(region : StringName, room_name : String) -> RoomData:
 func draw_node_marker(node_data : NodeData) -> NodeMarker:
 	var node_marker := NodeMarker.new(game, node_data)
 	node_marker.data = node_data
-	node_marker.started_hover.connect(ui.node_hover)
-	node_marker.stopped_hover.connect(ui.node_stop_hover)
+	node_marker.state_changed.connect(ui.node_state_changed)
 	node_marker.node_clicked.connect(logic_interface.update_data)
 	
 	return node_marker
@@ -205,6 +203,7 @@ func add_marker_to_map(node_marker : NodeMarker) -> void:
 	var data := node_marker.data
 	var room := get_room_obj(data.region, data.room_name)
 	room.add_child(node_marker)
+	room.node_markers.append(node_marker)
 	
 	var pos : Vector2 = region_nodes[data.region].global_position
 	pos += Vector2(data.coordinates.x, data.coordinates.y) * game.get_region_scale()

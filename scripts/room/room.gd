@@ -1,7 +1,5 @@
 class_name Room extends TextureButton
 
-signal started_hover
-signal stopped_hover
 signal clicked
 signal double_clicked(room_data : RoomData)
 signal state_changed(room : Room, new_state : State)
@@ -39,8 +37,8 @@ func _init(_game : Game, _data : RoomData) -> void:
 	set_mouse_filter(Control.MOUSE_FILTER_PASS)
 	set_default_cursor_shape(Control.CURSOR_POINTING_HAND)
 	
-	mouse_entered.connect(hover_start)
-	mouse_exited.connect(hover_end)
+	mouse_entered.connect( change_state.bind(State.HOVERED) )
+	mouse_exited.connect( func(): change_state(prev_state) )
 	
 	set_name(data.name) # Set name in SceneTree
 	set_texture_normal(data.texture)
@@ -57,20 +55,22 @@ func _input(event: InputEvent) -> void:
 	if (
 		event is InputEventMouseButton and
 		state == State.HOVERED and
-		event.get_button_index() == MOUSE_BUTTON_LEFT
+		event.get_button_index() == MOUSE_BUTTON_LEFT and 
+		event.is_pressed()
 	):
 		room_clicked()
 		
 		if event.is_double_click():
 			double_clicked.emit(data)
-
-func hover_start() -> void:
-	change_state(State.HOVERED)
-	started_hover.emit(self)
-
-func hover_end() -> void:
-	change_state(prev_state)
-	stopped_hover.emit(self)
+		
+		return
+	
+	if (
+		event is InputEventMouseMotion and
+		state == State.HOVERED
+		):
+			for n in node_markers:
+				n.determine_hover()
 
 func room_clicked() -> void:
 	print_debug(data.name)
@@ -94,6 +94,14 @@ func change_state(new_state : State) -> void:
 	prev_state = state
 	state = new_state
 	
+	# Unhover child node markers
+	if prev_state == State.HOVERED:
+		for n in node_markers:
+			if n.state == NodeMarker.State.HOVERED:
+				n.is_hovered = false
+				n._set_scale( n.data.get_scale() )
+				n.change_state(n.prev_state)
+	
 	match state:
 		State.DEFAULT:
 			default()
@@ -110,11 +118,7 @@ func default() -> void:
 	set_color( game.get_region_color(data.region) )
 
 func hovered() -> void:
-	if prev_state == State.STARTER:
-		#set_outline(STARTER_COLOR, config.outline_hover_thickness)
-		return
-	
-	#set_outline(HOVER_COLOR, config.outline_hover_thickness)
+	pass
 
 func unreachable() -> void:
 	set_color(UNREACHABLE_COLOR)
@@ -122,7 +126,6 @@ func unreachable() -> void:
 func starter() -> void:
 	prev_state = State.STARTER
 	set_color( game.get_region_color(data.region) )
-	#set_outline(STARTER_COLOR, config.starter_thickness)
 #endregion
 
 func set_color(new_color : Color) -> void:

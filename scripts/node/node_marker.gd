@@ -1,7 +1,6 @@
 class_name NodeMarker extends Sprite2D
 
-signal started_hover
-signal stopped_hover
+signal state_changed(marker : NodeMarker, new_state : State)
 signal node_clicked(marker : NodeMarker)
 signal double_clicked(marker : NodeMarker)
 
@@ -41,9 +40,6 @@ func _ready() -> void:
 	game.init_node_marker(self)
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion:
-		determine_hover()
-	
 	if (
 		state == State.HOVERED and
 		event is InputEventMouseButton and
@@ -55,7 +51,8 @@ func _input(event: InputEvent) -> void:
 				double_clicked.emit()
 
 func determine_hover() -> void:
-	var hover := rect.has_point( get_local_mouse_position() - offset )
+	var mouse_pos := get_local_mouse_position()
+	var hover := rect.has_point(mouse_pos - offset)
 	
 	# No change
 	if hover == is_hovered:
@@ -63,18 +60,9 @@ func determine_hover() -> void:
 	
 	is_hovered = hover
 	if is_hovered:
-		hover_start()
+		change_state(State.HOVERED)
 		return
-	hover_stop()
-
-func hover_start() -> void:
-	change_state(State.HOVERED)
-	started_hover.emit(self)
-
-func hover_stop() -> void:
 	change_state(prev_state)
-	_set_scale( data.get_scale() )
-	stopped_hover.emit(self)
 
 #region Marker State
 func change_state(new_state : State) -> void:
@@ -83,6 +71,7 @@ func change_state(new_state : State) -> void:
 	
 	if prev_state == State.HOVERED:
 		set_connection_visibility(false)
+		_set_scale( data.get_scale() )
 	
 	match state:
 		State.DEFAULT:
@@ -93,6 +82,8 @@ func change_state(new_state : State) -> void:
 			unreachable()
 		State.STARTER:
 			starter()
+	
+	state_changed.emit(self, state)
 
 func default() -> void:
 	set_color( data.get_color() )
@@ -116,7 +107,7 @@ func set_color(color : Color) -> void:
 	self_modulate = color
 
 func _node_clicked() -> void:
-	#print_debug("%s clicked" % data.name)
+	print_debug("%s" % data.name)
 	node_clicked.emit(self)
 
 func _set_scale(_scale : Vector2) -> void:
