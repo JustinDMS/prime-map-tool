@@ -5,8 +5,8 @@ const MIN_ZOOM : float = 4.0
 const MAX_ZOOM : float = 0.33
 const START_ZOOM : float = MAX_ZOOM
 const CENTER_ZOOM : float = 2.5
-const ZOOM_WEIGHT : float = 0.15
-const DRAG_WEIGHT : float = 0.3
+const ZOOM_WEIGHT : float = 5.0
+const DRAG_WEIGHT : float = 15.0
 
 # NOTE - Might be better to define these in the relative [Game] script
 const X_MAX_POS := 3200.0
@@ -28,7 +28,7 @@ func _ready() -> void:
 	update_zoom(START_ZOOM)
 
 func _process(delta: float) -> void:
-	set_position( position.lerp(target_pos, DRAG_WEIGHT) )
+	set_position( position.lerp(target_pos, DRAG_WEIGHT * delta) )
 	handle_zoom(delta)
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -44,7 +44,8 @@ func handle_input(event : InputEvent) -> void:
 		move_map(event)
 
 func handle_zoom(_delta : float) -> void:
-	zoom = zoom.slerp(Vector2(current_zoom, current_zoom), ZOOM_WEIGHT)
+	zoom = zoom.slerp(Vector2(current_zoom, current_zoom), ZOOM_WEIGHT * _delta)
+	
 	if target_pos.x > X_MAX_POS:
 		target_pos.x = lerpf(target_pos.x, X_MAX_POS, 0.5)
 	elif target_pos.x < X_MIN_POS:
