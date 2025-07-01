@@ -94,14 +94,6 @@ func change_state(new_state : State) -> void:
 	prev_state = state
 	state = new_state
 	
-	# Unhover child node markers
-	if prev_state == State.HOVERED:
-		for n in node_markers:
-			if n.state == NodeMarker.State.HOVERED:
-				n.is_hovered = false
-				n._set_scale( n.data.get_scale() )
-				n.change_state(n.prev_state)
-	
 	match state:
 		State.DEFAULT:
 			default()
@@ -113,6 +105,13 @@ func change_state(new_state : State) -> void:
 			starter()
 	
 	state_changed.emit(self, state)
+	
+	# Unhover nodes in this room
+	if prev_state == State.HOVERED:
+		for marker in node_markers:
+			if marker.state == NodeMarker.State.HOVERED:
+				# Block signal emission if manually unhovering
+				marker.change_state(marker.prev_state, false)
 
 func default() -> void:
 	set_color( game.get_region_color(data.region) )

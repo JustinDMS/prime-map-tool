@@ -18,7 +18,6 @@ var game : Game = null
 var data : NodeData = null
 var state : State = State.INIT
 var prev_state : State = State.INIT
-var is_hovered : bool = false
 var rect := Rect2()
 var hover_tween : Tween
 
@@ -54,24 +53,18 @@ func determine_hover() -> void:
 	var mouse_pos := get_local_mouse_position()
 	var hover := rect.has_point(mouse_pos - offset)
 	
-	# No change
-	if hover == is_hovered:
-		return
-	
-	is_hovered = hover
-	if is_hovered:
+	if hover:
+		if state == State.HOVERED:
+			return
 		change_state(State.HOVERED)
-		return
-	change_state(prev_state)
+	
+	elif state == State.HOVERED:
+		change_state(prev_state)
 
 #region Marker State
-func change_state(new_state : State) -> void:
+func change_state(new_state : State, emit_signal : bool = true) -> void:
 	prev_state = state
 	state = new_state
-	
-	if prev_state == State.HOVERED:
-		set_connection_visibility(false)
-		_set_scale( data.get_scale() )
 	
 	match state:
 		State.DEFAULT:
@@ -83,10 +76,13 @@ func change_state(new_state : State) -> void:
 		State.STARTER:
 			starter()
 	
-	state_changed.emit(self, state)
+	if emit_signal:
+		state_changed.emit(self, state)
 
 func default() -> void:
 	set_color( data.get_color() )
+	set_connection_visibility(false)
+	_set_scale( data.get_scale() )
 
 func hovered() -> void:
 	set_connection_visibility(true)
@@ -95,9 +91,11 @@ func hovered() -> void:
 func unreachable() -> void:
 	if data.is_event():
 		set_color(Color.INDIAN_RED)
-		return
+	else:
+		set_color(Room.UNREACHABLE_COLOR)
 	
-	set_color(Room.UNREACHABLE_COLOR)
+	set_connection_visibility(false)
+	_set_scale( data.get_scale() )
 
 func starter() -> void:
 	pass

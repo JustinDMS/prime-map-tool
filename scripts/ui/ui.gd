@@ -27,19 +27,17 @@ func room_hover(room : Room) -> void:
 
 func room_stop_hover(_room : Room) -> void:
 	hovered_room = null
-	
-	if hovered_nodes.is_empty():
-		region_name_label.text = ""
-		room_name_label.text = ""
-	else:
-		region_name_label.text = hovered_nodes[-1].data.region
-		room_name_label.text = hovered_nodes[-1].data.room_name
+	hovered_nodes.clear()
+	region_name_label.text = ""
+	room_name_label.text = ""
+	node_name_label.text = ""
 
 func node_state_changed(marker : NodeMarker, state : NodeMarker.State) -> void:
 	if state == NodeMarker.State.HOVERED:
 		node_hover(marker)
-	else:
-		node_stop_hover(marker)
+		return
+	
+	node_stop_hover(marker)
 
 func node_hover(marker : NodeMarker) -> void:
 	hovered_nodes.append(marker)
