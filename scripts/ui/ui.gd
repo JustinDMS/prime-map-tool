@@ -38,7 +38,7 @@ func room_stop_hover(_room : Room) -> void:
 func node_state_changed(marker : NodeMarker, state : NodeMarker.State) -> void:
 	if state == NodeMarker.State.HOVERED:
 		node_hover(marker)
-	elif not marker.prev_state == NodeMarker.State.HOVERED:
+	else:
 		node_stop_hover(marker)
 
 func node_hover(marker : NodeMarker) -> void:
