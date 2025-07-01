@@ -48,7 +48,7 @@ func resolve(start_node : NodeData) -> void:
 	for region in game.get_region_names():
 		reached_nodes[region] = {}
 	
-	game.clear_events()
+	game.reset_events()
 	
 	while len(queue) > 0:
 		var node : NodeData = queue.pop_front()
@@ -142,7 +142,7 @@ func has_resource(logic_data : Dictionary) -> bool:
 	
 	match type:
 		&"items":
-			result = game._get_item(name).has()
+			result = game.get_item(name).has()
 		&"events":
 			result = game.get_event(name).reached
 		&"tricks":

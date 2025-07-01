@@ -19,8 +19,6 @@ var _templates := {}
 var item_long_name_map : Dictionary[StringName, Item] = {}
 var event_long_name_map : Dictionary[StringName, Event] = {}
 
-var last_failed_event_id : String = "" ## Used when resolving
-
 #region Virtual Members
 ## Map of region names and their offsets in global space
 var region_offset : Dictionary[StringName, Vector2] = {}
@@ -87,6 +85,7 @@ func _init(rdv_header : Dictionary) -> void:
 			_:
 				continue
 
+#region Game Data Accessor Methods
 ## Creates and returns logic database data if it exists
 func get_region_data() -> Dictionary[StringName, Dictionary]:
 	var data : Dictionary[StringName, Dictionary] = {}
@@ -150,28 +149,38 @@ func get_pickup_texture(path : String) -> Texture2D:
 
 func get_region_names() -> Array[StringName]:
 	return region_offset.keys()
+#endregion
 
+#region Item Methods
 ## Returns an [member Item] given its name. 
-## Supports both short/long names for lookup.
 func get_item(item_name : StringName) -> Item:
-	if " " in item_name:
-		return _get_item_from_long_name(item_name)
-	return _get_item(item_name)
-
-func _get_item(item_name : StringName) -> Item:
-	assert(_items.has(item_name))
-	return _items[item_name]
-
-func _get_item_from_long_name(item_name : StringName) -> Item:
-	assert(item_long_name_map.has(item_name))
-	return item_long_name_map[item_name]
+	# Short Name
+	if _items.has(item_name):
+		return _items[item_name]
+	# Long Name
+	if item_long_name_map.has(item_name):
+		return item_long_name_map[item_name]
+	
+	assert(false, "Failed to find item: %s" % item_name)
+	return null
 
 func set_items(names : Array[String]) -> void:
-	clear()
+	remove_all_items()
 	
 	for n in names:
 		get_item(n).set_capacity(1)
 
+func give_all_items() -> void:
+	for i in _items:
+		var item := get_item(i)
+		item.set_max()
+func remove_all_items() -> void:
+	for i in _items:
+		var item := get_item(i)
+		item.set_capacity(0)
+#endregion
+
+#region Trick Methods
 ## Returns a [member Trick] given its name.
 func get_trick(trick_name : StringName) -> Trick:
 	assert(_tricks.has(trick_name))
@@ -180,7 +189,9 @@ func get_trick(trick_name : StringName) -> Trick:
 func set_tricks(tricks : Dictionary) -> void:
 	for t in tricks:
 		get_trick(t).set_level_no_signal(tricks[t])
+#endregion
 
+#region Misc Setting Methods
 ## Returns a [member MiscSetting] given its name.
 func get_misc_setting(setting_name : StringName) -> MiscSetting:
 	assert(_misc.has(setting_name))
@@ -194,37 +205,25 @@ func set_misc_settings(settings : Dictionary) -> void:
 			continue
 		
 		get_misc_setting(s).set_enabled(settings[s])
+#endregion
 
+#region Event Methods
 func get_event(event_name : StringName) -> Event:
 	assert(event_name in _events)
 	return _events[event_name]
+
 func get_event_from_long_name(event_name : StringName) -> Event:
 	assert(event_name in event_long_name_map)
 	return event_long_name_map[event_name]
+
 func set_event(event_name : StringName, b : bool) -> void:
 	assert(event_name in _events)
 	get_event(event_name).set_reached(b)
-func clear_events() -> void:
+
+func reset_events() -> void:
 	for key in _events:
 		set_event(key, false)
-
-func all() -> void:
-	for i in _items:
-		var item := _get_item(i)
-		item.set_max()
-func clear() -> void:
-	for i in _items:
-		var item := _get_item(i)
-		item.set_capacity(0)
-
-func can_pass_dock(type : String, weakness : String) -> bool:
-	return can_reach(_header.dock_weakness_database.types[type].items[weakness].requirement)
-func can_pass_lock(type : String, weakness : String) -> bool:
-	# True if there is no lock
-	var pass_lock : bool = _header.dock_weakness_database.types[type].items[weakness].lock == null
-	if not pass_lock:
-		pass_lock = can_reach(_header.dock_weakness_database.types[type].items[weakness].lock.requirement)
-	return pass_lock
+#endregion
 
 func rdvgame_loaded() -> void:
 	var rdvgame := RandovaniaInterface.get_rdvgame()
@@ -232,62 +231,6 @@ func rdvgame_loaded() -> void:
 	set_items(rdvgame.get_starting_pickups())
 	set_tricks(rdvgame.get_trick_levels())
 	set_misc_settings(rdvgame.get_config())
-
-func has_resource(logic_data : Dictionary) -> bool:
-	var type : String = logic_data.type
-	var name : String = logic_data.name
-	var amount : int = logic_data.amount
-	var negate : bool = logic_data.negate
-	var result := false
-	
-	match logic_data.type:
-		"items":
-			result = _get_item(name).has()
-		"events":
-			result = get_event(name).reached
-			if not result and not negate:
-				last_failed_event_id = name
-		"tricks":
-			result = get_trick(name).can_perform(amount)
-		"damage": # TODO
-			result = true
-		"misc":
-			result = get_misc_setting(name).is_enabled()
-		_:
-			push_error("Unhandled resource type: %s" % type)
-	
-	if negate:
-		result = not result
-	
-	return result
-
-func can_reach(logic : Dictionary, _depth : int = 0) -> bool:
-	match logic.type:
-		"and":
-			if logic.data.items.is_empty():
-				return true
-			
-			for i in range(logic.data.items.size()):
-				if not can_reach(logic.data.items[i], _depth + 1):
-					return false
-			return true
-		
-		"or":
-			for i in range(logic.data.items.size()):
-				if can_reach(logic.data.items[i], _depth + 1):
-					return true
-			return false
-		
-		"resource":
-			return has_resource(logic.data)
-		
-		"template":
-			return can_reach(_templates[logic.data])
-		
-		_:
-			push_error("Unhandled logic type: %s" % logic.type)
-	
-	return false
 
 class Item:
 	signal changed(item : Item)

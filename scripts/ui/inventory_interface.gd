@@ -64,7 +64,7 @@ class AllButton extends Button:
 		self.set_text("All")
 		pressed.connect(
 			func():
-				_game.all()
+				_game.give_all_items()
 		)
 		
 		self.set_h_size_flags(Control.SIZE_EXPAND_FILL)
@@ -76,7 +76,7 @@ class NoneButton extends Button:
 		self.set_text("None")
 		pressed.connect(
 			func():
-				_game.clear()
+				_game.remove_all_items()
 		)
 		
 		self.set_h_size_flags(Control.SIZE_EXPAND_FILL)

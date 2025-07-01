@@ -6,7 +6,7 @@ static func get_game() -> Game:
 	return game
 static func _static_init() -> void:
 	game = GameFactory.create_from_game_name("prime1")
-	game.all()
+	game.give_all_items()
 
 signal map_drawn(dock_connections : Dictionary[NodeMarker, NodeMarker])
 signal map_resolved(reached_nodes : Array[NodeData])
@@ -269,8 +269,6 @@ func resolve_map() -> void:
 	if not start_node:
 		start_node = get_default_start_node()
 	
-	game.clear_events()
-	
 	var resolver := Resolver.new(game, rdv_logic)
 	resolver.resolve(start_node)
 	
@@ -303,6 +301,14 @@ func set_all_unreachable() -> void:
 		for node in room_map[key].node_markers:
 			node.change_state(NodeMarker.State.UNREACHABLE)
 
+func set_start_node(new_node : NodeData) -> void:
+	start_node = new_node
+	resolve_map()
+
+func get_default_start_node() -> NodeData:
+	var data : Dictionary = game._header.starting_location
+	return get_node_data(data.region, data.area, data.node)
+
 func rdvgame_loaded() -> void:
 	init_nodes()
 	
@@ -313,18 +319,10 @@ func rdvgame_loaded() -> void:
 		rdvgame.get_start_node_name()
 		))
 
-func set_start_node(new_node : NodeData) -> void:
-	start_node = new_node
-	resolve_map()
-
-func get_default_start_node() -> NodeData:
-	var data : Dictionary = game._header.starting_location
-	return get_node_data(data.region, data.area, data.node)
-
 func rdvgame_cleared() -> void:
 	start_node = null
 	
-	game.all()
+	game.give_all_items()
 	
 	init_nodes()
 	resolve_map()
@@ -340,7 +338,7 @@ func change_to_game(game_id : StringName) -> void:
 	start_node = null
 
 	game = GameFactory.create_from_game_name(game_id)
-	game.all()
+	game.give_all_items()
 	
 	new_game_loaded.emit()
 	
@@ -348,6 +346,8 @@ func change_to_game(game_id : StringName) -> void:
 	init_map()
 	init_nodes()
 
+## Displays list of buttons for each node in the room
+## Clicking the button sets the respective node as the start node
 func update_start_nodes(room_data : RoomData) -> void:
 	for node in start_nodes_container.get_children():
 		node.queue_free()
