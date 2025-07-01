@@ -34,7 +34,7 @@ var subregion_offset : Dictionary[StringName, Array] = {}
 var subregion_map : Dictionary[StringName, Dictionary] = {}
 
 ## Map of room names and their z-indices
-var  z_index_override : Dictionary[StringName, int] = {}
+var z_index_override : Dictionary[StringName, int] = {}
 
 ## Map of region names and their color
 var region_color : Dictionary[StringName, Color] = {}
@@ -147,6 +147,9 @@ func get_pickup_texture(path : String) -> Texture2D:
 		push_warning("Failed to find pickup image at:\n%s" % path)
 		return null
 	return load(path)
+
+func get_region_names() -> Array[StringName]:
+	return region_offset.keys()
 
 ## Returns an [member Item] given its name. 
 ## Supports both short/long names for lookup.

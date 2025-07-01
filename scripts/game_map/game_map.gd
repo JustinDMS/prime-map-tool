@@ -269,107 +269,39 @@ func resolve_map() -> void:
 	if not start_node:
 		start_node = get_default_start_node()
 	
-	set_all_unreachable()
-	
 	game.clear_events()
 	
-	var queue : Array[NodeData] = []
-	var reached_nodes : Array[NodeData] = []
-	var unreached_nodes := {}
+	var resolver := Resolver.new(game, rdv_logic)
+	resolver.resolve(start_node)
 	
-	# Region name : Rooms
-	var visited_rooms : Dictionary[StringName, Array] = {}
-	for r in rdv_logic:
-		visited_rooms[r] = []
+	set_all_unreachable()
 	
-	queue.append(start_node)
-	reached_nodes.append(start_node)
-	
-	while len(queue) > 0:
-		var node : NodeData = queue.pop_front()
-		
-		if not node.room_name in visited_rooms[node.region]:
-			visited_rooms[node.region].append(node.room_name)
-		
-		var default_connection : NodeData = null if not node.is_dock() else node.default_connection
-		if (
-			is_instance_valid(default_connection) and
-			not default_connection in reached_nodes
-		):
-			var reached := can_reach_external(node, default_connection)
-			if reached:
-				reached_nodes.append(default_connection)
-				queue.append(default_connection)
-			elif not game.last_failed_event_id.is_empty():
-				if not unreached_nodes.has(game.last_failed_event_id):
-					unreached_nodes[game.last_failed_event_id] = []
-				unreached_nodes[game.last_failed_event_id].append(node)
-		
-		for n in node.connections:
-			if n in reached_nodes:
-				continue
-			
-			if can_reach_internal(node, n):
-				reached_nodes.append(n)
-				
-				if n.is_event():
-					var id := n.get_event_id()
-					game.set_event(id, true)
-					
-					if unreached_nodes.has(id):
-						queue.append_array(unreached_nodes[id])
-						unreached_nodes.erase(id)
-				
-				queue.append(n)
-				continue
-			
-			# Failed to reached
-			if not game.last_failed_event_id.is_empty():
-				if not unreached_nodes.has(game.last_failed_event_id):
-					unreached_nodes[game.last_failed_event_id] = []
-				unreached_nodes[game.last_failed_event_id].append(node)
-	
-	for r in visited_rooms:
-		for n in visited_rooms[r]:
-			var room_obj := get_room_obj(r, n)
+	# Set room, node, and node connection states
+	var all_reached : Array[NodeData] = []
+	for region in resolver.reached_nodes:
+		for room in resolver.reached_nodes[region]:
+			var room_obj := get_room_obj(region, room)
 			room_obj.change_state(Room.State.DEFAULT)
-	
-	for key in node_marker_map:
-		var reached : bool = key in reached_nodes
-		var marker : NodeMarker = node_marker_map[key]
-		marker.change_state(NodeMarker.State.DEFAULT if reached else NodeMarker.State.UNREACHABLE)
-		for c in marker.node_connections:
-			match c._to_marker.state:
-				NodeMarker.State.DEFAULT:
-					c.modulate = Color.GREEN
-				NodeMarker.State.UNREACHABLE:
-					c.modulate = Color.RED
+			
+			for node in resolver.reached_nodes[region][room]:
+				var data : NodeData = get_node_data(region, room, node)
+				var marker : NodeMarker = node_marker_map[data]
+				marker.change_state(NodeMarker.State.DEFAULT)
+				for connection in marker.node_connections:
+					connection.modulate = Color.GREEN
+				
+				all_reached.append(data)
 	
 	var starter_room := get_room_obj(start_node.region, start_node.room_name)
 	starter_room.change_state(Room.State.STARTER)
 	
-	map_resolved.emit(reached_nodes)
+	map_resolved.emit(all_reached)
 
 func set_all_unreachable() -> void:
 	for key in room_map:
 		room_map[key].change_state(Room.State.UNREACHABLE)
 		for node in room_map[key].node_markers:
 			node.change_state(NodeMarker.State.UNREACHABLE)
-
-func can_reach_external(from_node : NodeData, to_node : NodeData) -> bool:
-	return (
-		game.can_pass_dock(from_node.extra.dock_type, from_node.extra.dock_weakness) and 
-		game.can_pass_lock(from_node.extra.dock_type, from_node.extra.dock_weakness)
-		) and (
-			game.can_pass_dock(from_node.extra.dock_type, from_node.extra.dock_weakness) and 
-			game.can_pass_lock(to_node.extra.dock_type, to_node.extra.dock_weakness)
-			)
-
-func can_reach_internal(from_node : NodeData, to_node : NodeData) -> bool:
-	#print("Checking %s (%s) to %s (%s)" % [from_node.display_name, from_node.room_name, to_node.display_name, to_node.room_name])
-	game.last_failed_event_id = ""
-	var logic : Dictionary = rdv_logic[from_node.region]["areas"][from_node.room_name]["nodes"][from_node.name]["connections"][to_node.name]
-	return game.can_reach(logic)
 
 func rdvgame_loaded() -> void:
 	init_nodes()
