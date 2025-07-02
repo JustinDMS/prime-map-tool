@@ -1,4 +1,5 @@
 extends Node
+## Manages outline shaders for room hovering
 
 const SHADER := preload("res://resources/highlight_shader.tres")
 
@@ -22,6 +23,7 @@ func room_state_changed(_room : Room, _state : Room.State) -> void:
 	match _state:
 		Room.State.DEFAULT:
 			_room.set_material(null)
+			_set_outline_color(Color.TRANSPARENT, hover_material)
 		
 		Room.State.HOVERED:
 			if _room.prev_state == Room.State.STARTER:
@@ -34,6 +36,7 @@ func room_state_changed(_room : Room, _state : Room.State) -> void:
 		
 		Room.State.UNREACHABLE:
 			_room.set_material(null)
+			_set_outline_color(Color.TRANSPARENT, hover_material)
 		
 		Room.State.STARTER:
 			_room.set_material(start_room_material)
