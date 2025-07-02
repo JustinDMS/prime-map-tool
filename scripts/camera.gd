@@ -45,15 +45,6 @@ func handle_input(event : InputEvent) -> void:
 
 func handle_zoom(_delta : float) -> void:
 	zoom = zoom.slerp(Vector2(current_zoom, current_zoom), ZOOM_WEIGHT * _delta)
-	
-	if target_pos.x > X_MAX_POS:
-		target_pos.x = lerpf(target_pos.x, X_MAX_POS, 0.5)
-	elif target_pos.x < X_MIN_POS:
-		target_pos.x = lerpf(target_pos.x, X_MIN_POS, 0.5)
-	if target_pos.y > Y_MAX_POS:
-		target_pos.y = lerpf(target_pos.y, Y_MAX_POS, 0.5)
-	elif target_pos.y < Y_MIN_POS:
-		target_pos.y = lerpf(target_pos.y, Y_MIN_POS, 0.5)
 
 func update_zoom(amount : float) -> void:
 	current_zoom = clampf(amount, MAX_ZOOM, MIN_ZOOM)
@@ -64,6 +55,16 @@ func center_on_room(_room_data : RoomData, room : Room) -> void:
 
 func move_map(event : InputEventMouseMotion) -> void:
 	target_pos -= (event.relative / current_zoom)
+	
+	if target_pos.x > X_MAX_POS:
+		target_pos.x = lerpf(target_pos.x, X_MAX_POS, 0.5)
+	elif target_pos.x < X_MIN_POS:
+		target_pos.x = lerpf(target_pos.x, X_MIN_POS, 0.5)
+	
+	if target_pos.y > Y_MAX_POS:
+		target_pos.y = lerpf(target_pos.y, Y_MAX_POS, 0.5)
+	elif target_pos.y < Y_MIN_POS:
+		target_pos.y = lerpf(target_pos.y, Y_MIN_POS, 0.5)
 
 ## Move to position in global space
 func move_to(g_position : Vector2) -> void:
