@@ -50,9 +50,8 @@ func _init(_game : Game, _data : RoomData) -> void:
 
 func _ready() -> void:
 	game.init_room(self)
-	set_process_input(false)
 
-func _unhandled_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if not state == State.HOVERED:
 		return
 	
@@ -117,16 +116,19 @@ func change_state(new_state : State) -> void:
 
 func default() -> void:
 	set_color( game.get_region_color(data.region) )
+	set_process_input(false)
 
 func hovered() -> void:
-	pass
+	set_process_input(true)
 
 func unreachable() -> void:
 	set_color(UNREACHABLE_COLOR)
+	set_process_input(false)
 
 func starter() -> void:
 	prev_state = State.STARTER
 	set_color( game.get_region_color(data.region) )
+	set_process_input(false)
 #endregion
 
 func set_color(new_color : Color) -> void:
