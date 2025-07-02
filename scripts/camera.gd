@@ -27,24 +27,21 @@ func _ready() -> void:
 	) * 0.5
 	update_zoom(START_ZOOM)
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	set_position( position.lerp(target_pos, DRAG_WEIGHT * delta) )
 	handle_zoom(delta)
 
 func _unhandled_input(event: InputEvent) -> void:
-	handle_input(event)
-
-func handle_input(event : InputEvent) -> void:
 	if event.is_action("zoom_in"):
 		update_zoom(current_zoom + (ZOOM_RATE * current_zoom))
-	if event.is_action("zoom_out"):
+	elif event.is_action("zoom_out"):
 		update_zoom(current_zoom - (ZOOM_RATE * current_zoom))
 	
 	if Input.is_action_pressed("press") and event is InputEventMouseMotion:
 		move_map(event)
 
 func handle_zoom(_delta : float) -> void:
-	zoom = zoom.slerp(Vector2(current_zoom, current_zoom), ZOOM_WEIGHT * _delta)
+	set_zoom( zoom.lerp(Vector2(current_zoom, current_zoom), ZOOM_WEIGHT * _delta) )
 
 func update_zoom(amount : float) -> void:
 	current_zoom = clampf(amount, MAX_ZOOM, MIN_ZOOM)

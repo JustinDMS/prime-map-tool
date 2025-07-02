@@ -304,7 +304,7 @@ func resolve_map() -> void:
 
 func set_all_unreachable() -> void:
 	for key in room_map:
-		var room : Room= room_map[key]
+		var room : Room = room_map[key]
 		room.change_state(Room.State.UNREACHABLE)
 		for marker in room.node_markers:
 			marker.change_state(NodeMarker.State.UNREACHABLE)

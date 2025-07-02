@@ -50,11 +50,14 @@ func _init(_game : Game, _data : RoomData) -> void:
 
 func _ready() -> void:
 	game.init_room(self)
+	set_process_input(false)
 
-func _input(event: InputEvent) -> void:
+func _unhandled_input(event: InputEvent) -> void:
+	if not state == State.HOVERED:
+		return
+	
 	if (
 		event is InputEventMouseButton and
-		state == State.HOVERED and
 		event.get_button_index() == MOUSE_BUTTON_LEFT and 
 		event.is_pressed()
 	):
@@ -66,8 +69,7 @@ func _input(event: InputEvent) -> void:
 		return
 	
 	if (
-		event is InputEventMouseMotion and
-		state == State.HOVERED
+		event is InputEventMouseMotion
 		):
 			for n in node_markers:
 				n.determine_hover()

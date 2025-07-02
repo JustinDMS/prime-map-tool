@@ -176,8 +176,8 @@ func init_room(room : Room) -> void:
 	room.custom_minimum_size.y = room.data.extra.image_height
 	
 	var outline_config := Room.OutlineConfig.new(
-		15, # - Outline thickness while hovered
-		25  # - Outline thickness for starting room
+		10, # - Outline thickness while hovered
+		15  # - Outline thickness for starting room
 	)
 	room.config = outline_config
 
