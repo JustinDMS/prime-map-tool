@@ -3,7 +3,8 @@ class_name Resolver extends RefCounted
 var game : Game = null
 var logic_db : Dictionary[StringName, Dictionary] = {}
 
-# Inner dictionary expected type is [ StringName, Array[StringName] ]
+## Inner dictionary expected type is [ StringName, Array[StringName] ]
+## { Region Name : { Room Name : [ Node Names ] } }
 var reached_nodes : Dictionary[StringName, Dictionary] = {}
 
 var template_results : Dictionary[StringName, bool] = {}
