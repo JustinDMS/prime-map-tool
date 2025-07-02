@@ -178,7 +178,7 @@ func init_nodes() -> void:
 			to_node.default_connection = from_node
 	
 	map_drawn.emit( get_elevators() )
-	resolve_map()
+	resolve_map.call_deferred()
 
 func get_node_data(region : StringName, room_name : String, node_name : String) -> NodeData:
 	var room_data := get_room_data(region, room_name)
@@ -253,7 +253,7 @@ func get_elevators() -> Dictionary[NodeMarker, NodeMarker]:
 func add_node_connections(marker : NodeMarker) -> void:
 	var room := get_room_obj(marker.data.region, marker.data.room_name)
 	for c in marker.data.connections:
-		var to_marker := node_marker_map[c] as NodeMarker
+		var to_marker := node_marker_map[c]
 		var node_connection := NodeConnection.new(
 			marker,
 			to_marker,
@@ -286,20 +286,30 @@ func resolve_map() -> void:
 				var marker : NodeMarker = node_marker_map[data]
 				marker.change_state(NodeMarker.State.DEFAULT)
 				for connection in marker.node_connections:
-					connection.modulate = Color.GREEN
+					var to_node_data : NodeData = connection._to_marker.data
+					connection.change_state(
+						NodeConnection.State.REACHED 
+						if resolver.is_reached(to_node_data) 
+						else NodeConnection.State.UNREACHED
+						)
 				
 				all_reached.append(data)
 	
 	var starter_room := get_room_obj(start_node.region, start_node.room_name)
-	starter_room.change_state(Room.State.STARTER)
+	# Deferring this call allows the shader manager to connect signals first
+	# Without it, the starter room shader doesn't show properly
+	starter_room.change_state.call_deferred(Room.State.STARTER)
 	
 	map_resolved.emit(all_reached)
 
 func set_all_unreachable() -> void:
 	for key in room_map:
-		room_map[key].change_state(Room.State.UNREACHABLE)
-		for node in room_map[key].node_markers:
-			node.change_state(NodeMarker.State.UNREACHABLE)
+		var room : Room= room_map[key]
+		room.change_state(Room.State.UNREACHABLE)
+		for marker in room.node_markers:
+			marker.change_state(NodeMarker.State.UNREACHABLE)
+			for connection in marker.node_connections:
+				connection.change_state(NodeConnection.State.UNREACHED)
 
 func set_start_node(new_node : NodeData) -> void:
 	start_node = new_node

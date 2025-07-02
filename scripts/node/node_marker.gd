@@ -20,6 +20,7 @@ var state : State = State.INIT
 var prev_state : State = State.INIT
 var rect := Rect2()
 var hover_tween : Tween
+var connections_visible : bool = false
 
 # Set by [GameMap]
 var node_connections : Array[NodeConnection] = []
@@ -62,7 +63,7 @@ func determine_hover() -> void:
 		change_state(prev_state)
 
 #region Marker State
-func change_state(new_state : State, emit_signal : bool = true) -> void:
+func change_state(new_state : State, _emit_signal : bool = true) -> void:
 	prev_state = state
 	state = new_state
 	
@@ -76,17 +77,19 @@ func change_state(new_state : State, emit_signal : bool = true) -> void:
 		State.STARTER:
 			starter()
 	
-	if emit_signal:
+	if _emit_signal:
 		state_changed.emit(self, state)
 
 func default() -> void:
 	set_color( data.get_color() )
 	set_connection_visibility(false)
 	_set_scale( data.get_scale() )
+	set_process_input(false)
 
 func hovered() -> void:
 	set_connection_visibility(true)
 	_set_scale( data.get_hover_scale() )
+	set_process_input(true)
 
 func unreachable() -> void:
 	if data.is_event():
@@ -96,6 +99,7 @@ func unreachable() -> void:
 	
 	set_connection_visibility(false)
 	_set_scale( data.get_scale() )
+	set_process_input(false)
 
 func starter() -> void:
 	pass
@@ -116,8 +120,12 @@ func _set_scale(_scale : Vector2) -> void:
 	hover_tween.tween_property(self, "scale", _scale, HOVER_DURATION)
 
 func set_connection_visibility(_visible : bool) -> void:
+	if connections_visible == _visible:
+		return
+	
+	connections_visible = _visible
 	for c in node_connections:
-		if _visible:
-			c.extend_line()
+		if connections_visible:
+			c.show_connection()
 			continue
-		c.retract_line()
+		c.hide_connection()

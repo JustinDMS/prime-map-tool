@@ -12,11 +12,13 @@ const DATA_SIZE := Vector2(600, 900)
 var tree : Tree = null
 var url_map : Dictionary = {}
 var displayed_node : NodeMarker = null
+var resolver : Resolver = null
 
 func _ready() -> void:
 	super()
 	tricks_interface.tricks_changed.connect(display_data)
 	
+	resolver = Resolver.new(GameMap.get_game(), {})
 	min_size = NO_DATA_SIZE
 
 func update_data(clicked_node : NodeMarker) -> void:
@@ -136,7 +138,7 @@ func reach(game : Game, _d : Dictionary, _t : TreeItem, _z : int) -> bool:
 				"misc":
 					text += "%s (Misc)" % game.get_misc_setting(_name).long_name
 			tree_item.set_text(_z, text)
-			var has : bool = GameMap.get_game().has_resource(_d.data)
+			var has : bool = resolver.has_resource(_d.data)
 			tree_item.set_custom_color(_z, PASS_COLOR if has else FAIL_COLOR)
 			return has
 		
