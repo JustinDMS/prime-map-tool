@@ -237,7 +237,6 @@ func get_elevators() -> Dictionary[NodeMarker, NodeMarker]:
 			
 			# Subregions
 			if (
-				data.is_door() and
 				game.get_room_subregion_index(data.region, data.room_name) != \
 				game.get_room_subregion_index(data.default_connection.region, data.default_connection.room_name)
 				):

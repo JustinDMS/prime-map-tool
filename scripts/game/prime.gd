@@ -49,7 +49,8 @@ func _init(rdv_header : Dictionary) -> void:
 	subregion_offset = {
 		&"Tallon Overworld" : [Vector2.ZERO, Vector2(50, -25)],
 		&"Phendrana Drifts" : [Vector2.ZERO, Vector2(100, 75)],
-		&"Phazon Mines" :     [Vector2(230, 300), Vector2(230, -140), Vector2(-50, -670)]
+		&"Phazon Mines" :     [Vector2(230, 300), Vector2(230, -140), Vector2(-50, -670)],
+		&"Magmoor Caverns"  : [Vector2.ZERO, Vector2(15, 50)]
 	}
 	subregion_map = {
 		&"Tallon Overworld" : {
@@ -93,6 +94,9 @@ func _init(rdv_header : Dictionary) -> void:
 			&"Elite Quarters Access" : 2,
 			&"Elite Quarters" : 2,
 			&"Processing Center Access" : 2,
+		},
+		&"Magmoor Caverns" : {
+			&"Warrior Shrine" : 1,
 		}
 	}
 	z_index_override = {
