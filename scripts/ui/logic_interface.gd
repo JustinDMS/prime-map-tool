@@ -46,6 +46,7 @@ func display_data() -> void:
 		url_map.clear()
 	
 	var game := GameMap.get_game()
+	resolver.game = game
 	
 	tree = Tree.new()
 	tree.theme = preload("res://resources/theme.tres")
