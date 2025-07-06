@@ -2,7 +2,7 @@ class_name AM2R extends Game
 
 const ROOM_WIDTH : int = 320
 const ROOM_HEIGHT : int = 240
-const ROOM_DIVISOR : int = 8
+const ROOM_DIVISOR : int = 12
 
 const TEXTURE_MAP : Dictionary[StringName, Texture2D] = {
 	&"vertical_dock" : preload("res://data/icons/node marker/door.png"),
