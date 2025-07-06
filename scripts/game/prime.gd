@@ -47,10 +47,15 @@ func _init(rdv_header : Dictionary) -> void:
 		&"Magmoor Caverns" :  Vector2(1000, -500),
 	}
 	subregion_offset = {
+		&"Tallon Overworld" : [Vector2.ZERO, Vector2(50, -25)],
 		&"Phendrana Drifts" : [Vector2.ZERO, Vector2(100, 75)],
 		&"Phazon Mines" :     [Vector2(230, 300), Vector2(230, -140), Vector2(-50, -670)]
 	}
 	subregion_map = {
+		&"Tallon Overworld" : {
+			&"Life Grove Tunnel" : 1,
+			&"Life Grove" : 1
+		},
 		&"Phendrana Drifts" : {
 			&"West Tower Entrance" : 1, 
 			&"West Tower" : 1, 
