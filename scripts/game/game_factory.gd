@@ -7,9 +7,9 @@ static func create_from_game_name(name : String):
 	var rdv_header : Dictionary = load(path).data
 	
 	match name:
-		"prime1":
+		&"prime1":
 			return Prime.new(rdv_header)
-		"am2r":
+		&"am2r":
 			return AM2R.new(rdv_header)
 		_:
 			push_error("Failed to create game: %s" % name)
