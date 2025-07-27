@@ -79,6 +79,10 @@ func init_settings() -> void:
 		
 		button.pressed.connect(setting.toggle)
 		setting.changed.connect(set_button_color.bind(button))
+		
+		# Hide ignored settings
+		if setting.name in Game.IGNORED_MISC_SETTINGS:
+			button.set_visible(false)
 	
 	rdv_options_container.set_visible(true)
 

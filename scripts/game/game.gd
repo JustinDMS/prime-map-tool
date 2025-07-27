@@ -9,6 +9,8 @@ const SHARED_NODE_TEXTURES : Dictionary[StringName, Texture2D] = {
 	&"teleporter" : preload("res://data/icons/node marker/teleporter_marker.png"),
 }
 
+const IGNORED_MISC_SETTINGS : Array[String] = ["small", "dock_rando", "room_rando"]
+
 var _header := {} ## Randovania data
 var _items : Dictionary[StringName, Item] = {}
 var _events : Dictionary[StringName, Event] = {}
@@ -302,8 +304,6 @@ class Trick:
 class MiscSetting:
 	signal changed(setting : MiscSetting)
 	
-	const IGNORE : Array[String] = ["room_rando", "dock_rando"]
-	
 	var name : String = ""
 	var long_name : String = ""
 	var enabled : bool = false ## On/off
@@ -312,7 +312,7 @@ class MiscSetting:
 	func _init(_name : String, data : Dictionary) -> void:
 		name = _name
 		long_name = data.long_name
-		disabled = name in IGNORE
+		disabled = name in IGNORED_MISC_SETTINGS
 	
 	func toggle() -> void:
 		enabled = !enabled
