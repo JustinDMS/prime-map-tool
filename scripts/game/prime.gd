@@ -241,6 +241,10 @@ func init_room(room : Room) -> void:
 		8  # - Outline thickness for starting room
 	)
 	room.config = outline_config
+	
+	# Manually adjust rooms that have wonky borders
+	if room.data.name in ["Totem Access", "Hive Totem", "Transport Access North"]:
+		room.set_stretch_mode(TextureButton.STRETCH_KEEP_ASPECT_CENTERED)
 
 func init_node_data(_node_data : NodeData, _extra_data : Dictionary) -> void:
 	_node_data.set_type(_extra_data.node_type)
