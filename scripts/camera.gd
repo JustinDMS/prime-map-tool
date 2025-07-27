@@ -15,6 +15,8 @@ const Y_MAX_POS := 2100.0
 const Y_MIN_POS := -900.0
 const Y_START_OFFSET := 50.0
 
+const KEYBOARD_MOVE_SPEED := 20.0
+
 var current_zoom : float = START_ZOOM
 var target_pos : Vector2
 var target_zoom : Vector2
@@ -27,7 +29,8 @@ func _ready() -> void:
 	) * 0.5
 	update_zoom(START_ZOOM)
 
-func _physics_process(delta: float) -> void:
+func _process(delta: float) -> void:
+	move_map_from_keyboard()
 	set_position( position.lerp(target_pos, DRAG_WEIGHT * delta) )
 	handle_zoom(delta)
 
@@ -47,7 +50,7 @@ func update_zoom(amount : float) -> void:
 	current_zoom = clampf(amount, MAX_ZOOM, MIN_ZOOM)
 
 func center_on_room(_room_data : RoomData, room : Room) -> void:
-	move_to(room.get_global_center())
+	move_to( room.get_global_center() )
 	update_zoom(CENTER_ZOOM)
 
 func move_map(event : InputEventMouseMotion) -> void:
@@ -62,6 +65,18 @@ func move_map(event : InputEventMouseMotion) -> void:
 		target_pos.y = lerpf(target_pos.y, Y_MAX_POS, 0.5)
 	elif target_pos.y < Y_MIN_POS:
 		target_pos.y = lerpf(target_pos.y, Y_MIN_POS, 0.5)
+
+func move_map_from_keyboard() -> void:
+	var direction := Input.get_vector("left", "right", "up", "down")
+	target_pos += direction * (KEYBOARD_MOVE_SPEED / current_zoom)
+	
+	var zoom_dir := 0.0
+	if Input.is_action_pressed("zoom_in"):
+		zoom_dir += 1.0
+	if Input.is_action_pressed("zoom_out"):
+		zoom_dir -= 1.0
+	
+	update_zoom(current_zoom + zoom_dir * (ZOOM_RATE * current_zoom))
 
 ## Move to position in global space
 func move_to(g_position : Vector2) -> void:
