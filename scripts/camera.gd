@@ -29,7 +29,7 @@ func _ready() -> void:
 	) * 0.5
 	update_zoom(START_ZOOM)
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	move_map_from_keyboard()
 	set_position( position.lerp(target_pos, DRAG_WEIGHT * delta) )
 	handle_zoom(delta)
@@ -71,9 +71,9 @@ func move_map_from_keyboard() -> void:
 	target_pos += direction * (KEYBOARD_MOVE_SPEED / current_zoom)
 	
 	var zoom_dir := 0.0
-	if Input.is_action_pressed("zoom_in"):
+	if Input.is_action_pressed("key_zoom_in"):
 		zoom_dir += 1.0
-	if Input.is_action_pressed("zoom_out"):
+	if Input.is_action_pressed("key_zoom_out"):
 		zoom_dir -= 1.0
 	
 	update_zoom(current_zoom + zoom_dir * (ZOOM_RATE * current_zoom))
