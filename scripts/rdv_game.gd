@@ -57,10 +57,10 @@ func is_supported_version() -> bool:
 	assert(split.size() == 3)
 	
 	var major := int(split[0])
-	var minor := int(split[1])
-	var patch := int(split[2])
+	var _minor := int(split[1])
+	var _patch := int(split[2])
 	
-	return (major == 9 and minor >= 0 and patch >= 0)
+	return major >= 9
 
 #region Accessor Functions
 

@@ -115,6 +115,8 @@ func init_nodes() -> void:
 		for j in rdv_logic[r]["areas"]:
 			var room_data : RoomData = world_data[r][j]
 			room_data.clear_nodes()
+			var room := get_room_obj(r, j)
+			room.clear_markers()
 			
 			var default_node_buffer = rdv_logic[r]["areas"][j]["default_node"] # Can be null or [String]
 			var default_node_name : String = "" if not default_node_buffer else default_node_buffer
@@ -134,7 +136,7 @@ func init_nodes() -> void:
 				if rdvgame:
 					var format_string : String = "%s/%s/%s" % [node_data.region, j, k]
 					if format_string in dock_weaknesses:
-						node_data.default_dock_weakness = dock_weaknesses[format_string]["name"]
+						node_data.set_dock_weakness( dock_weaknesses[format_string]["name"] )
 				
 				if k == default_node_name:
 					room_data.default_node = node_data
@@ -336,7 +338,7 @@ func rdvgame_cleared() -> void:
 	init_nodes()
 	resolve_map()
 	
-	camera.center_on_room(start_node, get_room_obj(start_node.region, start_node.room_name))
+	camera.center_on_room(null, get_room_obj(start_node.region, start_node.room_name))
 
 func change_to_game(game_id : StringName) -> void:
 	rdv_logic.clear()

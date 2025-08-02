@@ -288,6 +288,11 @@ func init_node_data(_node_data : NodeData, _extra_data : Dictionary) -> void:
 			
 			# Get what is in the parenthesis
 			var item_name : StringName = _node_data.name.split("(")[1].split(")")[0]
+			
+			var rdvgame := RandovaniaInterface.get_rdvgame()
+			if rdvgame:
+				item_name = rdvgame.get_pickup_locations()[_node_data.region]["%s/%s" % [_node_data.room_name, _node_data.name]]
+			
 			if _extra_data.location_category == "minor":
 				if item_name.contains(&"Missile"):
 					item_name = &"Missile Expansion"

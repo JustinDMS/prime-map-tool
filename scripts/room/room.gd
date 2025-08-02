@@ -64,8 +64,6 @@ func _input(event: InputEvent) -> void:
 		
 		if event.is_double_click():
 			double_clicked.emit(data)
-		
-		return
 	
 	if (
 		event is InputEventMouseMotion
@@ -139,6 +137,11 @@ func set_color(new_color : Color) -> void:
 	
 	room_color_tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 	room_color_tween.tween_property(self, "self_modulate", new_color, DURATION)
+
+func clear_markers() -> void:
+	for m in node_markers:
+		m.queue_free()
+	node_markers.clear()
 
 class OutlineConfig:
 	var outline_hover_thickness : float
