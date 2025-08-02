@@ -29,7 +29,7 @@ func _ready() -> void:
 	) * 0.5
 	update_zoom(START_ZOOM)
 
-func _physics_process(delta: float) -> void:
+func _process(delta: float) -> void:
 	move_map_from_keyboard()
 	set_position( position.lerp(target_pos, DRAG_WEIGHT * delta) )
 	handle_zoom(delta)
