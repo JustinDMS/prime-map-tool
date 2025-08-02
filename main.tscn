@@ -33,7 +33,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
-mouse_default_cursor_shape = 3
+mouse_default_cursor_shape = 2
 color = Color(0.141176, 0.141176, 0.141176, 1)
 
 [node name="elevator_manager" type="Control" parent="." node_paths=PackedStringArray("game_map")]
@@ -197,6 +197,7 @@ text = "Event"
 vertical_alignment = 1
 
 [node name="Camera2D" type="Camera2D" parent="."]
+visible = false
 process_callback = 0
 position_smoothing_enabled = true
 position_smoothing_speed = 20.0
