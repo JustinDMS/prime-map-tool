@@ -6,6 +6,7 @@
     "areas": {
         "Transport to Tallon Overworld South": {
             "default_node": "Teleporter to Tallon Overworld",
+            "hint_features": [],
             "extra": {
                 "asset_id": 1125030300,
                 "size_index": 0.3,
@@ -130,12 +131,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 200,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Quarry Access": {
             "default_node": "Door to Transport to Tallon Overworld South",
+            "hint_features": [],
             "extra": {
                 "asset_id": 1758230360,
                 "size_index": 0.1,
@@ -265,12 +269,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 201,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Main Quarry": {
             "default_node": "Door to Quarry Access",
+            "hint_features": [],
             "extra": {
                 "asset_id": 1681720207,
                 "size_index": 0.6,
@@ -406,22 +413,8 @@
                                                         "comment": null,
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "MorphBall",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
-                                                            },
-                                                            {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Bombs",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Bombs"
                                                             },
                                                             {
                                                                 "type": "resource",
@@ -447,30 +440,8 @@
                                 "comment": "https://youtu.be/8hDg9fJZH1c",
                                 "items": [
                                     {
-                                        "type": "and",
-                                        "data": {
-                                            "comment": null,
-                                            "items": [
-                                                {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "MorphBall",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
-                                                },
-                                                {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Spider",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
-                                                }
-                                            ]
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Spider Ball"
                                     },
                                     {
                                         "type": "resource",
@@ -540,22 +511,8 @@
                                             "comment": null,
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "MorphBall",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
-                                                },
-                                                {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Bombs",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Bombs"
                                                 },
                                                 {
                                                     "type": "resource",
@@ -601,22 +558,8 @@
                                             "comment": "https://youtu.be/w6UegkJsX2c",
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "MorphBall",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
-                                                },
-                                                {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Boost",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Boost Ball"
                                                 },
                                                 {
                                                     "type": "resource",
@@ -775,6 +718,7 @@
                     ],
                     "extra": {
                         "position_required": false,
+                        "pre_placement_weight": 0.8,
                         "world_position": [
                             100.425362,
                             14.960495,
@@ -784,6 +728,8 @@
                     "valid_starting_location": false,
                     "pickup_index": 73,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {
                         "Crane Platform": {
                             "type": "and",
@@ -1057,22 +1003,8 @@
                                                         "comment": null,
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "MorphBall",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
-                                                            },
-                                                            {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Spider",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Spider Ball"
                                                             },
                                                             {
                                                                 "type": "or",
@@ -1080,13 +1012,8 @@
                                                                     "comment": null,
                                                                     "items": [
                                                                         {
-                                                                            "type": "resource",
-                                                                            "data": {
-                                                                                "type": "items",
-                                                                                "name": "Bombs",
-                                                                                "amount": 1,
-                                                                                "negate": false
-                                                                            }
+                                                                            "type": "template",
+                                                                            "data": "Can Use Bombs"
                                                                         },
                                                                         {
                                                                             "type": "and",
@@ -1094,13 +1021,8 @@
                                                                                 "comment": "https://youtu.be/i_l-GC9z9eI",
                                                                                 "items": [
                                                                                     {
-                                                                                        "type": "resource",
-                                                                                        "data": {
-                                                                                            "type": "items",
-                                                                                            "name": "Boost",
-                                                                                            "amount": 1,
-                                                                                            "negate": false
-                                                                                        }
+                                                                                        "type": "template",
+                                                                                        "data": "Can Use Boost Ball"
                                                                                     },
                                                                                     {
                                                                                         "type": "resource",
@@ -1244,6 +1166,7 @@
         },
         "Waste Disposal": {
             "default_node": "Door to Ore Processing",
+            "hint_features": [],
             "extra": {
                 "asset_id": 665031095,
                 "size_index": 0.3,
@@ -1303,22 +1226,8 @@
                                 "comment": null,
                                 "items": [
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "MorphBall",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
-                                    },
-                                    {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "Bombs",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Bombs"
                                     }
                                 ]
                             }
@@ -1385,13 +1294,8 @@
                                             "comment": null,
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Bombs",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Bombs"
                                                 },
                                                 {
                                                     "type": "and",
@@ -1399,13 +1303,8 @@
                                                         "comment": null,
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Boost",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Boost Ball"
                                                             },
                                                             {
                                                                 "type": "resource",
@@ -1445,12 +1344,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 202,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Save Station Mines A": {
             "default_node": "Save Station",
+            "hint_features": [],
             "extra": {
                 "asset_id": 907887024,
                 "size_index": 0.1,
@@ -1630,12 +1532,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 203,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Security Access A": {
             "default_node": "Door to Main Quarry",
+            "hint_features": [],
             "extra": {
                 "asset_id": 3345300114,
                 "size_index": 0.1,
@@ -1702,22 +1607,8 @@
                                 "comment": null,
                                 "items": [
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "MorphBall",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
-                                    },
-                                    {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "PowerBomb",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Power Bombs"
                                     }
                                 ]
                             }
@@ -1787,6 +1678,7 @@
                     ],
                     "extra": {
                         "position_required": false,
+                        "pre_placement_weight": 0.8,
                         "world_position": [
                             98.35289,
                             -18.84465,
@@ -1796,6 +1688,8 @@
                     "valid_starting_location": false,
                     "pickup_index": 74,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {
                         "Door to Main Quarry": {
                             "type": "and",
@@ -1810,6 +1704,7 @@
         },
         "Ore Processing": {
             "default_node": "Door to Elevator Access A",
+            "hint_features": [],
             "extra": {
                 "asset_id": 2547167990,
                 "size_index": 0.6,
@@ -1874,22 +1769,8 @@
                                             "comment": null,
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "MorphBall",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
-                                                },
-                                                {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Spider",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Spider Ball"
                                                 },
                                                 {
                                                     "type": "or",
@@ -1897,13 +1778,8 @@
                                                         "comment": null,
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Bombs",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Bombs"
                                                             },
                                                             {
                                                                 "type": "and",
@@ -1911,13 +1787,8 @@
                                                                     "comment": null,
                                                                     "items": [
                                                                         {
-                                                                            "type": "resource",
-                                                                            "data": {
-                                                                                "type": "items",
-                                                                                "name": "Boost",
-                                                                                "amount": 1,
-                                                                                "negate": false
-                                                                            }
+                                                                            "type": "template",
+                                                                            "data": "Can Use Boost Ball"
                                                                         },
                                                                         {
                                                                             "type": "resource",
@@ -1936,6 +1807,10 @@
                                                                                 "amount": 3,
                                                                                 "negate": false
                                                                             }
+                                                                        },
+                                                                        {
+                                                                            "type": "template",
+                                                                            "data": "Can Use Power Bombs"
                                                                         }
                                                                     ]
                                                                 }
@@ -2350,31 +2225,12 @@
                                             "comment": null,
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "MorphBall",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Spider Ball"
                                                 },
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Bombs",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
-                                                },
-                                                {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Spider",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Bombs"
                                                 },
                                                 {
                                                     "type": "or",
@@ -2387,13 +2243,8 @@
                                                                     "comment": null,
                                                                     "items": [
                                                                         {
-                                                                            "type": "resource",
-                                                                            "data": {
-                                                                                "type": "items",
-                                                                                "name": "PowerBomb",
-                                                                                "amount": 1,
-                                                                                "negate": false
-                                                                            }
+                                                                            "type": "template",
+                                                                            "data": "Can Use Power Bombs"
                                                                         },
                                                                         {
                                                                             "type": "or",
@@ -2520,13 +2371,8 @@
                                                                     "comment": "https://youtu.be/vA9uH9u1RjE",
                                                                     "items": [
                                                                         {
-                                                                            "type": "resource",
-                                                                            "data": {
-                                                                                "type": "items",
-                                                                                "name": "PowerBomb",
-                                                                                "amount": 1,
-                                                                                "negate": false
-                                                                            }
+                                                                            "type": "template",
+                                                                            "data": "Can Use Power Bombs"
                                                                         },
                                                                         {
                                                                             "type": "resource",
@@ -2587,22 +2433,8 @@
                                             "comment": null,
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "MorphBall",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
-                                                },
-                                                {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Boost",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Boost Ball"
                                                 },
                                                 {
                                                     "type": "resource",
@@ -2664,6 +2496,10 @@
                                                             }
                                                         ]
                                                     }
+                                                },
+                                                {
+                                                    "type": "template",
+                                                    "data": "Can Use Power Bombs"
                                                 }
                                             ]
                                         }
@@ -2691,12 +2527,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 204,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Mine Security Station": {
             "default_node": "Door to Security Access A",
+            "hint_features": [],
             "extra": {
                 "asset_id": 2507085138,
                 "size_index": 0.6,
@@ -2916,6 +2755,8 @@
                     "valid_starting_location": false,
                     "pickup_index": 205,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 },
                 "Event - Mine Security Station Doors Unlocked": {
@@ -3762,22 +3603,8 @@
                                             "comment": "Item Requirements",
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "PowerBomb",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
-                                                },
-                                                {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "MorphBall",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Power Bombs"
                                                 },
                                                 {
                                                     "type": "resource",
@@ -3932,6 +3759,7 @@
         },
         "Research Access": {
             "default_node": "Door to Ore Processing",
+            "hint_features": [],
             "extra": {
                 "asset_id": 1128703815,
                 "size_index": 0.3,
@@ -3991,30 +3819,8 @@
                                 "comment": null,
                                 "items": [
                                     {
-                                        "type": "and",
-                                        "data": {
-                                            "comment": null,
-                                            "items": [
-                                                {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "MorphBall",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
-                                                },
-                                                {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Spider",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
-                                                }
-                                            ]
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Spider Ball"
                                     },
                                     {
                                         "type": "and",
@@ -4123,12 +3929,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 206,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Storage Depot B": {
             "default_node": "Door to Ore Processing",
+            "hint_features": [],
             "extra": {
                 "asset_id": 3818665003,
                 "size_index": 0.1,
@@ -4205,6 +4014,7 @@
                     ],
                     "extra": {
                         "position_required": false,
+                        "pre_placement_weight": 0.8,
                         "world_position": [
                             101.39048,
                             224.6465,
@@ -4214,6 +4024,8 @@
                     "valid_starting_location": false,
                     "pickup_index": 75,
                     "location_category": "major",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {
                         "Door to Ore Processing": {
                             "type": "and",
@@ -4259,6 +4071,7 @@
         },
         "Elevator Access A": {
             "default_node": "Door to Ore Processing",
+            "hint_features": [],
             "extra": {
                 "asset_id": 639736833,
                 "size_index": 0.1,
@@ -4381,13 +4194,8 @@
                                             "comment": null,
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Spider",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Spider Ball"
                                                 },
                                                 {
                                                     "type": "and",
@@ -4423,13 +4231,8 @@
                                                                                 "comment": null,
                                                                                 "items": [
                                                                                     {
-                                                                                        "type": "resource",
-                                                                                        "data": {
-                                                                                            "type": "items",
-                                                                                            "name": "Bombs",
-                                                                                            "amount": 1,
-                                                                                            "negate": false
-                                                                                        }
+                                                                                        "type": "template",
+                                                                                        "data": "Can Use Bombs"
                                                                                     },
                                                                                     {
                                                                                         "type": "resource",
@@ -4449,13 +4252,8 @@
                                                                                 "comment": "https://youtu.be/PjXSkYQXDls",
                                                                                 "items": [
                                                                                     {
-                                                                                        "type": "resource",
-                                                                                        "data": {
-                                                                                            "type": "items",
-                                                                                            "name": "Boost",
-                                                                                            "amount": 1,
-                                                                                            "negate": false
-                                                                                        }
+                                                                                        "type": "template",
+                                                                                        "data": "Can Use Boost Ball"
                                                                                     },
                                                                                     {
                                                                                         "type": "resource",
@@ -4548,12 +4346,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 207,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Security Access B": {
             "default_node": "Door to Mine Security Station",
+            "hint_features": [],
             "extra": {
                 "asset_id": 2718040532,
                 "size_index": 0.1,
@@ -4683,12 +4484,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 208,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Storage Depot A": {
             "default_node": "Door to Mine Security Station",
+            "hint_features": [],
             "extra": {
                 "asset_id": 902158134,
                 "size_index": 0.1,
@@ -4765,6 +4569,7 @@
                     ],
                     "extra": {
                         "position_required": false,
+                        "pre_placement_weight": 0.8,
                         "world_position": [
                             -5.591609,
                             89.700455,
@@ -4774,6 +4579,8 @@
                     "valid_starting_location": false,
                     "pickup_index": 76,
                     "location_category": "major",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {
                         "Door to Mine Security Station": {
                             "type": "and",
@@ -4788,6 +4595,7 @@
         },
         "Elite Research": {
             "default_node": "Door to Security Access B",
+            "hint_features": [],
             "extra": {
                 "asset_id": 2325199700,
                 "size_index": 0.8,
@@ -4861,22 +4669,8 @@
                                             "comment": "https://youtu.be/ljX553EUfX4",
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "MorphBall",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
-                                                },
-                                                {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Boost",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Boost Ball"
                                                 },
                                                 {
                                                     "type": "resource",
@@ -4941,22 +4735,8 @@
                                 "comment": null,
                                 "items": [
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "MorphBall",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
-                                    },
-                                    {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "PowerBomb",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Power Bombs"
                                     },
                                     {
                                         "type": "or",
@@ -5082,22 +4862,8 @@
                                                                                 "comment": null,
                                                                                 "items": [
                                                                                     {
-                                                                                        "type": "resource",
-                                                                                        "data": {
-                                                                                            "type": "items",
-                                                                                            "name": "MorphBall",
-                                                                                            "amount": 1,
-                                                                                            "negate": false
-                                                                                        }
-                                                                                    },
-                                                                                    {
-                                                                                        "type": "resource",
-                                                                                        "data": {
-                                                                                            "type": "items",
-                                                                                            "name": "Bombs",
-                                                                                            "amount": 1,
-                                                                                            "negate": false
-                                                                                        }
+                                                                                        "type": "template",
+                                                                                        "data": "Can Use Bombs"
                                                                                     },
                                                                                     {
                                                                                         "type": "resource",
@@ -5256,6 +5022,7 @@
                     ],
                     "extra": {
                         "position_required": false,
+                        "pre_placement_weight": 0.8,
                         "world_position": [
                             -25.555389,
                             199.580185,
@@ -5265,6 +5032,8 @@
                     "valid_starting_location": false,
                     "pickup_index": 78,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {
                         "Top Floor": {
                             "type": "or",
@@ -5355,13 +5124,8 @@
                                             "comment": null,
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Boost",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Boost Ball"
                                                 },
                                                 {
                                                     "type": "resource",
@@ -5369,15 +5133,6 @@
                                                         "type": "tricks",
                                                         "name": "ClipThruObjects",
                                                         "amount": 3,
-                                                        "negate": false
-                                                    }
-                                                },
-                                                {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "MorphBall",
-                                                        "amount": 1,
                                                         "negate": false
                                                     }
                                                 }
@@ -5402,6 +5157,7 @@
                         "default"
                     ],
                     "extra": {
+                        "pre_placement_weight": 0.8,
                         "world_position": [
                             -25.636387,
                             166.72522,
@@ -5411,6 +5167,8 @@
                     "valid_starting_location": false,
                     "pickup_index": 77,
                     "location_category": "major",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {
                         "Door to Security Access B": {
                             "type": "and",
@@ -5508,15 +5266,6 @@
                                         }
                                     },
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "MorphBall",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
-                                    },
-                                    {
                                         "type": "or",
                                         "data": {
                                             "comment": null,
@@ -5536,13 +5285,8 @@
                                                                 }
                                                             },
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Bombs",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Bombs"
                                                             }
                                                         ]
                                                     }
@@ -5553,13 +5297,8 @@
                                                         "comment": null,
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Boost",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Boost Ball"
                                                             },
                                                             {
                                                                 "type": "or",
@@ -5567,13 +5306,8 @@
                                                                     "comment": null,
                                                                     "items": [
                                                                         {
-                                                                            "type": "resource",
-                                                                            "data": {
-                                                                                "type": "items",
-                                                                                "name": "Bombs",
-                                                                                "amount": 1,
-                                                                                "negate": false
-                                                                            }
+                                                                            "type": "template",
+                                                                            "data": "Can Use Bombs"
                                                                         },
                                                                         {
                                                                             "type": "and",
@@ -5581,13 +5315,8 @@
                                                                                 "comment": null,
                                                                                 "items": [
                                                                                     {
-                                                                                        "type": "resource",
-                                                                                        "data": {
-                                                                                            "type": "items",
-                                                                                            "name": "PowerBomb",
-                                                                                            "amount": 1,
-                                                                                            "negate": false
-                                                                                        }
+                                                                                        "type": "template",
+                                                                                        "data": "Can Use Power Bombs"
                                                                                     },
                                                                                     {
                                                                                         "type": "resource",
@@ -5711,22 +5440,8 @@
                                                     }
                                                 },
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "MorphBall",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
-                                                },
-                                                {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Boost",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Boost Ball"
                                                 },
                                                 {
                                                     "type": "resource",
@@ -5767,6 +5482,7 @@
         },
         "Elevator A": {
             "default_node": "Door to Elevator Access A",
+            "hint_features": [],
             "extra": {
                 "asset_id": 21425475,
                 "size_index": 0.6,
@@ -5906,12 +5622,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 209,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Elite Control Access": {
             "default_node": "Door to Elevator A",
+            "hint_features": [],
             "extra": {
                 "asset_id": 2307445195,
                 "size_index": 0.1,
@@ -6006,13 +5725,8 @@
                                                         "comment": "https://youtu.be/yIYfpeVsYCU",
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Bombs",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Bombs"
                                                             },
                                                             {
                                                                 "type": "resource",
@@ -6120,15 +5834,6 @@
                                             "comment": null,
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "MorphBall",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
-                                                },
-                                                {
                                                     "type": "or",
                                                     "data": {
                                                         "comment": null,
@@ -6139,13 +5844,8 @@
                                                                     "comment": null,
                                                                     "items": [
                                                                         {
-                                                                            "type": "resource",
-                                                                            "data": {
-                                                                                "type": "items",
-                                                                                "name": "Bombs",
-                                                                                "amount": 1,
-                                                                                "negate": false
-                                                                            }
+                                                                            "type": "template",
+                                                                            "data": "Can Use Bombs"
                                                                         },
                                                                         {
                                                                             "type": "resource",
@@ -6165,13 +5865,8 @@
                                                                     "comment": "https://www.youtube.com/watch?v=8jxY6XLwTzE",
                                                                     "items": [
                                                                         {
-                                                                            "type": "resource",
-                                                                            "data": {
-                                                                                "type": "items",
-                                                                                "name": "Boost",
-                                                                                "amount": 1,
-                                                                                "negate": false
-                                                                            }
+                                                                            "type": "template",
+                                                                            "data": "Can Use Boost Ball"
                                                                         },
                                                                         {
                                                                             "type": "resource",
@@ -6210,6 +5905,7 @@
                     ],
                     "extra": {
                         "position_required": false,
+                        "pre_placement_weight": 0.8,
                         "world_position": [
                             73.956299,
                             186.725922,
@@ -6219,6 +5915,8 @@
                     "valid_starting_location": false,
                     "pickup_index": 79,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {
                         "Door to Elite Control": {
                             "type": "and",
@@ -6233,6 +5931,7 @@
         },
         "Elite Control": {
             "default_node": "Door to Elite Control Access",
+            "hint_features": [],
             "extra": {
                 "asset_id": 3305828730,
                 "size_index": 0.6,
@@ -6828,12 +6527,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 210,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Maintenance Tunnel": {
             "default_node": "Door to Elite Control",
+            "hint_features": [],
             "extra": {
                 "asset_id": 3975146125,
                 "size_index": 0.1,
@@ -6893,22 +6595,8 @@
                                 "comment": null,
                                 "items": [
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "MorphBall",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
-                                    },
-                                    {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "PowerBomb",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Power Bombs"
                                     }
                                 ]
                             }
@@ -6961,22 +6649,8 @@
                                 "comment": null,
                                 "items": [
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "MorphBall",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
-                                    },
-                                    {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "PowerBomb",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Power Bombs"
                                     }
                                 ]
                             }
@@ -7001,12 +6675,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 211,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Ventilation Shaft": {
             "default_node": "Door to Elite Control",
+            "hint_features": [],
             "extra": {
                 "asset_id": 2423298732,
                 "size_index": 0.3,
@@ -7085,13 +6762,8 @@
                                                         "comment": null,
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Boost",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Boost Ball"
                                                             },
                                                             {
                                                                 "type": "and",
@@ -7099,13 +6771,8 @@
                                                                     "comment": null,
                                                                     "items": [
                                                                         {
-                                                                            "type": "resource",
-                                                                            "data": {
-                                                                                "type": "items",
-                                                                                "name": "Bombs",
-                                                                                "amount": 1,
-                                                                                "negate": false
-                                                                            }
+                                                                            "type": "template",
+                                                                            "data": "Can Use Bombs"
                                                                         },
                                                                         {
                                                                             "type": "or",
@@ -7221,22 +6888,8 @@
                                         }
                                     },
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "MorphBall",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
-                                    },
-                                    {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "PowerBomb",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Power Bombs"
                                     }
                                 ]
                             }
@@ -7306,6 +6959,7 @@
                     ],
                     "extra": {
                         "position_required": false,
+                        "pre_placement_weight": 0.8,
                         "world_position": [
                             7.79607,
                             61.914818,
@@ -7315,6 +6969,8 @@
                     "valid_starting_location": false,
                     "pickup_index": 80,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {
                         "Door to Omega Research": {
                             "type": "and",
@@ -7329,6 +6985,7 @@
         },
         "Phazon Processing Center": {
             "default_node": "Door to Maintenance Tunnel",
+            "hint_features": [],
             "extra": {
                 "asset_id": 2905505465,
                 "size_index": 0.6,
@@ -7470,30 +7127,8 @@
                                                                             }
                                                                         },
                                                                         {
-                                                                            "type": "and",
-                                                                            "data": {
-                                                                                "comment": null,
-                                                                                "items": [
-                                                                                    {
-                                                                                        "type": "resource",
-                                                                                        "data": {
-                                                                                            "type": "items",
-                                                                                            "name": "MorphBall",
-                                                                                            "amount": 1,
-                                                                                            "negate": false
-                                                                                        }
-                                                                                    },
-                                                                                    {
-                                                                                        "type": "resource",
-                                                                                        "data": {
-                                                                                            "type": "items",
-                                                                                            "name": "Spider",
-                                                                                            "amount": 1,
-                                                                                            "negate": false
-                                                                                        }
-                                                                                    }
-                                                                                ]
-                                                                            }
+                                                                            "type": "template",
+                                                                            "data": "Can Use Spider Ball"
                                                                         }
                                                                     ]
                                                                 }
@@ -7507,22 +7142,8 @@
                                                         "comment": null,
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "MorphBall",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
-                                                            },
-                                                            {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Bombs",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Bombs"
                                                             },
                                                             {
                                                                 "type": "or",
@@ -7535,13 +7156,8 @@
                                                                                 "comment": null,
                                                                                 "items": [
                                                                                     {
-                                                                                        "type": "resource",
-                                                                                        "data": {
-                                                                                            "type": "items",
-                                                                                            "name": "Spider",
-                                                                                            "amount": 1,
-                                                                                            "negate": false
-                                                                                        }
+                                                                                        "type": "template",
+                                                                                        "data": "Can Use Spider Ball"
                                                                                     },
                                                                                     {
                                                                                         "type": "resource",
@@ -7740,22 +7356,8 @@
                                 "comment": null,
                                 "items": [
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "MorphBall",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
-                                    },
-                                    {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "PowerBomb",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Power Bombs"
                                     }
                                 ]
                             }
@@ -7889,31 +7491,12 @@
                                                                                 "comment": null,
                                                                                 "items": [
                                                                                     {
-                                                                                        "type": "resource",
-                                                                                        "data": {
-                                                                                            "type": "items",
-                                                                                            "name": "MorphBall",
-                                                                                            "amount": 1,
-                                                                                            "negate": false
-                                                                                        }
+                                                                                        "type": "template",
+                                                                                        "data": "Can Use Spider Ball"
                                                                                     },
                                                                                     {
-                                                                                        "type": "resource",
-                                                                                        "data": {
-                                                                                            "type": "items",
-                                                                                            "name": "Bombs",
-                                                                                            "amount": 1,
-                                                                                            "negate": false
-                                                                                        }
-                                                                                    },
-                                                                                    {
-                                                                                        "type": "resource",
-                                                                                        "data": {
-                                                                                            "type": "items",
-                                                                                            "name": "Spider",
-                                                                                            "amount": 1,
-                                                                                            "negate": false
-                                                                                        }
+                                                                                        "type": "template",
+                                                                                        "data": "Can Use Bombs"
                                                                                     }
                                                                                 ]
                                                                             }
@@ -7930,22 +7513,8 @@
                                                         "comment": null,
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "MorphBall",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
-                                                            },
-                                                            {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Bombs",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Bombs"
                                                             },
                                                             {
                                                                 "type": "resource",
@@ -7967,13 +7536,8 @@
                                                                                 "comment": null,
                                                                                 "items": [
                                                                                     {
-                                                                                        "type": "resource",
-                                                                                        "data": {
-                                                                                            "type": "items",
-                                                                                            "name": "Spider",
-                                                                                            "amount": 1,
-                                                                                            "negate": false
-                                                                                        }
+                                                                                        "type": "template",
+                                                                                        "data": "Can Use Spider Ball"
                                                                                     },
                                                                                     {
                                                                                         "type": "resource",
@@ -8191,22 +7755,8 @@
                                         }
                                     },
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "MorphBall",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
-                                    },
-                                    {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "PowerBomb",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Power Bombs"
                                     },
                                     {
                                         "type": "or",
@@ -8307,6 +7857,7 @@
                     ],
                     "extra": {
                         "position_required": false,
+                        "pre_placement_weight": 0.8,
                         "world_position": [
                             -27.314747,
                             126.756615,
@@ -8316,6 +7867,8 @@
                     "valid_starting_location": false,
                     "pickup_index": 81,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {
                         "Door to Maintenance Tunnel": {
                             "type": "and",
@@ -8333,13 +7886,8 @@
                                                         "comment": null,
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "MorphBall",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Bombs"
                                                             },
                                                             {
                                                                 "type": "or",
@@ -8468,15 +8016,6 @@
                                                                         }
                                                                     ]
                                                                 }
-                                                            },
-                                                            {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Bombs",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
                                                             }
                                                         ]
                                                     }
@@ -8543,6 +8082,7 @@
         },
         "Omega Research": {
             "default_node": "Door to Ventilation Shaft",
+            "hint_features": [],
             "extra": {
                 "asset_id": 1060593356,
                 "size_index": 0.8,
@@ -8602,22 +8142,8 @@
                                 "comment": null,
                                 "items": [
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "MorphBall",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
-                                    },
-                                    {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "PowerBomb",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Power Bombs"
                                     }
                                 ]
                             }
@@ -8670,22 +8196,8 @@
                                 "comment": null,
                                 "items": [
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "MorphBall",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
-                                    },
-                                    {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "PowerBomb",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Power Bombs"
                                     }
                                 ]
                             }
@@ -8825,22 +8337,8 @@
                                                         "comment": null,
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "MorphBall",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
-                                                            },
-                                                            {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Bombs",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Bombs"
                                                             },
                                                             {
                                                                 "type": "resource",
@@ -8939,12 +8437,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 212,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Transport Access": {
             "default_node": "Door to Phazon Processing Center",
+            "hint_features": [],
             "extra": {
                 "asset_id": 1120185073,
                 "size_index": 0.1,
@@ -9120,12 +8621,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 213,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Processing Center Access": {
             "default_node": "Door to Elite Quarters",
+            "hint_features": [],
             "extra": {
                 "asset_id": 3983402811,
                 "size_index": 0.1,
@@ -9447,6 +8951,7 @@
                     ],
                     "extra": {
                         "position_required": false,
+                        "pre_placement_weight": 0.8,
                         "world_position": [
                             -152.71756,
                             87.637535,
@@ -9456,6 +8961,8 @@
                     "valid_starting_location": false,
                     "pickup_index": 82,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {
                         "Door to Elite Quarters": {
                             "type": "and",
@@ -9470,6 +8977,7 @@
         },
         "Map Station Mines": {
             "default_node": "Door to Omega Research",
+            "hint_features": [],
             "extra": {
                 "asset_id": 428864988,
                 "size_index": 0.1,
@@ -9580,12 +9088,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 214,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Dynamo Access": {
             "default_node": "Door to Central Dynamo",
+            "hint_features": [],
             "extra": {
                 "asset_id": 4111966698,
                 "size_index": 0.1,
@@ -9830,12 +9341,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 215,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Transport to Magmoor Caverns South": {
             "default_node": "Teleporter to Magmoor Caverns",
+            "hint_features": [],
             "extra": {
                 "asset_id": 3804417848,
                 "size_index": 0.3,
@@ -9960,12 +9474,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 216,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Elite Quarters": {
             "default_node": "Door to Elite Quarters Access",
+            "hint_features": [],
             "extra": {
                 "asset_id": 961790803,
                 "size_index": 0.8,
@@ -10062,22 +9579,8 @@
                                                                 }
                                                             },
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "MorphBall",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
-                                                            },
-                                                            {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Bombs",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Bombs"
                                                             },
                                                             {
                                                                 "type": "resource",
@@ -10235,6 +9738,7 @@
                     ],
                     "extra": {
                         "position_required": false,
+                        "pre_placement_weight": 0.8,
                         "world_position": [
                             -158.250366,
                             47.763702,
@@ -10244,6 +9748,8 @@
                     "valid_starting_location": false,
                     "pickup_index": 83,
                     "location_category": "major",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {
                         "Door to Elite Quarters Access": {
                             "type": "and",
@@ -10458,13 +9964,8 @@
                                                                 }
                                                             },
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "MorphBall",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Power Bombs"
                                                             }
                                                         ]
                                                     }
@@ -10572,6 +10073,7 @@
         },
         "Central Dynamo": {
             "default_node": "Door to Dynamo Access",
+            "hint_features": [],
             "extra": {
                 "asset_id": 4272124642,
                 "size_index": 0.8,
@@ -10680,22 +10182,8 @@
                                 "comment": null,
                                 "items": [
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "MorphBall",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
-                                    },
-                                    {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "PowerBomb",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Power Bombs"
                                     }
                                 ]
                             }
@@ -10779,22 +10267,8 @@
                                 "comment": null,
                                 "items": [
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "MorphBall",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
-                                    },
-                                    {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "Bombs",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Bombs"
                                     }
                                 ]
                             }
@@ -10815,6 +10289,7 @@
                     ],
                     "extra": {
                         "position_required": false,
+                        "pre_placement_weight": 0.8,
                         "world_position": [
                             164.61319,
                             21.420218,
@@ -10824,6 +10299,8 @@
                     "valid_starting_location": false,
                     "pickup_index": 84,
                     "location_category": "major",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {
                         "Room Bottom": {
                             "type": "and",
@@ -10896,13 +10373,8 @@
                                 "comment": null,
                                 "items": [
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "MorphBall",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Boost Ball"
                                     },
                                     {
                                         "type": "resource",
@@ -10919,33 +10391,14 @@
                                             "comment": "Power Bomb or Bomb crates and Boost after",
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "PowerBomb",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Power Bombs"
                                                 },
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Bombs",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Bombs"
                                                 }
                                             ]
-                                        }
-                                    },
-                                    {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "Boost",
-                                            "amount": 1,
-                                            "negate": false
                                         }
                                     },
                                     {
@@ -11030,22 +10483,8 @@
                                 "comment": "The Security Drone event triggers door locks on all doors in Central Dynamo except for the door to Quarantine Access A.",
                                 "items": [
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "MorphBall",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
-                                    },
-                                    {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "PowerBomb",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Power Bombs"
                                     },
                                     {
                                         "type": "or",
@@ -11183,22 +10622,8 @@
                                                         "comment": "https://youtu.be/GTSoLLbo2vk",
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "MorphBall",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
-                                                            },
-                                                            {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Bombs",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Bombs"
                                                             },
                                                             {
                                                                 "type": "resource",
@@ -11272,6 +10697,7 @@
         },
         "Elite Quarters Access": {
             "default_node": "Door to Metroid Quarantine B",
+            "hint_features": [],
             "extra": {
                 "asset_id": 1899248703,
                 "size_index": 0.1,
@@ -11481,12 +10907,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 217,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Quarantine Access A": {
             "default_node": "Door to Central Dynamo",
+            "hint_features": [],
             "extra": {
                 "asset_id": 1522461728,
                 "size_index": 0.3,
@@ -11616,12 +11045,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 218,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Save Station Mines B": {
             "default_node": "Save Station",
+            "hint_features": [],
             "extra": {
                 "asset_id": 2077614267,
                 "size_index": 0.1,
@@ -11733,12 +11165,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 219,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Metroid Quarantine B": {
             "default_node": "Door to Quarantine Access B",
+            "hint_features": [],
             "extra": {
                 "asset_id": 3141205070,
                 "size_index": 0.6,
@@ -11949,13 +11384,8 @@
                                                                     "comment": null,
                                                                     "items": [
                                                                         {
-                                                                            "type": "resource",
-                                                                            "data": {
-                                                                                "type": "items",
-                                                                                "name": "Spider",
-                                                                                "amount": 1,
-                                                                                "negate": false
-                                                                            }
+                                                                            "type": "template",
+                                                                            "data": "Can Use Spider Ball"
                                                                         },
                                                                         {
                                                                             "type": "or",
@@ -12004,13 +11434,8 @@
                                                                     "comment": "https://youtu.be/wXxYBRIgDb4?t=62",
                                                                     "items": [
                                                                         {
-                                                                            "type": "resource",
-                                                                            "data": {
-                                                                                "type": "items",
-                                                                                "name": "Bombs",
-                                                                                "amount": 1,
-                                                                                "negate": false
-                                                                            }
+                                                                            "type": "template",
+                                                                            "data": "Can Use Bombs"
                                                                         },
                                                                         {
                                                                             "type": "resource",
@@ -12057,13 +11482,8 @@
                                                                     "comment": "https://youtu.be/Ic3nXNhiUP8?t=16",
                                                                     "items": [
                                                                         {
-                                                                            "type": "resource",
-                                                                            "data": {
-                                                                                "type": "items",
-                                                                                "name": "Bombs",
-                                                                                "amount": 1,
-                                                                                "negate": false
-                                                                            }
+                                                                            "type": "template",
+                                                                            "data": "Can Use Bombs"
                                                                         },
                                                                         {
                                                                             "type": "resource",
@@ -12282,22 +11702,8 @@
                                 "comment": null,
                                 "items": [
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "MorphBall",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
-                                    },
-                                    {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "Boost",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Boost Ball"
                                     },
                                     {
                                         "type": "resource",
@@ -12354,13 +11760,8 @@
                                                         "comment": "https://youtu.be/LE6qEadXPok?t=83",
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Bombs",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Bombs"
                                                             },
                                                             {
                                                                 "type": "resource",
@@ -12509,22 +11910,8 @@
                                                         "comment": null,
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "MorphBall",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
-                                                            },
-                                                            {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Bombs",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Bombs"
                                                             },
                                                             {
                                                                 "type": "resource",
@@ -12693,6 +12080,7 @@
                     ],
                     "extra": {
                         "position_required": false,
+                        "pre_placement_weight": 0.8,
                         "world_position": [
                             -82.999771,
                             -72.115097,
@@ -12702,6 +12090,8 @@
                     "valid_starting_location": false,
                     "pickup_index": 85,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {
                         "Door to Save Station Mines C": {
                             "type": "and",
@@ -12789,22 +12179,8 @@
                                                         "comment": null,
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "MorphBall",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
-                                                            },
-                                                            {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Bombs",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Bombs"
                                                             },
                                                             {
                                                                 "type": "resource",
@@ -12913,6 +12289,7 @@
         },
         "Metroid Quarantine A": {
             "default_node": "Door to Quarantine Access A",
+            "hint_features": [],
             "extra": {
                 "asset_id": 4211416922,
                 "size_index": 0.6,
@@ -13061,22 +12438,8 @@
                                                         "comment": "https://youtu.be/x036CC58IZ8?t=9",
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "MorphBall",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
-                                                            },
-                                                            {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Bombs",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Bombs"
                                                             },
                                                             {
                                                                 "type": "resource",
@@ -13274,22 +12637,8 @@
                                                         "comment": null,
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "MorphBall",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
-                                                            },
-                                                            {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Bombs",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Bombs"
                                                             },
                                                             {
                                                                 "type": "resource",
@@ -13458,31 +12807,12 @@
                                             "comment": null,
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "MorphBall",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Spider Ball"
                                                 },
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Spider",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
-                                                },
-                                                {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Bombs",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Bombs"
                                                 }
                                             ]
                                         }
@@ -13515,6 +12845,7 @@
                     ],
                     "extra": {
                         "position_required": false,
+                        "pre_placement_weight": 0.8,
                         "world_position": [
                             224.916901,
                             255.70929,
@@ -13524,6 +12855,8 @@
                     "valid_starting_location": false,
                     "pickup_index": 86,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {
                         "Door to Elevator Access B": {
                             "type": "or",
@@ -13609,30 +12942,8 @@
                                 "comment": null,
                                 "items": [
                                     {
-                                        "type": "and",
-                                        "data": {
-                                            "comment": null,
-                                            "items": [
-                                                {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "MorphBall",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
-                                                },
-                                                {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Spider",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
-                                                }
-                                            ]
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Spider Ball"
                                     },
                                     {
                                         "type": "resource",
@@ -13820,22 +13131,8 @@
                                                         "comment": null,
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "MorphBall",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
-                                                            },
-                                                            {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Bombs",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Bombs"
                                                             },
                                                             {
                                                                 "type": "resource",
@@ -13915,13 +13212,8 @@
                                                         "comment": null,
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Spider",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Spider Ball"
                                                             },
                                                             {
                                                                 "type": "or",
@@ -13929,13 +13221,8 @@
                                                                     "comment": null,
                                                                     "items": [
                                                                         {
-                                                                            "type": "resource",
-                                                                            "data": {
-                                                                                "type": "items",
-                                                                                "name": "Bombs",
-                                                                                "amount": 1,
-                                                                                "negate": false
-                                                                            }
+                                                                            "type": "template",
+                                                                            "data": "Can Use Bombs"
                                                                         },
                                                                         {
                                                                             "type": "and",
@@ -13943,13 +13230,8 @@
                                                                                 "comment": "https://youtu.be/zPD0diebSX8",
                                                                                 "items": [
                                                                                     {
-                                                                                        "type": "resource",
-                                                                                        "data": {
-                                                                                            "type": "items",
-                                                                                            "name": "Boost",
-                                                                                            "amount": 1,
-                                                                                            "negate": false
-                                                                                        }
+                                                                                        "type": "template",
+                                                                                        "data": "Can Use Boost Ball"
                                                                                     },
                                                                                     {
                                                                                         "type": "resource",
@@ -14008,13 +13290,8 @@
                                                                                                     }
                                                                                                 },
                                                                                                 {
-                                                                                                    "type": "resource",
-                                                                                                    "data": {
-                                                                                                        "type": "items",
-                                                                                                        "name": "PowerBomb",
-                                                                                                        "amount": 1,
-                                                                                                        "negate": false
-                                                                                                    }
+                                                                                                    "type": "template",
+                                                                                                    "data": "Can Use Power Bombs"
                                                                                                 },
                                                                                                 {
                                                                                                     "type": "resource",
@@ -14077,22 +13354,8 @@
                                                         "comment": null,
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "MorphBall",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
-                                                            },
-                                                            {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "PowerBomb",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Power Bombs"
                                                             },
                                                             {
                                                                 "type": "resource",
@@ -14272,13 +13535,8 @@
                                 "comment": null,
                                 "items": [
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "MorphBall",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Power Bombs"
                                     },
                                     {
                                         "type": "resource",
@@ -14412,13 +13670,8 @@
                                             "comment": null,
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Spider",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Spider Ball"
                                                 },
                                                 {
                                                     "type": "or",
@@ -14457,13 +13710,8 @@
                                 "comment": null,
                                 "items": [
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "MorphBall",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Power Bombs"
                                     },
                                     {
                                         "type": "resource",
@@ -14483,6 +13731,7 @@
         },
         "Quarantine Access B": {
             "default_node": "Door to Fungal Hall B",
+            "hint_features": [],
             "extra": {
                 "asset_id": 340985721,
                 "size_index": 0.1,
@@ -14556,22 +13805,8 @@
                                             "comment": null,
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "MorphBall",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
-                                                },
-                                                {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Bombs",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Bombs"
                                                 },
                                                 {
                                                     "type": "resource",
@@ -14729,22 +13964,8 @@
                                             "comment": null,
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "MorphBall",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
-                                                },
-                                                {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Bombs",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Bombs"
                                                 },
                                                 {
                                                     "type": "resource",
@@ -14816,12 +14037,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 220,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Save Station Mines C": {
             "default_node": "Save Station",
+            "hint_features": [],
             "extra": {
                 "asset_id": 1724960771,
                 "size_index": 0.1,
@@ -14933,12 +14157,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 221,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Elevator Access B": {
             "default_node": "Door to Metroid Quarantine A",
+            "hint_features": [],
             "extra": {
                 "asset_id": 1071241062,
                 "size_index": 0.1,
@@ -15068,12 +14295,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 222,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Fungal Hall B": {
             "default_node": "Door to Phazon Mining Tunnel",
+            "hint_features": [],
             "extra": {
                 "asset_id": 3964125762,
                 "size_index": 0.6,
@@ -15363,22 +14593,8 @@
                                             "comment": "https://youtu.be/HbzeA1Z4_nc",
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "MorphBall",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
-                                                },
-                                                {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Bombs",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Bombs"
                                                 },
                                                 {
                                                     "type": "resource",
@@ -15436,13 +14652,8 @@
                                             "comment": null,
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Bombs",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Bombs"
                                                 },
                                                 {
                                                     "type": "and",
@@ -15450,13 +14661,8 @@
                                                         "comment": null,
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "PowerBomb",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Power Bombs"
                                                             },
                                                             {
                                                                 "type": "resource",
@@ -15492,6 +14698,7 @@
                     ],
                     "extra": {
                         "position_required": false,
+                        "pre_placement_weight": 0.8,
                         "world_position": [
                             113.364304,
                             -34.201637,
@@ -15501,6 +14708,8 @@
                     "valid_starting_location": false,
                     "pickup_index": 87,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {
                         "Door to Phazon Mining Tunnel": {
                             "type": "and",
@@ -15515,6 +14724,7 @@
         },
         "Elevator B": {
             "default_node": "Door to Elevator Access B",
+            "hint_features": [],
             "extra": {
                 "asset_id": 3900266464,
                 "size_index": 0.3,
@@ -15654,12 +14864,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 223,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Missile Station Mines": {
             "default_node": "Door to Fungal Hall B",
+            "hint_features": [],
             "extra": {
                 "asset_id": 2961781534,
                 "size_index": 0.1,
@@ -15770,12 +14983,15 @@
                     "valid_starting_location": false,
                     "pickup_index": 224,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
         },
         "Phazon Mining Tunnel": {
             "default_node": "Door to Fungal Hall A",
+            "hint_features": [],
             "extra": {
                 "asset_id": 3153742515,
                 "size_index": 0.3,
@@ -15835,31 +15051,12 @@
                                 "comment": null,
                                 "items": [
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "MorphBall",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Bombs"
                                     },
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "PowerBomb",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
-                                    },
-                                    {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "Bombs",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Power Bombs"
                                     },
                                     {
                                         "type": "or",
@@ -15867,13 +15064,8 @@
                                             "comment": null,
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Boost",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Boost Ball"
                                                 },
                                                 {
                                                     "type": "resource",
@@ -15922,22 +15114,8 @@
                                 "comment": null,
                                 "items": [
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "MorphBall",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
-                                    },
-                                    {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "Bombs",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Bombs"
                                     },
                                     {
                                         "type": "or",
@@ -15959,13 +15137,8 @@
                                                         "comment": null,
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Boost",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Boost Ball"
                                                             },
                                                             {
                                                                 "type": "or",
@@ -16136,22 +15309,8 @@
                                 "comment": null,
                                 "items": [
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "MorphBall",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
-                                    },
-                                    {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "PowerBomb",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Power Bombs"
                                     },
                                     {
                                         "type": "or",
@@ -16159,13 +15318,8 @@
                                             "comment": null,
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Boost",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Boost Ball"
                                                 },
                                                 {
                                                     "type": "and",
@@ -16173,13 +15327,8 @@
                                                         "comment": null,
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Bombs",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Bombs"
                                                             },
                                                             {
                                                                 "type": "or",
@@ -16249,6 +15398,7 @@
                     ],
                     "extra": {
                         "position_required": false,
+                        "pre_placement_weight": 0.8,
                         "world_position": [
                             120.13559,
                             147.160461,
@@ -16258,6 +15408,8 @@
                     "valid_starting_location": false,
                     "pickup_index": 88,
                     "location_category": "major",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {
                         "Door to Fungal Hall B": {
                             "type": "and",
@@ -16265,22 +15417,8 @@
                                 "comment": null,
                                 "items": [
                                     {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "MorphBall",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
-                                    },
-                                    {
-                                        "type": "resource",
-                                        "data": {
-                                            "type": "items",
-                                            "name": "Bombs",
-                                            "amount": 1,
-                                            "negate": false
-                                        }
+                                        "type": "template",
+                                        "data": "Can Use Bombs"
                                     },
                                     {
                                         "type": "or",
@@ -16302,13 +15440,8 @@
                                                         "comment": null,
                                                         "items": [
                                                             {
-                                                                "type": "resource",
-                                                                "data": {
-                                                                    "type": "items",
-                                                                    "name": "Boost",
-                                                                    "amount": 1,
-                                                                    "negate": false
-                                                                }
+                                                                "type": "template",
+                                                                "data": "Can Use Boost Ball"
                                                             },
                                                             {
                                                                 "type": "or",
@@ -16411,6 +15544,7 @@
         },
         "Fungal Hall Access": {
             "default_node": "Door to Elevator B",
+            "hint_features": [],
             "extra": {
                 "asset_id": 3734860277,
                 "size_index": 0.3,
@@ -16484,22 +15618,8 @@
                                             "comment": null,
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "MorphBall",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
-                                                },
-                                                {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Bombs",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Bombs"
                                                 },
                                                 {
                                                     "type": "resource",
@@ -16689,22 +15809,8 @@
                                             "comment": null,
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "MorphBall",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
-                                                },
-                                                {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Bombs",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Bombs"
                                                 },
                                                 {
                                                     "type": "resource",
@@ -16737,6 +15843,7 @@
                     ],
                     "extra": {
                         "position_required": false,
+                        "pre_placement_weight": 0.8,
                         "world_position": [
                             161.045975,
                             352.397278,
@@ -16746,6 +15853,8 @@
                     "valid_starting_location": false,
                     "pickup_index": 89,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {
                         "Door to Fungal Hall A": {
                             "type": "or",
@@ -16767,22 +15876,8 @@
                                             "comment": null,
                                             "items": [
                                                 {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "MorphBall",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
-                                                },
-                                                {
-                                                    "type": "resource",
-                                                    "data": {
-                                                        "type": "items",
-                                                        "name": "Bombs",
-                                                        "amount": 1,
-                                                        "negate": false
-                                                    }
+                                                    "type": "template",
+                                                    "data": "Can Use Bombs"
                                                 },
                                                 {
                                                     "type": "resource",
@@ -16831,6 +15926,7 @@
         },
         "Fungal Hall A": {
             "default_node": "Door to Fungal Hall Access",
+            "hint_features": [],
             "extra": {
                 "asset_id": 257062865,
                 "size_index": 0.6,
@@ -17336,6 +16432,8 @@
                     "valid_starting_location": false,
                     "pickup_index": 225,
                     "location_category": "minor",
+                    "custom_index_group": null,
+                    "hint_features": [],
                     "connections": {}
                 }
             }
