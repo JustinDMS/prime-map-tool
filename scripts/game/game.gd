@@ -96,7 +96,7 @@ func get_region_data() -> Dictionary[StringName, Dictionary]:
 		var path := StringName("res://data/games/%s/%s" % [_header.game, r])
 		if ResourceLoader.exists(path, "JSON"):
 			var json := load(path)
-			data[r.trim_suffix(".json")] = json.data
+			data[json.data.name] = json.data
 			continue
 		
 		push_warning("Could not find region data at %s" % path)

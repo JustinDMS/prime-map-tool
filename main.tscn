@@ -386,7 +386,7 @@ script = ExtResource("46_tfmeg")
 filters = PackedStringArray()
 
 [node name="import_status" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania"]
-layout_mode = 2
+layout_mode = 0
 offset_left = 600.0
 offset_right = 960.0
 offset_bottom = 78.0
