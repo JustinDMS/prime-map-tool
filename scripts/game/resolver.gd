@@ -26,18 +26,16 @@ func _init(_game : Game, _logic_db : Dictionary[StringName, Dictionary]) -> void
 			var lock_buffer = game._header.dock_weakness_database.types[type].items[item].lock
 			var lock = {} if lock_buffer == null else lock_buffer
 			
-			if requirement.type == &"template":
-				dock_results[item] = template_results[requirement.data]
-			else:
-				dock_results[item] = can_reach( requirement, ReachResult.new(null, null) )
-			
-			if lock.is_empty():
+			# Door type has a lock
+			if !lock.is_empty():
+				var can_pass_lock : bool = can_reach( lock.requirement, ReachResult.new(null, null) ) if lock.requirement.type != &"template" else template_results[lock.requirement.data]
+				if requirement.type == &"template":
+					dock_results[item] = can_pass_lock and template_results[requirement.data]
+				else:
+					dock_results[item] = can_pass_lock and can_reach( requirement, ReachResult.new(null, null) )
 				continue
 			
-			if lock.requirement.type == &"template":
-				dock_results[lock.lock_type] = template_results[lock.requirement.data]
-			else:
-				dock_results[lock.lock_type] = can_reach( lock.requirement, ReachResult.new(null, null) )
+			dock_results[item] = can_reach( requirement, ReachResult.new(null, null) ) if requirement.type != &"template" else template_results[requirement.data]
 	
 	# Default case for absent lock
 	dock_results[&"null"] = true
@@ -126,7 +124,7 @@ func is_reached(node : NodeData) -> bool:
 
 func can_reach_external(from_node : NodeData, _to_node : NodeData) -> bool:
 	# TODO - Check other side too?
-	return (dock_results[ from_node.get_dock_weakness() ])
+	return dock_results[ from_node.get_dock_weakness() ]
 
 func can_reach_internal(from_node : NodeData, to_node : NodeData, reach_result : ReachResult) -> bool:
 	var logic : Dictionary = \
