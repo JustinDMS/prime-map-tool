@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://br45wp8jdj0tx"]
+[gd_scene format=3 uid="uid://br45wp8jdj0tx"]
 
 [ext_resource type="Script" uid="uid://c3u7c3gsctgar" path="res://scripts/game_map/elevator_manager.gd" id="1_gb56k"]
 [ext_resource type="Script" uid="uid://cs002s81robiq" path="res://scripts/game_map/game_map.gd" id="2_0cp0l"]
@@ -21,12 +21,12 @@
 [sub_resource type="LabelSettings" id="LabelSettings_rr1j8"]
 font_size = 32
 
-[node name="main" type="Node2D"]
+[node name="main" type="Node2D" unique_id=102862493]
 
-[node name="Background" type="CanvasLayer" parent="."]
+[node name="Background" type="CanvasLayer" parent="." unique_id=1310157139]
 layer = -2
 
-[node name="bg_color" type="ColorRect" parent="Background"]
+[node name="bg_color" type="ColorRect" parent="Background" unique_id=2024227]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -36,17 +36,17 @@ mouse_filter = 1
 mouse_default_cursor_shape = 2
 color = Color(0.141176, 0.141176, 0.141176, 1)
 
-[node name="elevator_manager" type="Control" parent="." node_paths=PackedStringArray("game_map")]
+[node name="elevator_manager" type="Control" parent="." unique_id=692714769 node_paths=PackedStringArray("game_map")]
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_gb56k")
 game_map = NodePath("../game_map")
 
-[node name="shader_manager" type="Node" parent="." node_paths=PackedStringArray("game_map")]
+[node name="shader_manager" type="Node" parent="." unique_id=252036026 node_paths=PackedStringArray("game_map")]
 script = ExtResource("3_yaehf")
 game_map = NodePath("../game_map")
 
-[node name="game_map" type="Control" parent="." node_paths=PackedStringArray("ui", "game_interface", "trick_interface", "randovania_interface", "logic_interface", "camera", "start_nodes_container")]
+[node name="game_map" type="Control" parent="." unique_id=344489694 node_paths=PackedStringArray("ui", "game_interface", "trick_interface", "randovania_interface", "logic_interface", "camera", "start_nodes_container")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -64,7 +64,7 @@ logic_interface = NodePath("../UI/ui/MarginContainer/VBoxContainer/TabContainer/
 camera = NodePath("../Camera2D")
 start_nodes_container = NodePath("../UI/ui/MarginContainer/MarginContainer/start_node_select_container")
 
-[node name="legend" type="Panel" parent="."]
+[node name="legend" type="Panel" parent="." unique_id=1869313727]
 visible = false
 offset_left = 2496.0
 offset_top = 1143.0
@@ -73,7 +73,7 @@ offset_bottom = 1601.0
 size_flags_horizontal = 8
 size_flags_vertical = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="legend"]
+[node name="MarginContainer" type="MarginContainer" parent="legend" unique_id=9934110]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -85,10 +85,10 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="legend/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="legend/MarginContainer" unique_id=1150895153]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="legend/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="legend/MarginContainer/VBoxContainer" unique_id=699960834]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 32
@@ -96,18 +96,18 @@ text = "Legend"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="legend/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="legend/MarginContainer/VBoxContainer" unique_id=1111583134]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="TextureRect" type="TextureRect" parent="legend/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="legend/MarginContainer/VBoxContainer/HBoxContainer" unique_id=816286022]
 layout_mode = 2
 size_flags_horizontal = 3
 texture = ExtResource("6_6j0ik")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="legend/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="legend/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1754059865]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -115,11 +115,11 @@ size_flags_stretch_ratio = 1.5
 text = "Pickup / Item"
 vertical_alignment = 1
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="legend/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="legend/MarginContainer/VBoxContainer" unique_id=1244769919]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="TextureRect" type="TextureRect" parent="legend/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="TextureRect" type="TextureRect" parent="legend/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1260848884]
 self_modulate = Color(0, 0.749, 1, 1)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -127,7 +127,7 @@ texture = ExtResource("4_0cp0l")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="legend/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="Label" type="Label" parent="legend/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1911119547]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -135,11 +135,11 @@ size_flags_stretch_ratio = 1.5
 text = "Door"
 vertical_alignment = 1
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="legend/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="legend/MarginContainer/VBoxContainer" unique_id=2143922106]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="TextureRect" type="TextureRect" parent="legend/MarginContainer/VBoxContainer/HBoxContainer3"]
+[node name="TextureRect" type="TextureRect" parent="legend/MarginContainer/VBoxContainer/HBoxContainer3" unique_id=259724846]
 self_modulate = Color(0.961, 0.871, 0.702, 1)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -148,7 +148,7 @@ expand_mode = 1
 stretch_mode = 5
 flip_v = true
 
-[node name="Label" type="Label" parent="legend/MarginContainer/VBoxContainer/HBoxContainer3"]
+[node name="Label" type="Label" parent="legend/MarginContainer/VBoxContainer/HBoxContainer3" unique_id=1285979019]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -156,11 +156,11 @@ size_flags_stretch_ratio = 1.5
 text = "Generic"
 vertical_alignment = 1
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="legend/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="legend/MarginContainer/VBoxContainer" unique_id=162892662]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="TextureRect" type="TextureRect" parent="legend/MarginContainer/VBoxContainer/HBoxContainer4"]
+[node name="TextureRect" type="TextureRect" parent="legend/MarginContainer/VBoxContainer/HBoxContainer4" unique_id=1363445253]
 self_modulate = Color(0.627, 0.125, 0.941, 1)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -168,7 +168,7 @@ texture = ExtResource("6_gngh3")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="legend/MarginContainer/VBoxContainer/HBoxContainer4"]
+[node name="Label" type="Label" parent="legend/MarginContainer/VBoxContainer/HBoxContainer4" unique_id=557019272]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -176,11 +176,11 @@ size_flags_stretch_ratio = 1.5
 text = "Teleporter"
 vertical_alignment = 1
 
-[node name="HBoxContainer5" type="HBoxContainer" parent="legend/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer5" type="HBoxContainer" parent="legend/MarginContainer/VBoxContainer" unique_id=2121002103]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="TextureRect" type="TextureRect" parent="legend/MarginContainer/VBoxContainer/HBoxContainer5"]
+[node name="TextureRect" type="TextureRect" parent="legend/MarginContainer/VBoxContainer/HBoxContainer5" unique_id=105517192]
 self_modulate = Color(0.196, 0.803, 0.196, 1)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -188,7 +188,7 @@ texture = ExtResource("7_0n3wm")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="legend/MarginContainer/VBoxContainer/HBoxContainer5"]
+[node name="Label" type="Label" parent="legend/MarginContainer/VBoxContainer/HBoxContainer5" unique_id=1437811953]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -196,17 +196,17 @@ size_flags_stretch_ratio = 1.5
 text = "Event"
 vertical_alignment = 1
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1557405368]
 visible = false
 process_callback = 0
 position_smoothing_enabled = true
 position_smoothing_speed = 20.0
 script = ExtResource("3_et3qh")
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="." unique_id=319379077]
 script = ExtResource("4_pyxl1")
 
-[node name="ui" type="Control" parent="UI" node_paths=PackedStringArray("game_map", "region_name_label", "room_name_label", "node_name_label", "bg_color")]
+[node name="ui" type="Control" parent="UI" unique_id=1746487871 node_paths=PackedStringArray("game_map", "region_name_label", "room_name_label", "node_name_label", "bg_color")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -221,7 +221,7 @@ room_name_label = NodePath("MarginContainer/MarginContainer/VBoxContainer2/hover
 node_name_label = NodePath("MarginContainer/MarginContainer/VBoxContainer2/hovered_node_name")
 bg_color = NodePath("../../Background/bg_color")
 
-[node name="MarginContainer" type="MarginContainer" parent="UI/ui"]
+[node name="MarginContainer" type="MarginContainer" parent="UI/ui" unique_id=27507889]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -232,11 +232,11 @@ size_flags_horizontal = 2
 size_flags_vertical = 10
 mouse_filter = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer" unique_id=1643470846]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="TabContainer" type="TabContainer" parent="UI/ui/MarginContainer/VBoxContainer" node_paths=PackedStringArray("game_map", "game_interface", "logic_interface")]
+[node name="TabContainer" type="TabContainer" parent="UI/ui/MarginContainer/VBoxContainer" unique_id=134838955 node_paths=PackedStringArray("game_map", "game_interface", "logic_interface")]
 custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -249,7 +249,7 @@ game_map = NodePath("../../../../../game_map")
 game_interface = NodePath("Game")
 logic_interface = NodePath("Logic")
 
-[node name="Game" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("options")]
+[node name="Game" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" unique_id=833539596 node_paths=PackedStringArray("options")]
 layout_mode = 2
 script = ExtResource("12_2cqfq")
 options = NodePath("MarginContainer/OptionButton")
@@ -257,7 +257,7 @@ min_size = Vector2(600, 125)
 metadata/_custom_type_script = "uid://cmv3a55dt88lx"
 metadata/_tab_index = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Game"]
+[node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Game" unique_id=1236617100]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -269,10 +269,10 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="OptionButton" type="OptionButton" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Game/MarginContainer"]
+[node name="OptionButton" type="OptionButton" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Game/MarginContainer" unique_id=1577912951]
 layout_mode = 2
 
-[node name="Tricks" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("game_map", "randovania_interface", "tricks_container")]
+[node name="Tricks" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" unique_id=1476435945 node_paths=PackedStringArray("game_map", "randovania_interface", "tricks_container")]
 visible = false
 layout_mode = 2
 script = ExtResource("44_rbq56")
@@ -282,7 +282,7 @@ tricks_container = NodePath("MarginContainer/ScrollContainer/VBoxContainer")
 min_size = Vector2(600, 900)
 metadata/_tab_index = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Tricks"]
+[node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Tricks" unique_id=1802827310]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -294,17 +294,17 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="ScrollContainer" type="ScrollContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Tricks/MarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Tricks/MarginContainer" unique_id=1613197354]
 layout_mode = 2
 horizontal_scroll_mode = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Tricks/MarginContainer/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Tricks/MarginContainer/ScrollContainer" unique_id=1652470032]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 20
 
-[node name="Randovania" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("game_map", "import_rdvgame_button", "file_dialog", "import_status_label", "clear_rdvgame_button", "word_hash_label", "rdv_options_container", "bool_options_container", "loaded_container")]
+[node name="Randovania" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" unique_id=1781278471 node_paths=PackedStringArray("game_map", "import_rdvgame_button", "file_dialog", "import_status_label", "clear_rdvgame_button", "word_hash_label", "rdv_options_container", "bool_options_container", "loaded_container")]
 visible = false
 custom_minimum_size = Vector2(400, 850)
 layout_mode = 2
@@ -321,7 +321,7 @@ loaded_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/VBoxC
 min_size = Vector2(600, 0)
 metadata/_tab_index = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania"]
+[node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania" unique_id=459002717]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -333,66 +333,66 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer" unique_id=132209534]
 layout_mode = 2
 
-[node name="import_rdvgame" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer"]
+[node name="import_rdvgame" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer" unique_id=208197774]
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
 text = "Upload .rdvgame"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer" unique_id=1786285400]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 5.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer" unique_id=1661743280]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="loaded_container" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="loaded_container" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=1737221597]
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.3
 
-[node name="word_hash" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/loaded_container"]
+[node name="word_hash" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/loaded_container" unique_id=1139667156]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_alignment = 1
 vertical_alignment = 2
 
-[node name="clear_rdvgame" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/loaded_container"]
+[node name="clear_rdvgame" type="Button" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/loaded_container" unique_id=216386968]
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
 text = "Clear .rdvgame"
 
-[node name="HSeparator2" type="HSeparator" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=230941246]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.1
 
-[node name="bool_options" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="bool_options" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=1090241144]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
 
-[node name="HTML5FileDialog" type="Node" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania"]
+[node name="HTML5FileDialog" type="Node" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania" unique_id=476909735]
 script = ExtResource("46_tfmeg")
 filters = PackedStringArray()
 
-[node name="import_status" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania"]
+[node name="import_status" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Randovania" unique_id=992787777]
 layout_mode = 0
 offset_left = 600.0
 offset_right = 960.0
 offset_bottom = 78.0
 size_flags_vertical = 3
 
-[node name="Logic" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("tricks_interface", "container", "tooltip_label")]
+[node name="Logic" type="Panel" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer" unique_id=1266487849 node_paths=PackedStringArray("tricks_interface", "container", "tooltip_label")]
 visible = false
 layout_mode = 2
 script = ExtResource("37_ky3bh")
@@ -402,7 +402,7 @@ tooltip_label = NodePath("VBoxContainer/Label")
 min_size = Vector2(600, 900)
 metadata/_tab_index = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Logic"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Logic" unique_id=1132121567]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -411,17 +411,17 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="Label" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Logic/VBoxContainer"]
+[node name="Label" type="Label" parent="UI/ui/MarginContainer/VBoxContainer/TabContainer/Logic/VBoxContainer" unique_id=1235690812]
 layout_mode = 2
 text = "Click a node to view its logic"
 horizontal_alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="UI/ui/MarginContainer" unique_id=53370773]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_top = 20
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="UI/ui/MarginContainer/MarginContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/ui/MarginContainer/MarginContainer" unique_id=828687463]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
@@ -429,20 +429,20 @@ mouse_filter = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="hovered_node_name" type="Label" parent="UI/ui/MarginContainer/MarginContainer/VBoxContainer2"]
+[node name="hovered_node_name" type="Label" parent="UI/ui/MarginContainer/MarginContainer/VBoxContainer2" unique_id=2034678117]
 layout_mode = 2
 horizontal_alignment = 1
 
-[node name="hovered_room_name" type="Label" parent="UI/ui/MarginContainer/MarginContainer/VBoxContainer2"]
+[node name="hovered_room_name" type="Label" parent="UI/ui/MarginContainer/MarginContainer/VBoxContainer2" unique_id=1212465909]
 layout_mode = 2
 label_settings = SubResource("LabelSettings_rr1j8")
 horizontal_alignment = 1
 
-[node name="hovered_world_name" type="Label" parent="UI/ui/MarginContainer/MarginContainer/VBoxContainer2"]
+[node name="hovered_world_name" type="Label" parent="UI/ui/MarginContainer/MarginContainer/VBoxContainer2" unique_id=1661491095]
 layout_mode = 2
 horizontal_alignment = 1
 
-[node name="start_node_select_container" type="VBoxContainer" parent="UI/ui/MarginContainer/MarginContainer"]
+[node name="start_node_select_container" type="VBoxContainer" parent="UI/ui/MarginContainer/MarginContainer" unique_id=2055094713]
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0
